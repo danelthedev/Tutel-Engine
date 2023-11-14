@@ -31,6 +31,23 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <!-- imGui -->
+        <dependency>
+            <groupId>io.github.spair</groupId>
+            <artifactId>imgui-java-app</artifactId>
+            <version>1.81.0</version>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- LWJGL Dependencies -->
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
