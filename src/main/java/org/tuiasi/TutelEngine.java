@@ -3,7 +3,7 @@ package org.tuiasi;
 import org.joml.Vector4f;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
-import org.tuiasi.engine.window.EngineEditorUI;
+import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.window.Window;
 import org.tuiasi.rendering.Renderer;
 
@@ -25,7 +25,7 @@ public class TutelEngine {
     }
 
     private void init() {
-        window = new Window(1920, 1080, "Tutel Engine", new Vector4f(0.25f, 0.25f, 0.25f, 0.25f), new EngineEditorUI());
+        window = new Window(1920, 1080, "Tutel Engine", new Vector4f(0.25f, 0.25f, 0.25f, 0.25f), new DefaultEngineEditorUI());
         window.init();
     }
 

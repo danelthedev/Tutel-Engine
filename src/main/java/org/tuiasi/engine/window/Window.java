@@ -13,20 +13,16 @@ import org.joml.Vector4f;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
+import org.tuiasi.engine.global.IO.KeyboardHandler;
+import org.tuiasi.engine.global.WindowVariables;
+import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 
-import java.nio.IntBuffer;
-
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengles.GLES20.*;
-import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Getter @Setter
@@ -43,16 +39,19 @@ public class Window{
 
     private String glslVersion = null;
     private long windowID;
-    private EngineEditorUI engineEditorUI;
+    private DefaultEngineEditorUI defaultEngineEditorUI;
 
-    public Window(int width, int height, String title, Vector4f clearColor, EngineEditorUI engineEditorUI){
+    WindowVariables windowVariables;
+
+
+    public Window(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
         //Init class variables
         this.width = width;
         this.height = height;
         this.title = title;
         this.clearColor = clearColor;
         this.resized = false;
-        this.engineEditorUI = engineEditorUI;
+        this.defaultEngineEditorUI = defaultEngineEditorUI;
     }
 
     public void init() {
@@ -60,6 +59,8 @@ public class Window{
         initImGui();
         imGuiGlfw.init(windowID, true);
         imGuiGl3.init(glslVersion);
+
+        windowVariables = WindowVariables.getInstance();
     }
 
     public void destroy() {
@@ -99,6 +100,9 @@ public class Window{
         glfwShowWindow(windowID);
 
         GL.createCapabilities();
+
+        // initialize the keyboard handler
+        KeyboardHandler.initialize(windowID);
     }
 
     private void initImGui() {
@@ -109,18 +113,24 @@ public class Window{
 
 
     public void run() {
-        //while (!glfwWindowShouldClose(windowID)) {
+        while (!glfwWindowShouldClose(windowID)) {
+            // clear the previous frame
             glClearColor(0.1f, 0.09f, 0.1f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
+            // create a new frame for both ImGui and GLFW
             imGuiGlfw.newFrame();
             ImGui.newFrame();
 
-            engineEditorUI.renderUI();
+            // update the window data
+            windowVariables.updateGlobalVariables(windowID);
 
+            // render the UI
+            defaultEngineEditorUI.renderUI();
             ImGui.render();
             imGuiGl3.renderDrawData(ImGui.getDrawData());
 
+            // manage the viewports of the UI
             if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
                 final long backupWindowID = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
                 ImGui.updatePlatformWindows();
@@ -128,9 +138,10 @@ public class Window{
                 GLFW.glfwMakeContextCurrent(backupWindowID);
             }
 
+            // swap the buffers and poll for events
             GLFW.glfwSwapBuffers(windowID);
             GLFW.glfwPollEvents();
-        //}
+        }
     }
 
 }
