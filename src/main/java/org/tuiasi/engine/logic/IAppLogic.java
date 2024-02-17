@@ -1,14 +1,14 @@
 package org.tuiasi.engine.logic;
 
-import org.tuiasi.engine.window.Window;
+import org.tuiasi.engine.ui.AppWindow;
 
 public interface IAppLogic {
 
     void init() throws Exception;
 
-    void input(Window window);
+    void input(AppWindow appWindow);
 
     void update(float delta);
 
-    void render(Window window);
+    void render(AppWindow appWindow);
 }

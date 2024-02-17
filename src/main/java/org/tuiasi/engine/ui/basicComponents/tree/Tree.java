@@ -12,7 +12,7 @@ public class Tree implements ITree{
     @NonNull
     private List<TreeNode> treeData;
     @NonNull
-    private NodeClickListener nodeClickListener;
+    private TreeListener nodeClickListener;
 
     private Integer lastClickedNodeId;  // Variable to store the last clicked node
 
@@ -75,7 +75,7 @@ public class Tree implements ITree{
     }
 
     @Override
-    public void setNodeClickListener(NodeClickListener listener) {
+    public void setNodeClickListener(TreeListener listener) {
         this.nodeClickListener = listener;
     }
 

@@ -15,7 +15,7 @@ public class ListWithTitle implements IList{
     private List<String> items;
 
     private Integer lastClickedItemId;  // Variable to store the last clicked node
-    ItemClickListener itemClickListener;
+    ListListener itemClickListener;
 
     public ListWithTitle(String title, List<String> items) {
         this.title = title;

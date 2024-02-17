@@ -12,7 +12,7 @@ public class DropdownWithTitle implements IDropdown{
     private String title;
     private String[] items;
     private int selectedItemIndex;
-    private IDropdownListener listener;
+    private DropdownListener listener;
 
     public DropdownWithTitle(String title, String[] items) {
         this.title = title;

@@ -1,4 +1,4 @@
-package org.tuiasi.engine.ui.composedComponents;
+package org.tuiasi.engine.ui.uiWindow;
 
 import imgui.ImGui;
 import org.tuiasi.engine.ui.basicComponents.button.ButtonWithTitle;
@@ -9,18 +9,14 @@ import org.tuiasi.engine.ui.basicComponents.dropdown.DropdownWithTitle;
 import org.tuiasi.engine.ui.basicComponents.dropdown.IDropdown;
 import org.tuiasi.engine.ui.basicComponents.list.IList;
 import org.tuiasi.engine.ui.basicComponents.list.ListWithTitle;
-import org.tuiasi.engine.ui.basicComponents.searchbar.ISearchbar;
-import org.tuiasi.engine.ui.basicComponents.searchbar.SearchbarWithHint;
 import org.tuiasi.engine.ui.basicComponents.textbox.ITextbox;
 import org.tuiasi.engine.ui.basicComponents.textbox.Textbox;
-import org.tuiasi.engine.ui.basicComponents.tree.ITree;
 import org.tuiasi.engine.ui.basicComponents.tree.TreeNode;
-import org.tuiasi.engine.ui.basicComponents.tree.TreeWithTitle;
-import org.tuiasi.engine.ui.basicComponents.tree.TreeWithTitleAndSearchBar;
+import org.tuiasi.engine.ui.composedComponents.TreeWithTitleAndSearchBar;
 
 import java.util.List;
 
-public class DemoWindow implements IImguiWindow{
+public class DemoWindow implements IUIWindow {
 
     String title;
     ICheckbox checkbox;

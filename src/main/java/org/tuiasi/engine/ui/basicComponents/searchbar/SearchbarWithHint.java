@@ -14,7 +14,7 @@ public class SearchbarWithHint implements ISearchbar {
 
     private String hint = "Search";
     private ImString searchText = new ImString();
-    boolean enterPressed = false;
+    private boolean enterPressed = false;
 
     private SearchListener searchListener;
 

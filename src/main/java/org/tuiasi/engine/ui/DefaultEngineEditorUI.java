@@ -1,12 +1,9 @@
 package org.tuiasi.engine.ui;
 
 import imgui.ImGui;
-import imgui.flag.ImGuiWindowFlags;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.tuiasi.engine.ui.composedComponents.DemoWindow;
+import org.tuiasi.engine.ui.uiWindow.DemoWindow;
 
 @Getter @Setter
 public class DefaultEngineEditorUI {

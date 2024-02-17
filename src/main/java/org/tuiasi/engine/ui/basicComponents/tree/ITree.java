@@ -6,10 +6,6 @@ public interface ITree {
 
     void render();
     void setTreeData(List<TreeNode> treeData);
-    void setNodeClickListener(NodeClickListener listener);
-
-    interface NodeClickListener {
-        void onNodeClick(TreeNode node);
-    }
+    void setNodeClickListener(TreeListener listener);
 
 }

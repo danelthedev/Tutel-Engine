@@ -1,4 +1,4 @@
-package org.tuiasi.engine.window;
+package org.tuiasi.engine.ui;
 
 import imgui.ImGui;
 import imgui.ImGuiIO;
@@ -16,7 +16,6 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.tuiasi.engine.global.IO.KeyboardHandler;
 import org.tuiasi.engine.global.WindowVariables;
-import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
@@ -27,7 +26,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Getter @Setter
 @NoArgsConstructor
-public class Window{
+public class AppWindow {
 
     private int width, height;
     private boolean resized;
@@ -44,7 +43,7 @@ public class Window{
     WindowVariables windowVariables;
 
 
-    public Window(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
+    public AppWindow(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
         //Init class variables
         this.width = width;
         this.height = height;
