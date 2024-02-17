@@ -8,8 +8,6 @@ import org.joml.Vector4f;
 @Getter @Setter @AllArgsConstructor
 public class WindowVariables {
 
-    //singleton class that is thread safe
-
     private static WindowVariables instance;
 
     private int width, height;
