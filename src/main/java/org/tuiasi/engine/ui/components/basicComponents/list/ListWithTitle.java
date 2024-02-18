@@ -25,7 +25,7 @@ public class ListWithTitle implements IList{
     @Override
     public void render() {
         // render the label
-        ImGui.text(label + "##Text");
+        ImGui.text(label);
         // render the list like the tree, but flat and clickable
         for (String item : items) {
             // Check if the current node is the last clicked one
@@ -36,7 +36,7 @@ public class ListWithTitle implements IList{
                 ImGui.pushStyleColor(ImGuiCol.Text, 1.0f, 1.0f, 0.0f, 1.0f);  // Yellow text color
             }
 
-            if (ImGui.selectable(item + "#Selectable")) {
+            if (ImGui.selectable(item + "##Selectable")) {
                 lastClickedItemId = item.hashCode();  // Update the last clicked node ID
                 if (itemClickListener != null) {
                     itemClickListener.onItemClick(item);

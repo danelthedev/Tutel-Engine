@@ -17,6 +17,10 @@ public class Textbox implements ITextbox{
 
     String previousText = "";
 
+    public Textbox(String label) {
+        this.label = label;
+    }
+
     public Textbox(String label, TextboxListener textboxListener) {
         this.label = label;
         this.textboxListener = textboxListener;

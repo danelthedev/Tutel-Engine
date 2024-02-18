@@ -31,8 +31,6 @@ public class TutelEngine {
         double previous = 0;
         double steps = 0.0;
 
-        // Run the rendering loop until the user has attempted to close
-        // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(appWindow.getWindowID()) ) {
             double loopStartTime = GLFW.glfwGetTime();
             double elapsed = loopStartTime - previous;

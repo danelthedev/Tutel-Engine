@@ -12,11 +12,14 @@ public class Tree implements ITree{
     private String label;
     @NonNull
     private List<TreeNode> treeData;
-    @NonNull
     private TreeListener nodeClickListener;
 
     private Integer lastClickedNodeId;  // Variable to store the last clicked node
 
+    public Tree(List<TreeNode> treeData, TreeListener nodeClickListener) {
+        this.treeData = treeData;
+        this.nodeClickListener = nodeClickListener;
+    }
 
     @Override
     public void render() {
