@@ -4,9 +4,9 @@ import org.tuiasi.engine.ui.components.IComponent;
 
 import java.util.List;
 
-public interface ITree extends IComponent {
+public abstract class ITree extends IComponent {
 
-    void setTreeData(List<TreeNode> treeData);
-    void setNodeClickListener(TreeListener listener);
+    public abstract void setTreeData(List<TreeNode> treeData);
+    public abstract void setNodeClickListener(TreeListener listener);
 
 }

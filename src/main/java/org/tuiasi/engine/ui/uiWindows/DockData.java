@@ -8,7 +8,6 @@ import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor  @AllArgsConstructor
 public class DockData {
-    private String windowLabel;
     private int direction;
     private float splitRatio;
 }

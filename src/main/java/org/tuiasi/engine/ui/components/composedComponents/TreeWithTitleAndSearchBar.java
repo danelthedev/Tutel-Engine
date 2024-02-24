@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TreeWithTitleAndSearchBar implements IComponent {
+public class TreeWithTitleAndSearchBar extends IComponent {
 
     private String label;
     private SearchbarWithHint searchbar;
@@ -34,6 +34,12 @@ public class TreeWithTitleAndSearchBar implements IComponent {
         this.tree = new Tree(treeData, nodeClickListener);
         this.originalTreeData = new ArrayList<>(treeData);
         this.filteredTreeData = new ArrayList<>(treeData);
+    }
+
+    public void addNode(TreeNode node) {
+        tree.addNode(node);
+        originalTreeData.add(node);
+        filteredTreeData.add(node);
     }
 
     public void render() {

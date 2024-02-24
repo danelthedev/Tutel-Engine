@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter @Getter @AllArgsConstructor @NoArgsConstructor
-public class CheckboxWithTitle implements ICheckbox {
+public class CheckboxWithTitle extends ICheckbox {
 
     private String label;
     private boolean isChecked;
