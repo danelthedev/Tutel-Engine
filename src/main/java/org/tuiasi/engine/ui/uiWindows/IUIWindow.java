@@ -61,8 +61,8 @@ public abstract class IUIWindow {
         if (size != null)
             ImGui.setNextWindowSize(size.x, size.y);
         else
-            ImGui.setNextWindowSize(windowVariables.getWidth(), windowVariables.getHeight());
-        ImGui.setNextWindowPos(windowVariables.getWindowPosX() + relativePosition.x, windowVariables.getWindowPosY() + relativePosition.y);
+            ImGui.setNextWindowSize(windowVariables.getWidth(), windowVariables.getHeight() - WindowVariables.getInstance().getMainMenuHeight());
+        ImGui.setNextWindowPos(windowVariables.getWindowPosX() + relativePosition.x, windowVariables.getWindowPosY() + relativePosition.y+ WindowVariables.getInstance().getMainMenuHeight());
 
         isFirstTime = false;
     }

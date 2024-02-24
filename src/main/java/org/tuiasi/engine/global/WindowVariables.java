@@ -15,6 +15,7 @@ public class WindowVariables {
     private boolean resized;
     private String title;
     private Vector4f clearColor;
+    private float mainMenuHeight;
 
     private WindowVariables() {
         //Init class variables
@@ -25,6 +26,7 @@ public class WindowVariables {
         this.title = "Engine";
         this.clearColor = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
         this.resized = false;
+        this.mainMenuHeight = 0;
     }
 
     public static WindowVariables getInstance() {
@@ -42,7 +44,7 @@ public class WindowVariables {
         if (instance == null) {
             synchronized (WindowVariables.class) {
                 if (instance == null) {
-                    instance = new WindowVariables(width, height, windowPosX, windowPosY, false, title, clearColor);
+                    instance = new WindowVariables(width, height, windowPosX, windowPosY, false, title, clearColor, 0);
                 }
             }
         }
