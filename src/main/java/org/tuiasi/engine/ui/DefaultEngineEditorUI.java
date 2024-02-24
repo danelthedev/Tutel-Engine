@@ -1,12 +1,17 @@
 package org.tuiasi.engine.ui;
 
-import imgui.ImVec2;
+import imgui.*;
 import imgui.flag.ImGuiDir;
 import lombok.Getter;
 import lombok.Setter;
 import org.tuiasi.engine.ui.components.basicComponents.TopMenuBar;
+import org.tuiasi.engine.ui.components.basicComponents.textbox.Textbox;
 import org.tuiasi.engine.ui.uiWindows.IUIWindow;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
+import org.tuiasi.engine.ui.uiWindows.prefabs.UIFilesWindow;
+import org.tuiasi.engine.ui.uiWindows.prefabs.UILogsWindow;
+import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeInspectorWindow;
+import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeTreeWindow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +24,7 @@ public class DefaultEngineEditorUI {
         boolean isSetup = false;
 
         public DefaultEngineEditorUI() {
+
             topMenuBar = new TopMenuBar();
 
             uiWindows = new ArrayList<>();
@@ -27,27 +33,25 @@ public class DefaultEngineEditorUI {
             mainWindow.setDocked(true);
             uiWindows.add(mainWindow);
 
-            UIWindow debugLogsWindow = new UIWindow("Debug logs", new ImVec2(0, 0), new ImVec2(100, 100));
+            UILogsWindow debugLogsWindow = new UILogsWindow("Debug logs", new ImVec2(0, 0), new ImVec2(100, 100));
             debugLogsWindow.setDocked(true);
-            mainWindow.addDockedWindow("Debug logs", ImGuiDir.Down, 0.2f);
+            mainWindow.addDockedWindow(debugLogsWindow, ImGuiDir.Down, 0.2f);
             uiWindows.add(debugLogsWindow);
 
-            UIWindow nodeTreeWindow = new UIWindow("Node Tree", new ImVec2(0, 0), new ImVec2(100, 100));
+            UINodeInspectorWindow nodeInspectorWindow = new UINodeInspectorWindow("Node Inspector", new ImVec2(0, 0), new ImVec2(100, 100));
+            nodeInspectorWindow.setDocked(true);
+            mainWindow.addDockedWindow(nodeInspectorWindow, ImGuiDir.Right, 0.2f);
+            uiWindows.add(nodeInspectorWindow);
+
+            UINodeTreeWindow nodeTreeWindow = new UINodeTreeWindow("Node Tree", new ImVec2(0, 0), new ImVec2(100, 100));
             nodeTreeWindow.setDocked(true);
-            mainWindow.addDockedWindow("Node Tree", ImGuiDir.Left, 0.2f);
+            mainWindow.addDockedWindow(nodeTreeWindow, ImGuiDir.Left, 0.2f);
             uiWindows.add(nodeTreeWindow);
 
-            UIWindow filesWindow = new UIWindow("Files", new ImVec2(0, 0), new ImVec2(100, 100));
+            UIFilesWindow filesWindow = new UIFilesWindow("Files", new ImVec2(0, 0), new ImVec2(100, 100));
             filesWindow.setDocked(true);
-            nodeTreeWindow.addDockedWindow("Files", ImGuiDir.Down, 0.3f);
+            nodeTreeWindow.addDockedWindow(filesWindow, ImGuiDir.Down, 0.2f);
             uiWindows.add(filesWindow);
-
-            UIWindow nodeDetailsWindow = new UIWindow("Node Details", new ImVec2(0, 0), new ImVec2(100, 100));
-            nodeDetailsWindow.setDocked(true);
-            mainWindow.addDockedWindow("Node Details", ImGuiDir.Right, 0.2f);
-            uiWindows.add(nodeDetailsWindow);
-
-
         }
 
         public void renderUI() {

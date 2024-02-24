@@ -1,6 +1,8 @@
 package org.tuiasi.engine.ui.uiWindows;
 
 //import imgui.ImGui;
+import imgui.ImFont;
+import imgui.ImGuiStyle;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;
 import imgui.ImVec2;
@@ -15,13 +17,15 @@ import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.ui.components.IComponent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter @Setter
 public class UIWindow extends IUIWindow{
 
     Integer dockspace_id;
-    private List<DockData> dockedWindows = new ArrayList<>();
+    private Map<IUIWindow, DockData> dockedWindows = new HashMap<>();
     boolean isRoot = false;
 
     public UIWindow(String windowTitle) {
@@ -40,13 +44,14 @@ public class UIWindow extends IUIWindow{
         this.isRoot = isRootWindow;
     }
 
-    public void addDockedWindow(String windowLabel, int direction, float splitRatio){
-        dockedWindows.add(new DockData(windowLabel, direction, splitRatio));
+    public void addDockedWindow(IUIWindow window, int direction, float splitRatio){
+        dockedWindows.put(window, new DockData(direction, splitRatio));
     }
 
     @Override
     public void render() {
         super.render();
+
 
         // if the window is the root, autoresize to the window size
         if(isRoot) {
@@ -59,6 +64,7 @@ public class UIWindow extends IUIWindow{
 
         ImGui.begin(getWindowTitle(), getFlags());
 
+
         // render components inside
         for (IComponent component : getComponents()) {
             component.render();
@@ -70,8 +76,10 @@ public class UIWindow extends IUIWindow{
 
 
         // setup docked windows
-        if(isFirstTime)
+        if(isFirstTime) {
             dockedSetup();
+            configurePrefabComponents();
+        }
 
         ImGui.end();
 
@@ -85,12 +93,15 @@ public class UIWindow extends IUIWindow{
         ImGui.dockBuilderSetNodeSize(dockspace_id, windowVariables.getWidth(), windowVariables.getHeight() - WindowVariables.getInstance().getMainMenuHeight());
 
         ImInt newNode = new ImInt(dockspace_id);
-        for(DockData entry : dockedWindows){
+        for(Map.Entry<IUIWindow, DockData> entry : dockedWindows.entrySet()){
             // split the node defined by the newNode id in 2 windows and return the id of the newly split node in the given direection
-            int dock_id = ImGui.dockBuilderSplitNode(newNode.get(), entry.getDirection(), entry.getSplitRatio(), null, newNode);
+            int dock_id = ImGui.dockBuilderSplitNode(newNode.get(), entry.getValue().getDirection(), entry.getValue().getSplitRatio(), null, newNode);
 
             // add the window defined by the windowLabel to the window with the id dock_id
-            ImGui.dockBuilderDockWindow(entry.getWindowLabel(), dock_id);
+            ImGui.dockBuilderDockWindow(entry.getKey().getWindowTitle(), dock_id);
+
+            ImVec2 nodeSize = ImGui.dockBuilderGetNode(dock_id).getSize();
+            entry.getKey().setSize(nodeSize);
         }
 
         ImGui.dockBuilderFinish(dockspace_id);
@@ -98,4 +109,7 @@ public class UIWindow extends IUIWindow{
         isFirstTime = false;
     }
 
+    protected void addPrefabComponents(){}
+
+    protected void configurePrefabComponents(){}
 }

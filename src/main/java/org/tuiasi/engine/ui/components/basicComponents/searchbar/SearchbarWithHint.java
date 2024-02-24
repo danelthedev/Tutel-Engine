@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SearchbarWithHint implements ISearchbar {
+public class SearchbarWithHint extends ISearchbar {
 
     private String label;
     private String hint = "Search";

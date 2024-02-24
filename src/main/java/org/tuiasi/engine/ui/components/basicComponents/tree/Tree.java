@@ -8,13 +8,17 @@ import lombok.*;
 import java.util.List;
 
 @Setter @Getter @RequiredArgsConstructor @NoArgsConstructor
-public class Tree implements ITree{
+public class Tree extends ITree{
     private String label;
     @NonNull
     private List<TreeNode> treeData;
     private TreeListener nodeClickListener;
 
     private Integer lastClickedNodeId;  // Variable to store the last clicked node
+
+    public void addNode(TreeNode node) {
+        treeData.add(node);
+    }
 
     public Tree(List<TreeNode> treeData, TreeListener nodeClickListener) {
         this.treeData = treeData;

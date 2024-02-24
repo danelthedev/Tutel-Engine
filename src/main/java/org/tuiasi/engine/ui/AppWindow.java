@@ -1,7 +1,6 @@
 package org.tuiasi.engine.ui;
 
-import imgui.ImGui;
-import imgui.ImGuiIO;
+import imgui.*;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
@@ -42,6 +41,7 @@ public class AppWindow {
 
     WindowVariables windowVariables;
 
+    public static ImFont appFont;
 
     public AppWindow(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
         //Init class variables
@@ -109,6 +109,13 @@ public class AppWindow {
         ImGuiIO io = ImGui.getIO();
         io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
+        io.addConfigFlags(ImGuiConfigFlags.DpiEnableScaleFonts);
+
+
+        // add the font Nihonium113-Console.ttf found in resources to the atlas
+        ImFontConfig fontConfig = new ImFontConfig();
+        fontConfig.setGlyphRanges(io.getFonts().getGlyphRangesDefault());
+        appFont = io.getFonts().addFontFromFileTTF("src/main/resources/Nihonium113-Console.ttf", 14, fontConfig);
     }
 
 

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class DropdownWithTitle implements IDropdown{
+public class DropdownWithTitle extends IDropdown{
 
     private String label;
     private String[] items;

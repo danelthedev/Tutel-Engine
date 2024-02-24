@@ -10,7 +10,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
-public class ListWithTitle implements IList{
+public class ListWithTitle extends IList{
     private String label;
     private List<String> items;
 
