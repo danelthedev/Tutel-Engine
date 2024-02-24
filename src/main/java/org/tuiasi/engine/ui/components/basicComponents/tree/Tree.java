@@ -1,7 +1,9 @@
 package org.tuiasi.engine.ui.components.basicComponents.tree;
 
 import imgui.ImGui;
+import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiTreeNodeFlags;
 import lombok.*;
 
@@ -39,6 +41,7 @@ public class Tree extends ITree{
             // Get node data
             boolean isLeaf = node.getChildren().isEmpty();
             int flags = isLeaf ? ImGuiTreeNodeFlags.Leaf : (ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.OpenOnDoubleClick);
+            flags |= ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth;
 
             // Check if the current node is the last clicked one
             boolean isLastClickedNode = lastClickedNodeId != null && lastClickedNodeId.equals(node.hashCode());
@@ -48,6 +51,7 @@ public class Tree extends ITree{
                 ImGui.pushStyleColor(ImGuiCol.Text, 1.0f, 1.0f, 0.0f, 1.0f);  // Yellow text color
             }
 
+            ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 0, 5);
             // Render the tree node
             boolean treeNodeOpen = ImGui.treeNodeEx(node.getName() + "##TreeNode", flags);
 
@@ -58,6 +62,7 @@ public class Tree extends ITree{
                     nodeClickListener.onNodeClick(node);
                 }
             }
+            ImGui.popStyleVar();
 
             // Restore the text color if not the last clicked node
             if (isLastClickedNode) {

@@ -9,46 +9,18 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor
-public class ListWithTitle extends IList{
-    private String label;
-    private List<String> items;
-
-    private Integer lastClickedItemId;  // Variable to store the last clicked node
-    ListListener itemClickListener;
-
+@Getter @Setter
+public class ListWithTitle extends SimpleList{
     public ListWithTitle(String label, List<String> items) {
-        this.label = label;
-        this.items = items;
+        super(label, items);
     }
 
     @Override
     public void render() {
         // render the label
-        ImGui.text(label);
-        // render the list like the tree, but flat and clickable
-        for (String item : items) {
-            // Check if the current node is the last clicked one
-            boolean isLastClickedItem = lastClickedItemId != null && lastClickedItemId.equals(item.hashCode());
-
-            // Highlight the last clicked node
-            if (isLastClickedItem) {
-                ImGui.pushStyleColor(ImGuiCol.Text, 1.0f, 1.0f, 0.0f, 1.0f);  // Yellow text color
-            }
-
-            if (ImGui.selectable(item + "##Selectable")) {
-                lastClickedItemId = item.hashCode();  // Update the last clicked node ID
-                if (itemClickListener != null) {
-                    itemClickListener.onItemClick(item);
-                }
-            }
-
-            // Restore the text color if not the last clicked node
-            if (isLastClickedItem) {
-                ImGui.popStyleColor();
-            }
-
-        }
+        ImGui.text(getLabel());
+        super.render();
     }
+
 
 }

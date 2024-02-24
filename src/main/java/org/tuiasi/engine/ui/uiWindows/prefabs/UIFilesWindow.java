@@ -3,6 +3,7 @@ package org.tuiasi.engine.ui.uiWindows.prefabs;
 import imgui.ImVec2;
 import imgui.flag.ImGuiInputTextFlags;
 import org.tuiasi.engine.ui.components.basicComponents.list.ListWithTitle;
+import org.tuiasi.engine.ui.components.basicComponents.list.SimpleList;
 import org.tuiasi.engine.ui.components.basicComponents.textbox.Textbox;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 
@@ -26,7 +27,7 @@ public class UIFilesWindow extends UIWindow {
 
     @Override
     protected void addPrefabComponents(){
-        ListWithTitle filesList = new ListWithTitle("Logs", List.of("file1", "file2", "file3"));
+        SimpleList filesList = new SimpleList("Logs", List.of("file1", "file2", "file3"));
         addComponent(filesList);
     }
 
