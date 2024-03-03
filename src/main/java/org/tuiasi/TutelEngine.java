@@ -7,6 +7,7 @@ import org.tuiasi.engine.ui.AppWindow;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengles.GLES20.glGenBuffers;
 
 public class TutelEngine {
 
@@ -24,6 +25,7 @@ public class TutelEngine {
     private void init() {
         appWindow = new AppWindow(1920, 1080, "Tutel Engine", new Vector4f(0.25f, 0.25f, 0.25f, 0.25f), new DefaultEngineEditorUI());
         appWindow.init();
+
     }
 
     private void loop() {

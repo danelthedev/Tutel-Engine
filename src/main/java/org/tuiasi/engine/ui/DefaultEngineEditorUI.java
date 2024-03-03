@@ -24,11 +24,9 @@ public class DefaultEngineEditorUI {
         boolean isSetup = false;
 
         public DefaultEngineEditorUI() {
-
-            topMenuBar = new TopMenuBar();
-
             uiWindows = new ArrayList<>();
 
+            topMenuBar = new TopMenuBar();
             UIWindow mainWindow = new UIWindow("Main Window", new ImVec2(0, 0), null, true);
             mainWindow.setDocked(true);
             uiWindows.add(mainWindow);
