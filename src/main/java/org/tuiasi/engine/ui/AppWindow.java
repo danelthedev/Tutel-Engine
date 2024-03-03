@@ -15,8 +15,9 @@ import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
@@ -42,6 +43,7 @@ import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengles.GLES20.*;
+import static org.lwjgl.opengles.GLES20.GL_FRONT_AND_BACK;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Getter @Setter
@@ -66,7 +68,7 @@ public class AppWindow {
 
     public static ImFont appFont;
 
-    Renderable3D testObject;
+    Renderable3D testObject, testObject2;
 
     public AppWindow(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
         //Init class variables
@@ -87,9 +89,14 @@ public class AppWindow {
         compileShaders();
         testObject = new Renderable3D(
                 new float[]{
-                        -0.5f, -0.5f, 0.0f,
-                        0.5f, -0.5f, 0.0f,
-                        0.0f,  0.5f, 0.0f
+                        -.9f, -.9f, 0.0f, // bottom left
+                        -.9f,  .9f, 0.0f, // top left
+                        .9f, .9f, 0.0f,  // top right
+                        .9f, -.9f, 0.0f  // bottom right
+                },
+                new int[]{
+                        0, 1, 2,
+                        2, 3, 0
                 }
         );
 
@@ -167,6 +174,9 @@ public class AppWindow {
             // update the window data
             windowVariables.updateGlobalVariables(windowID);
 
+            // test draw polygons
+            testObject.render();
+
             // render the UI
             defaultEngineEditorUI.renderUI();
             ImGui.render();
@@ -180,7 +190,7 @@ public class AppWindow {
                 GLFW.glfwMakeContextCurrent(backupWindowID);
             }
 
-            testObject.render();
+
 
             // swap the buffers and poll for events
             GLFW.glfwSwapBuffers(windowID);
