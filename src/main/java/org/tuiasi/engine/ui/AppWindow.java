@@ -31,8 +31,6 @@ import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.global.IO.KeyboardHandler;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
-import org.tuiasi.engine.renderer.shaders.Shader;
-import org.tuiasi.engine.renderer.shaders.ShaderProgram;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -64,8 +62,6 @@ public class AppWindow {
 
     WindowVariables windowVariables;
 
-    int shaderProgram;
-
     public static ImFont appFont;
 
     Renderable3D testObject, testObject2;
@@ -86,7 +82,6 @@ public class AppWindow {
         imGuiGlfw.init(windowID, true);
         imGuiGl3.init(glslVersion);
 
-        compileShaders();
         testObject = new Renderable3D(
                 new float[]{
                         -.9f, -.9f, 0.0f, // bottom left
@@ -99,6 +94,21 @@ public class AppWindow {
                         2, 3, 0
                 }
         );
+        testObject.setUniform("in_color", new Float[]{1.0f, 0.0f, 0.0f, 1.0f});
+
+        testObject2 = new Renderable3D(
+                new float[]{
+                        -.5f, -.5f, 0.0f, // bottom left
+                        -.5f,  .5f, 0.0f, // top left
+                        .5f, .5f, 0.0f,  // top right
+                        .5f, -.5f, 0.0f  // bottom right
+                },
+                new int[]{
+                        0, 1, 2,
+                        2, 3, 0
+                }
+        );
+        testObject2.setUniform("in_color", new Float[]{0.0f, 1.0f, 0.0f, 1.0f});
 
         windowVariables = WindowVariables.getInstance();
     }
@@ -142,6 +152,11 @@ public class AppWindow {
 
         glfwShowWindow(windowID);
 
+        // set resized callback
+        glfwSetFramebufferSizeCallback(windowID, (window, width, height) -> {
+            GL20.glViewport(0, 0, width, height);
+        });
+
         // initialize the keyboard handler
         KeyboardHandler.initialize(windowID);
     }
@@ -176,6 +191,7 @@ public class AppWindow {
 
             // test draw polygons
             testObject.render();
+            testObject2.render();
 
             // render the UI
             defaultEngineEditorUI.renderUI();
@@ -196,15 +212,6 @@ public class AppWindow {
             GLFW.glfwSwapBuffers(windowID);
             GLFW.glfwPollEvents();
         }
-    }
-
-
-    private void compileShaders() {
-        Shader vertexShader = new Shader("src/main/resources/shaders/vertex.vert", GL_VERTEX_SHADER);
-        Shader fragmentShader = new Shader("src/main/resources/shaders/fragment.frag", GL_FRAGMENT_SHADER);
-        ShaderProgram shaderProgram = new ShaderProgram(vertexShader.getShaderID(), fragmentShader.getShaderID());
-        shaderProgram.link();
-        ShaderProgram.useProgram(shaderProgram.getProgramID());
     }
 
 }

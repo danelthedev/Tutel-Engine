@@ -5,6 +5,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
+import org.tuiasi.engine.renderer.shaders.Shader;
+import org.tuiasi.engine.renderer.shaders.ShaderProgram;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -12,14 +14,19 @@ import java.nio.IntBuffer;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
+import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class Renderable3D implements IRenderable{
+    // mesh data
     int VAO, VBO, EBO;
-
     FloatBuffer verticesBuffer;
     IntBuffer indicesBuffer;
+
+    // shader data
+    ShaderProgram shaderProgram;
 
     public Renderable3D(float[] vertices, int[] indices){
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
@@ -32,7 +39,10 @@ public class Renderable3D implements IRenderable{
         indicesBuffer.put(indices);
         indicesBuffer.flip();
 
-        init();
+        shaderProgram = new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
+                            new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER));
+
+        initVertBuf();
     }
 
     public Renderable3D(List<Vector3f> vertices, List<Integer> indices){
@@ -52,10 +62,51 @@ public class Renderable3D implements IRenderable{
         }
         indicesBuffer.flip();
 
-        init();
+        shaderProgram = new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
+                new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER));
+
+        initVertBuf();
     }
 
-    public void init(){
+    public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram){
+        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
+        verticesBuffer = byteBuffer.asFloatBuffer();
+        verticesBuffer.put(vertices);
+        verticesBuffer.flip();
+
+        ByteBuffer indicesByteBuffer = BufferUtils.createByteBuffer(indices.length * Integer.BYTES);
+        indicesBuffer = indicesByteBuffer.asIntBuffer();
+        indicesBuffer.put(indices);
+        indicesBuffer.flip();
+
+        this.shaderProgram = shaderProgram;
+
+        initVertBuf();
+    }
+
+    public Renderable3D(List<Vector3f> vertices, List<Integer> indices, ShaderProgram shaderProgram){
+        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.size() * 3 * Float.BYTES);
+        verticesBuffer = byteBuffer.asFloatBuffer();
+        for(Vector3f vertex : vertices){
+            verticesBuffer.put(vertex.x);
+            verticesBuffer.put(vertex.y);
+            verticesBuffer.put(vertex.z);
+        }
+        verticesBuffer.flip();
+
+        ByteBuffer indicesByteBuffer = BufferUtils.createByteBuffer(indices.size() * Integer.BYTES);
+        indicesBuffer = indicesByteBuffer.asIntBuffer();
+        for(Integer index : indices){
+            indicesBuffer.put(index);
+        }
+        indicesBuffer.flip();
+
+        this.shaderProgram = shaderProgram;
+
+        initVertBuf();
+    }
+
+    public void initVertBuf(){
         // create a vertex array object to store the vertex buffer object
         VAO = glGenVertexArrays();
         glBindVertexArray(VAO);
@@ -75,12 +126,19 @@ public class Renderable3D implements IRenderable{
         GL20.glEnableVertexAttribArray(0);
     }
 
+    public void setUniform(String name, List<Float> value){
+        shaderProgram.setUniform(name, value);
+    }
+
+    public void setUniform(String name, Float[] value){
+        shaderProgram.setUniform(name, value);
+    }
+
     @Override
     public void render() {
+        shaderProgram.use();
+
         glBindVertexArray(VAO);
-//        GL20.glDrawArrays(GL11.GL_TRIANGLES, 0, verticesBuffer.capacity() / 3);
-//        System.out.println(EBO);
-//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         GL20.glDrawElements(GL11.GL_TRIANGLES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
     }
 
