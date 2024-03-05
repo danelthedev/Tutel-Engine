@@ -1,9 +1,6 @@
-package org.tuiasi.engine.renderer.shaders;
+package org.tuiasi.engine.renderer.shader;
 
 import lombok.*;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.Arrays;

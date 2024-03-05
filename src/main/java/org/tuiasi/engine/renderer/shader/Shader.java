@@ -1,4 +1,4 @@
-package org.tuiasi.engine.renderer.shaders;
+package org.tuiasi.engine.renderer.shader;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

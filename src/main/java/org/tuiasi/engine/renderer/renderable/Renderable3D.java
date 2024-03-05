@@ -5,8 +5,9 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
-import org.tuiasi.engine.renderer.shaders.Shader;
-import org.tuiasi.engine.renderer.shaders.ShaderProgram;
+import org.tuiasi.engine.renderer.shader.Shader;
+import org.tuiasi.engine.renderer.shader.ShaderProgram;
+import org.tuiasi.engine.renderer.texture.Texture;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -25,6 +26,10 @@ public class Renderable3D implements IRenderable{
     FloatBuffer verticesBuffer;
     IntBuffer indicesBuffer;
 
+    // texture data
+
+    Texture texture;
+
     // shader data
     ShaderProgram shaderProgram;
 
@@ -41,6 +46,8 @@ public class Renderable3D implements IRenderable{
 
         shaderProgram = new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
                             new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER));
+
+        texture = new Texture();
 
         initVertBuf();
     }
@@ -65,6 +72,8 @@ public class Renderable3D implements IRenderable{
         shaderProgram = new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
                 new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER));
 
+        texture = new Texture();
+
         initVertBuf();
     }
 
@@ -80,6 +89,8 @@ public class Renderable3D implements IRenderable{
         indicesBuffer.flip();
 
         this.shaderProgram = shaderProgram;
+
+        texture = new Texture();
 
         initVertBuf();
     }
@@ -103,6 +114,48 @@ public class Renderable3D implements IRenderable{
 
         this.shaderProgram = shaderProgram;
 
+        texture = new Texture();
+
+        initVertBuf();
+    }
+
+    public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Texture texture){
+        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
+        verticesBuffer = byteBuffer.asFloatBuffer();
+        verticesBuffer.put(vertices);
+        verticesBuffer.flip();
+
+        ByteBuffer indicesByteBuffer = BufferUtils.createByteBuffer(indices.length * Integer.BYTES);
+        indicesBuffer = indicesByteBuffer.asIntBuffer();
+        indicesBuffer.put(indices);
+        indicesBuffer.flip();
+
+        this.shaderProgram = shaderProgram;
+        this.texture = texture;
+
+        initVertBuf();
+    }
+
+    public Renderable3D(List<Vector3f> vertices, List<Integer> indices, ShaderProgram shaderProgram, Texture texture){
+        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.size() * 3 * Float.BYTES);
+        verticesBuffer = byteBuffer.asFloatBuffer();
+        for(Vector3f vertex : vertices){
+            verticesBuffer.put(vertex.x);
+            verticesBuffer.put(vertex.y);
+            verticesBuffer.put(vertex.z);
+        }
+        verticesBuffer.flip();
+
+        ByteBuffer indicesByteBuffer = BufferUtils.createByteBuffer(indices.size() * Integer.BYTES);
+        indicesBuffer = indicesByteBuffer.asIntBuffer();
+        for(Integer index : indices){
+            indicesBuffer.put(index);
+        }
+        indicesBuffer.flip();
+
+        this.shaderProgram = shaderProgram;
+        this.texture = texture;
+
         initVertBuf();
     }
 
@@ -122,8 +175,18 @@ public class Renderable3D implements IRenderable{
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
 
         // set the vertex attributes
-        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 3 * Float.BYTES, 0);
+
+        // position attribute
+        GL20.glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * Float.BYTES, 0);
         GL20.glEnableVertexAttribArray(0);
+
+        // color attribute
+        GL20.glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * Float.BYTES, 3 * Float.BYTES);
+        GL20.glEnableVertexAttribArray(1);
+
+        // texture attribute
+        GL20.glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * Float.BYTES, 6 * Float.BYTES);
+        GL20.glEnableVertexAttribArray(2);
     }
 
     public void setUniform(String name, List<Float> value){
@@ -136,6 +199,7 @@ public class Renderable3D implements IRenderable{
 
     @Override
     public void render() {
+        texture.use();
         shaderProgram.use();
 
         glBindVertexArray(VAO);

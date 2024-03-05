@@ -31,6 +31,9 @@ import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.global.IO.KeyboardHandler;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
+import org.tuiasi.engine.renderer.shader.Shader;
+import org.tuiasi.engine.renderer.shader.ShaderProgram;
+import org.tuiasi.engine.renderer.texture.Texture;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -84,31 +87,27 @@ public class AppWindow {
 
         testObject = new Renderable3D(
                 new float[]{
-                        -.9f, -.9f, 0.0f, // bottom left
-                        -.9f,  .9f, 0.0f, // top left
-                        .9f, .9f, 0.0f,  // top right
-                        .9f, -.9f, 0.0f  // bottom right
+                        -.9f, -.9f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
+                        -.9f,  .9f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+                        .9f, .9f, 0.0f,     0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
                 },
                 new int[]{
                         0, 1, 2,
-                        2, 3, 0
                 }
         );
-        testObject.setUniform("in_color", new Float[]{1.0f, 0.0f, 0.0f, 1.0f});
 
         testObject2 = new Renderable3D(
                 new float[]{
-                        -.5f, -.5f, 0.0f, // bottom left
-                        -.5f,  .5f, 0.0f, // top left
-                        .5f, .5f, 0.0f,  // top right
-                        .5f, -.5f, 0.0f  // bottom right
+                        -.5f, -.5f, 0.0f,   0.0f, 0.5f, 0.0f,    1.0f, 1.0f,
+                        -.5f,  .5f, 0.0f,   0.5f, 0.0f, 0.0f,    1.0f, 0.0f,
+                        .5f, .5f, 0.0f,     0.0f, 0.0f, 0.5f,    0.0f, 0.0f,
                 },
                 new int[]{
                         0, 1, 2,
-                        2, 3, 0
-                }
+                },
+                new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
+                new Texture("src/main/resources/textures/test_texture.jpg")
         );
-        testObject2.setUniform("in_color", new Float[]{0.0f, 1.0f, 0.0f, 1.0f});
 
         windowVariables = WindowVariables.getInstance();
     }
