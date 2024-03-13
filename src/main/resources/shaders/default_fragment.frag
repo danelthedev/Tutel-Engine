@@ -7,8 +7,8 @@ out vec4 FragColor;
 
 uniform sampler2D objTex;
 
-uniform float u_Color;
+uniform vec3 u_Color;
 
 void main() {
-    FragColor = texture(objTex, texCoord) * vec4(vertColor, 1.0);
+    FragColor = texture(objTex, texCoord) * vec4(vertColor + u_Color, 1.0);
 }

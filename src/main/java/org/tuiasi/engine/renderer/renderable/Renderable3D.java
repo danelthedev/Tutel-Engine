@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
-import org.tuiasi.engine.renderer.shader.uniform.Uniform;
+import org.tuiasi.engine.renderer.shader.Uniform;
 import org.tuiasi.engine.renderer.texture.Texture;
 
 import java.nio.ByteBuffer;
@@ -190,7 +190,7 @@ public class Renderable3D implements IRenderable{
         GL20.glEnableVertexAttribArray(2);
     }
 
-    public void setUniform(String name, Uniform<Float> value){
+    public void setUniform(String name, Uniform<?> value){
         shaderProgram.setUniform(name, value);
     }
 

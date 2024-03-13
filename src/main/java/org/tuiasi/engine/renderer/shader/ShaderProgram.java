@@ -3,8 +3,6 @@ package org.tuiasi.engine.renderer.shader;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.tuiasi.engine.renderer.shader.uniform.FUniform;
-import org.tuiasi.engine.renderer.shader.uniform.Uniform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,30 +49,23 @@ public class ShaderProgram {
         glUseProgram(programID);
     }
 
-    public void setUniform(String name, Uniform<?> value){
+    public void setUniform(String name, Uniform<?> uniform){
         glUseProgram(programID);
         // iterate over the uniforms and set the value of the uniform with the given name
         boolean found = false;
-        for(Uniform<?> uniform : uniforms){
-            if(uniform.getName().equals(name)){
-                // check the type of the uniform and set the value accordingly
-                if(value instanceof FUniform) {
-                    ((FUniform) uniform).setUniform((Float) value.getValue());
-                }
-
+        for(Uniform<?> _uniform : uniforms){
+            if(_uniform.getName().equals(name)){
+                _uniform.setValue(uniform.getValue());
                 found = true;
-                uniform.use();
+                _uniform.use();
                 break;
             }
         }
         if(!found){
             // create a new uniform and set its value based on the given value
-            if(value instanceof FUniform) {
-                FUniform uniform = new FUniform(name, (Float) value.getValue(), programID);
-                uniforms.add(uniform);
-                uniform.use();
-            }
-
+            uniform.setLocation(programID);
+            uniforms.add(uniform);
+            uniform.use();
         }
     }
 
