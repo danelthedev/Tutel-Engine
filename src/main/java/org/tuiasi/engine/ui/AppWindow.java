@@ -33,6 +33,7 @@ import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
+import org.tuiasi.engine.renderer.shader.uniform.FUniform;
 import org.tuiasi.engine.renderer.texture.Texture;
 
 import java.nio.ByteBuffer;
@@ -108,6 +109,9 @@ public class AppWindow {
                 new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
                 new Texture("src/main/resources/textures/test_texture.jpg")
         );
+
+        FUniform uniform = new FUniform("u_Color", 0.5f);
+        testObject2.setUniform("u_Color", uniform);
 
         windowVariables = WindowVariables.getInstance();
     }
