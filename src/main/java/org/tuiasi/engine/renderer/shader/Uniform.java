@@ -1,9 +1,7 @@
 package org.tuiasi.engine.renderer.shader;
 
 import lombok.*;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
+import org.joml.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +35,7 @@ public class Uniform<T> {
         this.shaderProgram = shaderProgram;
         location = glGetUniformLocation(shaderProgram, name);
         if (location == -1) {
-            System.err.println("Warning: Uniform variable '" + name + "' not found in the shader program.");
+            System.err.println("Warning: Uniform variable '" + name + "' not found in the shader program. It may not be used, or was not declared correctly.");
         }
     }
 
@@ -59,6 +57,16 @@ public class Uniform<T> {
             glUniform3f(location, ((Vector3f) value).x, ((Vector3f) value).y, ((Vector3f) value).z);
         else if(value instanceof Vector4f)
             glUniform4f(location, ((Vector4f) value).x, ((Vector4f) value).y, ((Vector4f) value).z, ((Vector4f) value).w);
+
+        else if(value instanceof Matrix2f)
+            glUniformMatrix2fv(location, false, ((Matrix2f) value).get(new float[4]));
+        else if(value instanceof Matrix3f)
+            glUniformMatrix3fv(location, false, ((Matrix3f) value).get(new float[9]));
+        else if(value instanceof Matrix4f)
+            glUniformMatrix4fv(location, false, ((Matrix4f) value).get(new float[16]));
+
+        else if(value instanceof float[])
+            glUniform1fv(location, (float[]) value);
     }
 
 }
