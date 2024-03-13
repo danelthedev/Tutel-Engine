@@ -190,8 +190,8 @@ public class Renderable3D implements IRenderable{
         GL20.glEnableVertexAttribArray(2);
     }
 
-    public void setUniform(String name, Uniform<?> value){
-        shaderProgram.setUniform(name, value);
+    public void setUniform(Uniform<?> value){
+        shaderProgram.setUniform(value);
     }
 
     @Override

@@ -97,7 +97,7 @@ public class AppWindow {
         );
 
         Uniform<Vector3f> uniform = new Uniform<>("u_Color", new Vector3f(0.0f, 0.5f, 0.0f));
-        testObject2.setUniform("u_Color", uniform);
+        testObject2.setUniform(uniform);
 
         windowVariables = WindowVariables.getInstance();
     }

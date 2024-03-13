@@ -49,12 +49,12 @@ public class ShaderProgram {
         glUseProgram(programID);
     }
 
-    public void setUniform(String name, Uniform<?> uniform){
+    public void setUniform(Uniform<?> uniform){
         glUseProgram(programID);
         // iterate over the uniforms and set the value of the uniform with the given name
         boolean found = false;
         for(Uniform<?> _uniform : uniforms){
-            if(_uniform.getName().equals(name)){
+            if(_uniform.getName().equals(uniform.getName())){
                 _uniform.setValue(uniform.getValue());
                 found = true;
                 _uniform.use();
