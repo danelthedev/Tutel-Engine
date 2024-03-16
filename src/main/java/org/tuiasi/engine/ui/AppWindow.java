@@ -8,21 +8,22 @@ import imgui.glfw.ImGuiImplGlfw;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
+import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.global.IO.KeyboardHandler;
 import org.tuiasi.engine.global.WindowVariables;
+import org.tuiasi.engine.renderer.camera.EditorCamera;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
@@ -31,6 +32,7 @@ import org.tuiasi.engine.renderer.texture.Texture;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -72,32 +74,46 @@ public class AppWindow {
         imGuiGlfw.init(windowID, true);
         imGuiGl3.init(glslVersion);
 
-        testObject = new Renderable3D(
-                new float[]{
-                        -.9f, -.9f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
-                        -.9f,  .9f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-                        .9f, .9f, 0.0f,     0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
-                },
-                new int[]{
-                        0, 1, 2,
-                }
-        );
-
         testObject2 = new Renderable3D(
                 new float[]{
-                        -.5f, -.5f, 0.0f,   0.0f, 0.5f, 0.0f,    1.0f, 1.0f,
-                        -.5f,  .5f, 0.0f,   0.5f, 0.0f, 0.0f,    1.0f, 0.0f,
-                        .5f, .5f, 0.0f,     0.0f, 0.0f, 0.5f,    0.0f, 0.0f,
+                        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // Top left (Front face)
+                        0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,  // Top right (Front face)
+                        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom left (Front face)
+                        0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // Bottom right (Front face)
+
+                        -0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // Top left (Back face)
+                        0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,  // Top right (Back face)
+                        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom left (Back face)
+                        0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // Bottom right (Back face)
                 },
                 new int[]{
-                        0, 1, 2,
+                        // Front face
+                        0, 1, 2,  // Top left, Top right, Bottom left
+                        2, 1, 3,  // Bottom left, Top right, Bottom right
+
+                        // Back face
+                        4, 6, 5,  // Top left, Bottom left, Top right
+                        5, 6, 7,  // Top right, Bottom left, Bottom right
+
+                        // Left face
+                        4, 0, 2,  // Top left, Top left, Bottom left
+                        4, 2, 6,  // Top left, Bottom left, Bottom right
+
+                        // Right face
+                        1, 5, 3,  // Top right, Top right, Bottom right
+                        3, 5, 7,  // Bottom right, Top right, Bottom right
+
+                        // Top face
+                        4, 5, 0,  // Top left, Top right, Top left
+                        0, 5, 1,  // Top left, Top right, Top right
+
+                        // Bottom face
+                        2, 3, 6,  // Bottom left, Bottom right, Bottom left
+                        6, 3, 7   // Bottom left, Bottom right, Bottom right
                 },
                 new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
                 new Texture("src/main/resources/textures/test_texture.jpg")
         );
-
-        Uniform<Vector3f> uniform = new Uniform<>("u_Color", new Vector3f(0.0f, 0.5f, 0.0f));
-        testObject2.setUniform(uniform);
 
         windowVariables = WindowVariables.getInstance();
     }
@@ -141,9 +157,12 @@ public class AppWindow {
 
         glfwShowWindow(windowID);
 
+        glEnable(GL_DEPTH_TEST);
+
         // set resized callback
         glfwSetFramebufferSizeCallback(windowID, (window, width, height) -> {
             GL20.glViewport(0, 0, width, height);
+            EditorCamera.getInstance().setAspect((float)width / (float)height);
         });
 
         // initialize the keyboard handler
@@ -169,7 +188,7 @@ public class AppWindow {
         while (!glfwWindowShouldClose(windowID)) {
             // clear the previous frame
             GL11.glClearColor(0.1f, 0.09f, 0.1f, 1.0f);
-            GL11.glClear(GL_COLOR_BUFFER_BIT);
+            GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             // create a new frame for both ImGui and GLFW
             imGuiGlfw.newFrame();
@@ -179,7 +198,6 @@ public class AppWindow {
             windowVariables.updateGlobalVariables(windowID);
 
             // test draw polygons
-            testObject.render();
             testObject2.render();
 
             // render the UI
@@ -204,7 +222,3 @@ public class AppWindow {
     }
 
 }
-
-
-
-

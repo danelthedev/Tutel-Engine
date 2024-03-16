@@ -1,10 +1,12 @@
 package org.tuiasi.engine.renderer.renderable;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
+import org.tuiasi.engine.renderer.camera.EditorCamera;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
 import org.tuiasi.engine.renderer.shader.Uniform;
@@ -28,11 +30,13 @@ public class Renderable3D implements IRenderable{
     IntBuffer indicesBuffer;
 
     // texture data
-
     Texture texture;
 
     // shader data
     ShaderProgram shaderProgram;
+
+    // position and rotation
+    Vector3f position = new Vector3f(0,0,-5), rotation = new Vector3f(45,0,0);
 
     public Renderable3D(float[] vertices, int[] indices){
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
@@ -196,6 +200,30 @@ public class Renderable3D implements IRenderable{
 
     @Override
     public void render() {
+
+        rotation.add(0, 0.025f, 0);
+
+        EditorCamera camera = EditorCamera.getInstance();
+
+        Matrix4f projectionMatrix = new Matrix4f();
+        projectionMatrix.identity();
+        projectionMatrix.perspective(camera.getFov(), camera.getAspect(), camera.getNear(), camera.getFar());
+
+        Matrix4f modelMatrix = new Matrix4f();
+        modelMatrix.identity();
+        modelMatrix.translate(position);
+        modelMatrix.rotateX((float) Math.toRadians(rotation.x));
+        modelMatrix.rotateY((float) Math.toRadians(rotation.y));
+        modelMatrix.rotateZ((float) Math.toRadians(rotation.z));
+
+        Matrix4f viewMatrix = new Matrix4f();
+        viewMatrix.identity();
+
+        setUniform(new Uniform<>("projection", projectionMatrix));
+        setUniform(new Uniform<>("model", modelMatrix));
+        setUniform(new Uniform<>("view", viewMatrix));
+
+
         texture.use();
         shaderProgram.use();
 
