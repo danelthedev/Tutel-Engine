@@ -8,26 +8,26 @@ import imgui.glfw.ImGuiImplGlfw;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector3fc;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
+import static java.lang.Math.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.global.IO.KeyboardHandler;
+import org.tuiasi.engine.global.IO.MouseHandler;
 import org.tuiasi.engine.global.WindowVariables;
-import org.tuiasi.engine.renderer.camera.EditorCamera;
+import org.tuiasi.engine.renderer.camera.Camera;
+import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
-import org.tuiasi.engine.renderer.shader.Uniform;
 import org.tuiasi.engine.renderer.texture.Texture;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -115,6 +115,9 @@ public class AppWindow {
                 new Texture("src/main/resources/textures/test_texture.jpg")
         );
 
+        testObject = new Renderable3D(testObject2);
+        testObject.setPosition(new Vector3f(2, 0, 0));
+
         windowVariables = WindowVariables.getInstance();
     }
 
@@ -162,11 +165,12 @@ public class AppWindow {
         // set resized callback
         glfwSetFramebufferSizeCallback(windowID, (window, width, height) -> {
             GL20.glViewport(0, 0, width, height);
-            EditorCamera.getInstance().setAspect((float)width / (float)height);
+            MainCamera.getInstance().setAspect((float)width / (float)height);
         });
 
         // initialize the keyboard handler
         KeyboardHandler.initialize(windowID);
+        MouseHandler.initialize(windowID);
     }
 
     private void initImGui() {
@@ -197,7 +201,16 @@ public class AppWindow {
             // update the window data
             windowVariables.updateGlobalVariables(windowID);
 
-            // test draw polygons
+            // update the camera
+            MainCamera.update();
+
+            // render the objects
+            // rotate test object around 0, 3, 0
+            testObject.rotate(new Vector3f(0, (float) toRadians(1), 0));
+            // move test Object 2 around test object
+            testObject2.setPosition(new Vector3f((float) sin(toRadians(glfwGetTime()*15)) * 5, 0, (float) cos(toRadians(glfwGetTime()*15)) * 5));
+
+            testObject.render();
             testObject2.render();
 
             // render the UI

@@ -17,6 +17,8 @@ public class WindowVariables {
     private Vector4f clearColor;
     private float mainMenuHeight;
 
+    private long windowID;
+
     private WindowVariables() {
         //Init class variables
         this.width = 800;
@@ -27,6 +29,7 @@ public class WindowVariables {
         this.clearColor = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
         this.resized = false;
         this.mainMenuHeight = 0;
+        this.windowID = 0;
     }
 
     public static WindowVariables getInstance() {
@@ -40,11 +43,11 @@ public class WindowVariables {
         return instance;
     }
 
-    public static WindowVariables setInstance(int width, int height, int windowPosX, int windowPosY, String title, Vector4f clearColor) {
+    public static WindowVariables setInstance(int width, int height, int windowPosX, int windowPosY, String title, Vector4f clearColor, long windowID) {
         if (instance == null) {
             synchronized (WindowVariables.class) {
                 if (instance == null) {
-                    instance = new WindowVariables(width, height, windowPosX, windowPosY, false, title, clearColor, 0);
+                    instance = new WindowVariables(width, height, windowPosX, windowPosY, false, title, clearColor, 0, windowID);
                 }
             }
         }
@@ -53,6 +56,7 @@ public class WindowVariables {
 
     public void updateGlobalVariables(long windowId) {
         WindowVariables windowVariables = WindowVariables.getInstance();
+        windowVariables.setWindowID(windowId);
         // get the window dimensions using glfw
         int[] w = new int[1];
         int[] h = new int[1];

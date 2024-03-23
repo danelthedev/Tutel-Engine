@@ -1,12 +1,13 @@
 package org.tuiasi.engine.renderer.renderable;
 
+import lombok.Data;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
-import org.tuiasi.engine.renderer.camera.EditorCamera;
+import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
 import org.tuiasi.engine.renderer.shader.Uniform;
@@ -23,6 +24,7 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
+@Data
 public class Renderable3D implements IRenderable{
     // mesh data
     int VAO, VBO, EBO;
@@ -36,7 +38,7 @@ public class Renderable3D implements IRenderable{
     ShaderProgram shaderProgram;
 
     // position and rotation
-    Vector3f position = new Vector3f(0,0,-5), rotation = new Vector3f(45,0,0);
+    Vector3f position = new Vector3f(0,0,0), rotation = new Vector3f(0,0,0);
 
     public Renderable3D(float[] vertices, int[] indices){
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
@@ -164,6 +166,15 @@ public class Renderable3D implements IRenderable{
         initVertBuf();
     }
 
+    public Renderable3D(Renderable3D renderable3D){
+        this.verticesBuffer = renderable3D.verticesBuffer;
+        this.indicesBuffer = renderable3D.indicesBuffer;
+        this.shaderProgram = renderable3D.shaderProgram;
+        this.texture = renderable3D.texture;
+
+        initVertBuf();
+    }
+
     public void initVertBuf(){
         // create a vertex array object to store the vertex buffer object
         VAO = glGenVertexArrays();
@@ -198,12 +209,17 @@ public class Renderable3D implements IRenderable{
         shaderProgram.setUniform(value);
     }
 
+    public void move(Vector3f direction){
+        position.add(direction);
+    }
+
+    public void rotate(Vector3f rotation){
+        this.rotation.add(rotation);
+    }
+
     @Override
     public void render() {
-
-        rotation.add(0, 0.025f, 0);
-
-        EditorCamera camera = EditorCamera.getInstance();
+        MainCamera camera = MainCamera.getInstance();
 
         Matrix4f projectionMatrix = new Matrix4f();
         projectionMatrix.identity();
@@ -216,13 +232,11 @@ public class Renderable3D implements IRenderable{
         modelMatrix.rotateY((float) Math.toRadians(rotation.y));
         modelMatrix.rotateZ((float) Math.toRadians(rotation.z));
 
-        Matrix4f viewMatrix = new Matrix4f();
-        viewMatrix.identity();
+        Matrix4f viewMatrix = camera.getViewMatrix();
 
         setUniform(new Uniform<>("projection", projectionMatrix));
         setUniform(new Uniform<>("model", modelMatrix));
         setUniform(new Uniform<>("view", viewMatrix));
-
 
         texture.use();
         shaderProgram.use();
