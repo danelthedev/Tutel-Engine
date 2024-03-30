@@ -7,6 +7,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
+import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
@@ -38,7 +39,7 @@ public class Renderable3D implements IRenderable{
     ShaderProgram shaderProgram;
 
     // position and rotation
-    Vector3f position = new Vector3f(0,0,0), rotation = new Vector3f(0,0,0);
+    Spatial3D transform;
 
     public Renderable3D(float[] vertices, int[] indices){
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
@@ -57,6 +58,8 @@ public class Renderable3D implements IRenderable{
         texture = new Texture();
 
         initVertBuf();
+
+        transform = new Spatial3D();
     }
 
     public Renderable3D(List<Vector3f> vertices, List<Integer> indices){
@@ -82,6 +85,8 @@ public class Renderable3D implements IRenderable{
         texture = new Texture();
 
         initVertBuf();
+
+        transform = new Spatial3D();
     }
 
     public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram){
@@ -100,6 +105,8 @@ public class Renderable3D implements IRenderable{
         texture = new Texture();
 
         initVertBuf();
+
+        transform = new Spatial3D();
     }
 
     public Renderable3D(List<Vector3f> vertices, List<Integer> indices, ShaderProgram shaderProgram){
@@ -124,6 +131,8 @@ public class Renderable3D implements IRenderable{
         texture = new Texture();
 
         initVertBuf();
+
+        transform = new Spatial3D();
     }
 
     public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Texture texture){
@@ -141,6 +150,8 @@ public class Renderable3D implements IRenderable{
         this.texture = texture;
 
         initVertBuf();
+
+        transform = new Spatial3D();
     }
 
     public Renderable3D(List<Vector3f> vertices, List<Integer> indices, ShaderProgram shaderProgram, Texture texture){
@@ -164,6 +175,8 @@ public class Renderable3D implements IRenderable{
         this.texture = texture;
 
         initVertBuf();
+
+        transform = new Spatial3D();
     }
 
     public Renderable3D(Renderable3D renderable3D){
@@ -173,6 +186,8 @@ public class Renderable3D implements IRenderable{
         this.texture = renderable3D.texture;
 
         initVertBuf();
+
+        transform = new Spatial3D();
     }
 
     public void initVertBuf(){
@@ -209,12 +224,20 @@ public class Renderable3D implements IRenderable{
         shaderProgram.setUniform(value);
     }
 
-    public void move(Vector3f direction){
-        position.add(direction);
+    public void translate(Vector3f direction){
+        transform.translate(direction);
+    }
+
+    public void setPosition(Vector3f position){
+        transform.setPosition(position);
     }
 
     public void rotate(Vector3f rotation){
-        this.rotation.add(rotation);
+        transform.rotate(rotation);
+    }
+
+    public void setRotation(Vector3f rotation){
+        transform.setRotation(rotation);
     }
 
     @Override
@@ -227,10 +250,11 @@ public class Renderable3D implements IRenderable{
 
         Matrix4f modelMatrix = new Matrix4f();
         modelMatrix.identity();
-        modelMatrix.translate(position);
-        modelMatrix.rotateX((float) Math.toRadians(rotation.x));
-        modelMatrix.rotateY((float) Math.toRadians(rotation.y));
-        modelMatrix.rotateZ((float) Math.toRadians(rotation.z));
+        modelMatrix.translate(transform.getPosition());
+        modelMatrix.rotateX((float) Math.toRadians(transform.getRotation().x));
+        modelMatrix.rotateY((float) Math.toRadians(transform.getRotation().y));
+        modelMatrix.rotateZ((float) Math.toRadians(transform.getRotation().z));
+        modelMatrix.scale(transform.getScale());
 
         Matrix4f viewMatrix = camera.getViewMatrix();
 
