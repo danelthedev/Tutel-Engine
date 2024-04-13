@@ -28,25 +28,25 @@ public class TutelEngine {
     }
 
     private void loop() {
-//        double secsPerUpdate = 1.0d / 60.0d;
-//        double previous = 0;
-//        double steps = 0.0;
-//
-//        while ( !glfwWindowShouldClose(appWindow.getWindowID()) ) {
-//            double loopStartTime = GLFW.glfwGetTime();
-//            double elapsed = loopStartTime - previous;
-//            previous = loopStartTime;
-//            steps += elapsed;
-//
-//            // Handle game logic on fixed framerate
-//            while (steps >= secsPerUpdate) {
-//                steps -= secsPerUpdate;
-//                System.out.println(steps);
-//            }
-//
-//            appWindow.run();
-//        }
-        appWindow.run();
+
+        double secsPerUpdate = 1.0d / 60.0d;
+        double previous = 0;
+        double steps = 0.0;
+
+        while ( !glfwWindowShouldClose(appWindow.getWindowID()) ) {
+            double loopStartTime = GLFW.glfwGetTime();
+            double elapsed = loopStartTime - previous;
+            previous = loopStartTime;
+            steps += elapsed;
+
+            // Handle game logic on fixed framerate
+            while (steps >= secsPerUpdate) {
+                steps -= secsPerUpdate;
+            }
+
+            appWindow.run();
+        }
+
     }
 
 

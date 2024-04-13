@@ -23,12 +23,19 @@ import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.global.IO.KeyboardHandler;
 import org.tuiasi.engine.global.IO.MouseHandler;
 import org.tuiasi.engine.global.WindowVariables;
+import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.renderer.camera.Camera;
 import org.tuiasi.engine.renderer.camera.MainCamera;
+import org.tuiasi.engine.renderer.light.LightData;
+import org.tuiasi.engine.renderer.light.LightSource;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
+import org.tuiasi.engine.renderer.shader.Uniform;
 import org.tuiasi.engine.renderer.texture.Texture;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
@@ -39,6 +46,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 @Getter @Setter
 @NoArgsConstructor
 public class AppWindow {
+
+    // TODO: FIX THE SHADERS!!!!!!
 
     private int width, height;
     private boolean resized;
@@ -56,7 +65,9 @@ public class AppWindow {
 
     public static ImFont appFont;
 
+    List<Renderable3D> objects;
     Renderable3D testObject, testObject2;
+    LightSource lightSource;
 
     public AppWindow(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
         //Init class variables
@@ -74,49 +85,54 @@ public class AppWindow {
         imGuiGlfw.init(windowID, true);
         imGuiGl3.init(glslVersion);
 
-        testObject2 = new Renderable3D(
-                new float[]{
-                        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // Top left (Front face)
-                        0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,  // Top right (Front face)
-                        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom left (Front face)
-                        0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // Bottom right (Front face)
 
-                        -0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // Top left (Back face)
-                        0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,  // Top right (Back face)
-                        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom left (Back face)
-                        0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // Bottom right (Back face)
+        lightSource = new LightSource(  new Spatial3D(  new Vector3f(10, 10, 10),
+                                                        new Vector3f(0, 0, 0),
+                                                        new Vector3f(1, 1, 1)),
+                                        new LightData(  .2f, .6f, 1),
+                                        new Vector3f(1, 1, 1));
+
+        objects = new ArrayList<>();
+
+        testObject = new Renderable3D(
+                new float[]{
+                        -0.5f, 0.5f, 0.5f,    1.0f, 0.0f, 0.0f,    0.0f, 0.0f,    -0.5f, 0.5f, 0.5f, // Top left
+                        0.5f, 0.5f, 0.5f,     1.0f, 0.0f, 0.0f,    1.0f, 0.0f,    0.5f, 0.5f, 0.5f, // Top right
+                        -0.5f, -0.5f, 0.5f,   1.0f, 0.0f, 0.0f,    0.0f, 1.0f,    -0.5f, -0.5f, 0.5f, // Bottom left
+                        0.5f, -0.5f, 0.5f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f,    0.5f, -0.5f, 0.5f, // Bottom right
+
+                        // Back face
+                        -0.5f, 0.5f, -0.5f,   1.0f, 0.0f, 0.0f,    0.0f, 0.0f,    -0.5f, 0.5f, -0.5f, // Top left
+                        0.5f, 0.5f, -0.5f,    1.0f, 0.0f, 0.0f,    1.0f, 0.0f,    0.5f, 0.5f, -0.5f, // Top right
+                        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,    0.0f, 1.0f,    -0.5f, -0.5f, -0.5f, // Bottom left
+                        0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,    1.0f, 1.0f,    0.5f, -0.5f, -0.5f, // Bottom right
                 },
                 new int[]{
                         // Front face
-                        0, 1, 2,  // Top left, Top right, Bottom left
-                        2, 1, 3,  // Bottom left, Top right, Bottom right
-
+                        0, 1, 2,
+                        1, 3, 2,
                         // Back face
-                        4, 6, 5,  // Top left, Bottom left, Top right
-                        5, 6, 7,  // Top right, Bottom left, Bottom right
-
-                        // Left face
-                        4, 0, 2,  // Top left, Top left, Bottom left
-                        4, 2, 6,  // Top left, Bottom left, Bottom right
-
-                        // Right face
-                        1, 5, 3,  // Top right, Top right, Bottom right
-                        3, 5, 7,  // Bottom right, Top right, Bottom right
-
+                        4, 6, 5,
+                        5, 6, 7,
                         // Top face
-                        4, 5, 0,  // Top left, Top right, Top left
-                        0, 5, 1,  // Top left, Top right, Top right
-
+                        0, 4, 1,
+                        1, 4, 5,
                         // Bottom face
-                        2, 3, 6,  // Bottom left, Bottom right, Bottom left
-                        6, 3, 7   // Bottom left, Bottom right, Bottom right
+                        2, 3, 6,
+                        3, 7, 6,
+                        // Right face
+                        1, 5, 3,
+                        3, 5, 7,
+                        // Left face
+                        0, 2, 4,
+                        2, 6, 4
                 },
-                new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Texture("src/main/resources/textures/test_texture.jpg")
+                new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER))
         );
 
-        testObject = new Renderable3D(testObject2);
-        testObject.setPosition(new Vector3f(2, 0, 0));
+        objects.add(testObject);
+
+        testObject.setUniform(new Uniform<>("lightPos", lightSource.getTransform().getPosition()));
 
         windowVariables = WindowVariables.getInstance();
     }
@@ -205,13 +221,12 @@ public class AppWindow {
             MainCamera.update();
 
             // render the objects
-            // rotate test object around 0, 3, 0
-            testObject.rotate(new Vector3f(0, (float) toRadians(1), 0));
-            // move test Object 2 around test object
-            testObject2.setPosition(new Vector3f((float) sin(toRadians(glfwGetTime()*15)) * 5, 0, (float) cos(toRadians(glfwGetTime()*15)) * 5));
 
-            testObject.render();
-            testObject2.render();
+            objects.get(0).getShaderProgram().use();
+            objects.get(0).setUniform(new Uniform<>("lightPos", lightSource.getTransform().getPosition()));
+            objects.get(0).setUniform(new Uniform<>("viewPos", MainCamera.getInstance().getPosition()));
+            objects.get(0).render();
+
 
             // render the UI
             defaultEngineEditorUI.renderUI();

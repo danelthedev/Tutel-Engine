@@ -34,6 +34,7 @@ public class Renderable3D implements IRenderable{
 
     // texture data
     Texture texture;
+    boolean hasTexture;
 
     // shader data
     ShaderProgram shaderProgram;
@@ -56,6 +57,7 @@ public class Renderable3D implements IRenderable{
                             new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER));
 
         texture = new Texture();
+        hasTexture = false;
 
         initVertBuf();
 
@@ -83,6 +85,7 @@ public class Renderable3D implements IRenderable{
                 new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER));
 
         texture = new Texture();
+        hasTexture = false;
 
         initVertBuf();
 
@@ -103,6 +106,7 @@ public class Renderable3D implements IRenderable{
         this.shaderProgram = shaderProgram;
 
         texture = new Texture();
+        hasTexture = false;
 
         initVertBuf();
 
@@ -147,7 +151,9 @@ public class Renderable3D implements IRenderable{
         indicesBuffer.flip();
 
         this.shaderProgram = shaderProgram;
+
         this.texture = texture;
+        hasTexture = true;
 
         initVertBuf();
 
@@ -172,7 +178,9 @@ public class Renderable3D implements IRenderable{
         indicesBuffer.flip();
 
         this.shaderProgram = shaderProgram;
+
         this.texture = texture;
+        hasTexture = true;
 
         initVertBuf();
 
@@ -184,6 +192,7 @@ public class Renderable3D implements IRenderable{
         this.indicesBuffer = renderable3D.indicesBuffer;
         this.shaderProgram = renderable3D.shaderProgram;
         this.texture = renderable3D.texture;
+        this.hasTexture = renderable3D.hasTexture;
 
         initVertBuf();
 
@@ -208,16 +217,20 @@ public class Renderable3D implements IRenderable{
         // set the vertex attributes
 
         // position attribute
-        GL20.glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * Float.BYTES, 0);
+        GL20.glVertexAttribPointer(0, 3, GL_FLOAT, false, 11 * Float.BYTES, 0);
         GL20.glEnableVertexAttribArray(0);
 
         // color attribute
-        GL20.glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * Float.BYTES, 3 * Float.BYTES);
+        GL20.glVertexAttribPointer(1, 3, GL_FLOAT, false, 11 * Float.BYTES, 3 * Float.BYTES);
         GL20.glEnableVertexAttribArray(1);
 
         // texture attribute
-        GL20.glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * Float.BYTES, 6 * Float.BYTES);
+        GL20.glVertexAttribPointer(2, 2, GL_FLOAT, false, 11 * Float.BYTES, 6 * Float.BYTES);
         GL20.glEnableVertexAttribArray(2);
+
+        // normal attribute
+        GL20.glVertexAttribPointer(3, 3, GL_FLOAT, false, 11 * Float.BYTES, 8 * Float.BYTES);
+        GL20.glEnableVertexAttribArray(3);
     }
 
     public void setUniform(Uniform<?> value){
@@ -240,6 +253,11 @@ public class Renderable3D implements IRenderable{
         transform.setRotation(rotation);
     }
 
+    public void setTexture(Texture texture){
+        this.texture = texture;
+        hasTexture = (texture != null);
+    }
+
     @Override
     public void render() {
         MainCamera camera = MainCamera.getInstance();
@@ -258,9 +276,10 @@ public class Renderable3D implements IRenderable{
 
         Matrix4f viewMatrix = camera.getViewMatrix();
 
-        setUniform(new Uniform<>("projection", projectionMatrix));
-        setUniform(new Uniform<>("model", modelMatrix));
-        setUniform(new Uniform<>("view", viewMatrix));
+//        setUniform(new Uniform<>("hasTexture", hasTexture));
+
+        setUniform(new Uniform<>("modelViewProjectionMatrix", projectionMatrix.mul(viewMatrix).mul(modelMatrix)));
+        setUniform(new Uniform<>("normalMatrix", modelMatrix.invert().transpose()));
 
         texture.use();
         shaderProgram.use();
