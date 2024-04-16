@@ -86,26 +86,26 @@ public class AppWindow {
         imGuiGl3.init(glslVersion);
 
 
-        lightSource = new LightSource(  new Spatial3D(  new Vector3f(10, 10, 10),
+        lightSource = new LightSource(  new Spatial3D(  new Vector3f(10, 0, 2),
                                                         new Vector3f(0, 0, 0),
                                                         new Vector3f(1, 1, 1)),
-                                        new LightData(  .2f, .6f, 1),
+                                        new LightData(  .5f, .6f, 1),
                                         new Vector3f(1, 1, 1));
 
         objects = new ArrayList<>();
 
         testObject = new Renderable3D(
                 new float[]{
-                        -0.5f, 0.5f, 0.5f,    1.0f, 0.0f, 0.0f,    0.0f, 0.0f,    -0.5f, 0.5f, 0.5f, // Top left
-                        0.5f, 0.5f, 0.5f,     1.0f, 0.0f, 0.0f,    1.0f, 0.0f,    0.5f, 0.5f, 0.5f, // Top right
-                        -0.5f, -0.5f, 0.5f,   1.0f, 0.0f, 0.0f,    0.0f, 1.0f,    -0.5f, -0.5f, 0.5f, // Bottom left
-                        0.5f, -0.5f, 0.5f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f,    0.5f, -0.5f, 0.5f, // Bottom right
+                        -0.5f, 0.5f, 0.5f,    1.0f, 0.1f, 0.3f,    0.0f, 0.0f,    -0.5f, 0.5f, 0.5f, // Top left
+                        0.5f, 0.5f, 0.5f,     1.0f, 0.3f, 0.3f,    1.0f, 0.0f,    0.5f, 0.5f, 0.5f, // Top right
+                        -0.5f, -0.5f, 0.5f,   1.0f, 0.3f, 0.3f,    0.0f, 1.0f,    -0.5f, -0.5f, 0.5f, // Bottom left
+                        0.5f, -0.5f, 0.5f,    1.0f, 0.3f, 0.3f,    1.0f, 1.0f,    0.5f, -0.5f, 0.5f, // Bottom right
 
                         // Back face
-                        -0.5f, 0.5f, -0.5f,   1.0f, 0.0f, 0.0f,    0.0f, 0.0f,    -0.5f, 0.5f, -0.5f, // Top left
-                        0.5f, 0.5f, -0.5f,    1.0f, 0.0f, 0.0f,    1.0f, 0.0f,    0.5f, 0.5f, -0.5f, // Top right
-                        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,    0.0f, 1.0f,    -0.5f, -0.5f, -0.5f, // Bottom left
-                        0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,    1.0f, 1.0f,    0.5f, -0.5f, -0.5f, // Bottom right
+                        -0.5f, 0.5f, -0.5f,   1.0f, 0.3f, 0.3f,    0.0f, 0.0f,    -0.5f, 0.5f, -0.5f, // Top left
+                        0.5f, 0.5f, -0.5f,    1.0f, 0.3f, 0.3f,    1.0f, 0.0f,    0.5f, 0.5f, -0.5f, // Top right
+                        -0.5f, -0.5f, -0.5f,  1.0f, 0.3f, 0.3f,    0.0f, 1.0f,    -0.5f, -0.5f, -0.5f, // Bottom left
+                        0.5f, -0.5f, -0.5f,   1.0f, 0.3f, 0.3f,    1.0f, 1.0f,    0.5f, -0.5f, -0.5f, // Bottom right
                 },
                 new int[]{
                         // Front face
@@ -222,11 +222,19 @@ public class AppWindow {
 
             // render the objects
 
-            objects.get(0).getShaderProgram().use();
-            objects.get(0).setUniform(new Uniform<>("lightPos", lightSource.getTransform().getPosition()));
-            objects.get(0).setUniform(new Uniform<>("viewPos", MainCamera.getInstance().getPosition()));
-            objects.get(0).render();
+            for(Renderable3D object : objects) {
+                object.getShaderProgram().use();
+                object.setUniform(new Uniform<>("lightPos", lightSource.getTransform().getPosition()));
+                object.setUniform(new Uniform<>("viewPos", MainCamera.getInstance().getPosition()));
 
+                // only one light source for now, so sending it to all
+                object.setUniform(new Uniform<>("lightColor", lightSource.getColor()));
+                object.setUniform(new Uniform<>("ambient", lightSource.getLightData().getAmbient()));
+                object.setUniform(new Uniform<>("specular", lightSource.getLightData().getSpecular()));
+
+
+                object.render();
+            }
 
             // render the UI
             defaultEngineEditorUI.renderUI();
