@@ -59,8 +59,10 @@ public class Texture implements ITexture {
     }
 
     public void use(){
-        if(!pathToTexture.isEmpty())
+        if(!pathToTexture.isEmpty()) {
             glBindTexture(GL_TEXTURE_2D, textureID);
+//            System.out.println("Using texture " + textureID + " at path: " + pathToTexture);
+        }
         else
             glBindTexture(GL_TEXTURE_2D, 0);
     }

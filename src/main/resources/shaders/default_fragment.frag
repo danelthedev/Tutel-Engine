@@ -11,13 +11,13 @@ uniform vec3 lightPos;
 uniform vec3 viewPos;
 
 uniform vec3 lightColor;
-uniform vec3 ambient;
-uniform vec3 specular;
+uniform float ambient;
+uniform float specular;
 uniform float specPower;
 
 
 vec3 lighting(vec3 objectColor, vec3 pos, vec3 normal, vec3 lightPos, vec3 viewPos,
-              vec3 ambient, vec3 lightColor, vec3 specular, float specPower)
+              float ambient, vec3 lightColor, float specular, float specPower)
 {
     vec3 L = normalize(lightPos - pos);
     vec3 V = normalize(viewPos - pos);
@@ -40,13 +40,10 @@ vec3 lighting(vec3 objectColor, vec3 pos, vec3 normal, vec3 lightPos, vec3 viewP
 
 void main()
 {
-    vec3 lightColor = vec3(1.0, 1.0, 1.0);
-    vec3 ambient = vec3(0.2);
-    vec3 specular = vec3(0.9);
     float specPower = 64;
 
     vec3 color = lighting(vertColor, pos, normal, lightPos, viewPos, ambient, lightColor, specular, specPower);
 
     fragColor = vec4(color, 1.0);
-//    fragColor = texture(tex, uv.xy) * vec4(color, 1.0);
+//    fragColor = texture(tex, texCoord);
 }

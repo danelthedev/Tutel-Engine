@@ -89,8 +89,8 @@ public class AppWindow {
         lightSource = new LightSource(  new Spatial3D(  new Vector3f(10, 0, 2),
                                                         new Vector3f(0, 0, 0),
                                                         new Vector3f(1, 1, 1)),
-                                        new LightData(  .5f, .6f, 1),
-                                        new Vector3f(1, 1, 1));
+                                        new LightData(   .2f, .9f),
+                                        new Vector3f(1.0f, 1.0f, 1.0f));
 
         objects = new ArrayList<>();
 
@@ -127,7 +127,8 @@ public class AppWindow {
                         0, 2, 4,
                         2, 6, 4
                 },
-                new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER))
+                new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
+                new Texture("src/main/resources/textures/orangOutline.png")
         );
 
         objects.add(testObject);
@@ -232,7 +233,6 @@ public class AppWindow {
                 object.setUniform(new Uniform<>("ambient", lightSource.getLightData().getAmbient()));
                 object.setUniform(new Uniform<>("specular", lightSource.getLightData().getSpecular()));
 
-
                 object.render();
             }
 
@@ -248,8 +248,6 @@ public class AppWindow {
                 ImGui.renderPlatformWindowsDefault();
                 GLFW.glfwMakeContextCurrent(backupWindowID);
             }
-
-
 
             // swap the buffers and poll for events
             GLFW.glfwSwapBuffers(windowID);
