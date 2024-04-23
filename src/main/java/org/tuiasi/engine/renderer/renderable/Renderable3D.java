@@ -35,7 +35,7 @@ public class Renderable3D implements IRenderable{
     IntBuffer indicesBuffer;
 
     // texture data
-    Texture texture;
+    Texture[] textures;
     boolean hasTexture;
 
     // material data
@@ -50,7 +50,7 @@ public class Renderable3D implements IRenderable{
     // draw mode
     DrawMode drawMode = DrawMode.FILLED;
 
-    public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Texture texture, Material material){
+    public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Texture[] texture, Material material){
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
         verticesBuffer = byteBuffer.asFloatBuffer();
         verticesBuffer.put(vertices);
@@ -63,8 +63,8 @@ public class Renderable3D implements IRenderable{
 
         this.shaderProgram = shaderProgram;
 
-        this.texture = texture;
-        if(texture != null && !texture.getPathToTexture().isEmpty())
+        this.textures = texture;
+        if(texture != null && !texture[0].getPathToTexture().isEmpty())
             hasTexture = true;
 
         this.material = material;
@@ -128,9 +128,8 @@ public class Renderable3D implements IRenderable{
         transform.setRotation(rotation);
     }
 
-    public void setTexture(Texture texture){
-        this.texture = texture;
-        hasTexture = (texture != null);
+    public void setTexture(Texture texture, int textureIndex){
+        this.textures[textureIndex] = texture;
     }
 
     private void setModelViewMatrix(){
@@ -169,9 +168,13 @@ public class Renderable3D implements IRenderable{
         setMaterialUniforms();
 
         setUniform(new Uniform<>("hasTexture", hasTexture));
-        System.out.println(hasTexture);
 
-        texture.use();
+        for(int i = 0; i < textures.length; i++){
+            if(textures[i] != null) {
+                textures[i].use();
+                shaderProgram.setUniform(new Uniform<>("tex" + i, textures[i].getTextureIndex()));
+            }
+        }
 
         glBindVertexArray(VAO);
 

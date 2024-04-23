@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL14.GL_MIRRORED_REPEAT;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 import static org.lwjgl.stb.STBImage.stbi_image_free;
@@ -19,7 +19,7 @@ public class Texture implements ITexture {
     private IntBuffer width, height, nrChannels;
     private String pathToTexture, format;
     private ByteBuffer image;
-    private int textureID;
+    private int textureID, textureIndex;
 
     public Texture(){
         this.pathToTexture = "";
@@ -30,7 +30,7 @@ public class Texture implements ITexture {
         this.textureID = glGenTextures();
     }
 
-    public Texture(String pathToTexture){
+    public Texture(String pathToTexture, int textureIndex){
         this.pathToTexture = pathToTexture;
         this.format = pathToTexture.split("\\.")[1];
 
@@ -38,6 +38,8 @@ public class Texture implements ITexture {
         height = BufferUtils.createIntBuffer(1);
         nrChannels = BufferUtils.createIntBuffer(1);
 
+        this.textureIndex = textureIndex;
+        glActiveTexture(GL_TEXTURE0 + textureIndex);
         textureID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureID);
 
@@ -60,6 +62,7 @@ public class Texture implements ITexture {
 
     public void use(){
         if(!pathToTexture.isEmpty()) {
+            glActiveTexture(GL_TEXTURE0 + textureIndex);
             glBindTexture(GL_TEXTURE_2D, textureID);
 //            System.out.println("Using texture " + textureID + " at path: " + pathToTexture);
         }

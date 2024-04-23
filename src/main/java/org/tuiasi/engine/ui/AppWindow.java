@@ -97,16 +97,16 @@ public class AppWindow {
 
         testObject = new Renderable3D(
                 new float[]{
-                        -0.5f, 0.5f, 0.5f,    1.0f, 1.0f, 1.0f,    0.0f, 0.66f,    -0.5f, 0.5f, 0.5f, // Top left
-                        0.5f, 0.5f, 0.5f,     1.0f, 1.0f, 1.0f,    0.25f, 0.66f,    0.5f, 0.5f, 0.5f, // Top right
-                        -0.5f, -0.5f, 0.5f,   1.0f, 1.0f, 1.0f,    0.0f, 0.33f,    -0.5f, -0.5f, 0.5f, // Bottom left
-                        0.5f, -0.5f, 0.5f,    1.0f, 1.0f, 1.0f,    0.25f, 0.33f,    0.5f, -0.5f, 0.5f, // Bottom right
+                        -0.5f, 0.5f, 0.5f,    1.0f, 1.0f, 1.0f,    1.0f, 0.0f,    -0.5f, 0.5f, 0.5f, // Top left
+                        0.5f, 0.5f, 0.5f,     1.0f, 1.0f, 1.0f,    1.0f, 1.0f,    0.5f, 0.5f, 0.5f, // Top right
+                        -0.5f, -0.5f, 0.5f,   1.0f, 1.0f, 1.0f,    0.0f, 0.0f,    -0.5f, -0.5f, 0.5f, // Bottom left
+                        0.5f, -0.5f, 0.5f,    1.0f, 1.0f, 1.0f,    0.0f, 1.0f,    0.5f, -0.5f, 0.5f, // Bottom right
 
                         // Back face
-                        -0.5f, 0.5f, -0.5f,   1.0f, 1.0f, 1.0f,    0.0f, 0.0f,    -0.5f, 0.5f, -0.5f, // Top left
-                        0.5f, 0.5f, -0.5f,    1.0f, 1.0f, 1.0f,    1.0f, 0.0f,    0.5f, 0.5f, -0.5f, // Top right
-                        -0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,    0.0f, 1.0f,    -0.5f, -0.5f, -0.5f, // Bottom left
-                        0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,    1.0f, 1.0f,    0.5f, -0.5f, -0.5f, // Bottom right
+                        -0.5f, 0.5f, -0.5f,   1.0f, 1.0f, 1.0f,    1.0f, 0.0f,    -0.5f, 0.5f, -0.5f, // Top left
+                        0.5f, 0.5f, -0.5f,    1.0f, 1.0f, 1.0f,    1.0f, 1.0f,    0.5f, 0.5f, -0.5f, // Top right
+                        -0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,    0.0f, 0.0f,    -0.5f, -0.5f, -0.5f, // Bottom left
+                        0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,    0.0f, 1.0f,    0.5f, -0.5f, -0.5f, // Bottom right
                 },
                 new int[]{
                         // Front face
@@ -129,7 +129,9 @@ public class AppWindow {
                         2, 6, 4
                 },
                 new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Texture("src/main/resources/textures/test_texture.jpg"),
+                new Texture[]{  new Texture("src/main/resources/textures/test_texture.jpg", 0),
+                                new Texture("src/main/resources/textures/orangOutline.png", 1)
+                },
                 new Material(   new Vector3f(0.24725f, 	0.1995f, 	0.0745f),
                                 new Vector3f(0.75164f, 	0.60648f, 	0.22648f),
                                 new Vector3f(0.628281f, 	0.555802f, 	0.366065f),
@@ -154,13 +156,13 @@ public class AppWindow {
                         4, 5
                 },
                 new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Texture(),
+                new Texture[]{new Texture()},
                 new Material()
         );
         axisObject.setDrawMode(DrawMode.WIREFRAME);
 
         objects.add(testObject);
-        objects.add(axisObject);
+//        objects.add(axisObject);
 
         testObject.setUniform(new Uniform<>("lightPos", lightSource.getTransform().getPosition()));
 

@@ -6,7 +6,9 @@ in vec3 normal;
 in vec2 texCoord;
 in vec3 pos;
 
-uniform sampler2D tex;
+uniform sampler2D tex0;
+uniform sampler2D tex1;
+
 uniform bool hasTexture;
 
 uniform vec3 lightPos;
@@ -53,11 +55,8 @@ void main()
                           lightAmbient, lightDiffuse, lightSpecular,
                           materialAmbient, materialDiffuse, materialSpecular, materialShininess);
 
-//    fragColor = vec4(color, 1.0);
-//    fragColor = texture(tex, texCoord);
-
     if(hasTexture)
-        fragColor = texture(tex, texCoord) * vec4(color, 1.0);
+        fragColor = mix(texture(tex0, texCoord), texture(tex1, texCoord), 0.2) * vec4(color, 1.0);
     else
         fragColor = vec4(color, 1.0);
 }
