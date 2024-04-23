@@ -29,6 +29,7 @@ import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.light.LightData;
 import org.tuiasi.engine.renderer.light.LightSource;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
+import org.tuiasi.engine.renderer.shader.DrawMode;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
 import org.tuiasi.engine.renderer.shader.Uniform;
@@ -47,8 +48,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 @NoArgsConstructor
 public class AppWindow {
 
-    // TODO: FIX THE SHADERS!!!!!!
-
     private int width, height;
     private boolean resized;
     private String title;
@@ -66,7 +65,7 @@ public class AppWindow {
     public static ImFont appFont;
 
     List<Renderable3D> objects;
-    Renderable3D testObject, testObject2;
+    Renderable3D testObject, axisObject;
     LightSource lightSource;
 
     public AppWindow(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
@@ -96,10 +95,10 @@ public class AppWindow {
 
         testObject = new Renderable3D(
                 new float[]{
-                        -0.5f, 0.5f, 0.5f,    1.0f, 0.1f, 0.3f,    0.0f, 0.0f,    -0.5f, 0.5f, 0.5f, // Top left
-                        0.5f, 0.5f, 0.5f,     1.0f, 0.3f, 0.3f,    1.0f, 0.0f,    0.5f, 0.5f, 0.5f, // Top right
-                        -0.5f, -0.5f, 0.5f,   1.0f, 0.3f, 0.3f,    0.0f, 1.0f,    -0.5f, -0.5f, 0.5f, // Bottom left
-                        0.5f, -0.5f, 0.5f,    1.0f, 0.3f, 0.3f,    1.0f, 1.0f,    0.5f, -0.5f, 0.5f, // Bottom right
+                        -0.5f, 0.5f, 0.5f,    1.0f, 0.1f, 0.3f,    0.0f, 0.66f,    -0.5f, 0.5f, 0.5f, // Top left
+                        0.5f, 0.5f, 0.5f,     1.0f, 0.3f, 0.3f,    0.25f, 0.66f,    0.5f, 0.5f, 0.5f, // Top right
+                        -0.5f, -0.5f, 0.5f,   1.0f, 0.3f, 0.3f,    0.0f, 0.33f,    -0.5f, -0.5f, 0.5f, // Bottom left
+                        0.5f, -0.5f, 0.5f,    1.0f, 0.3f, 0.3f,    0.25f, 0.33f,    0.5f, -0.5f, 0.5f, // Bottom right
 
                         // Back face
                         -0.5f, 0.5f, -0.5f,   1.0f, 0.3f, 0.3f,    0.0f, 0.0f,    -0.5f, 0.5f, -0.5f, // Top left
@@ -128,10 +127,33 @@ public class AppWindow {
                         2, 6, 4
                 },
                 new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Texture("src/main/resources/textures/orangOutline.png")
+                new Texture("src/main/resources/textures/test_texture.jpg")
         );
 
+        // axis object that is used to draw the x, y and z axis with different colors
+        axisObject = new Renderable3D(
+                new float[]{
+                        -100.0f, 0.0f, 0.0f, 1, 0, 0, 0, 0, 0, 0, 0,
+                        100.0f, 0.0f, 0.0f, 1, 0, 0, 0, 0, 0, 0, 0,
+
+                        0.0f, -100.0f, 0.0f, 0, 1, 0, 0, 0, 0, 0, 0,
+                        0.0f, 100.0f, 0.0f, 0, 1, 0, 0, 0, 0, 0, 0,
+
+                        0.0f, 0.0f, -100.0f, 0, 0, 1, 0, 0, 0, 0, 0,
+                        0.0f, 0.0f, 100.0f, 0, 0, 1, 0, 0, 0, 0, 0,
+                },
+                new int[]{
+                        0, 1,
+                        2, 3,
+                        4, 5
+                },
+                new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
+                new Texture()
+        );
+        axisObject.setDrawMode(DrawMode.WIREFRAME);
+
         objects.add(testObject);
+        objects.add(axisObject);
 
         testObject.setUniform(new Uniform<>("lightPos", lightSource.getTransform().getPosition()));
 
@@ -205,7 +227,9 @@ public class AppWindow {
 
     }
 
+
     public void run() {
+
         while (!glfwWindowShouldClose(windowID)) {
             // clear the previous frame
             GL11.glClearColor(0.1f, 0.09f, 0.1f, 1.0f);
@@ -224,7 +248,6 @@ public class AppWindow {
             // render the objects
 
             for(Renderable3D object : objects) {
-                object.getShaderProgram().use();
                 object.setUniform(new Uniform<>("lightPos", lightSource.getTransform().getPosition()));
                 object.setUniform(new Uniform<>("viewPos", MainCamera.getInstance().getPosition()));
 

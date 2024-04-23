@@ -24,4 +24,5 @@ void main()
     vertColor = aColor;
     pos = aPos;
 
+    texCoord = aTexCoord;
 }

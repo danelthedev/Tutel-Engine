@@ -44,6 +44,7 @@ void main()
 
     vec3 color = lighting(vertColor, pos, normal, lightPos, viewPos, ambient, lightColor, specular, specPower);
 
-    fragColor = vec4(color, 1.0);
+//    fragColor = vec4(color, 1.0);
 //    fragColor = texture(tex, texCoord);
+    fragColor = texture(tex, texCoord) * vec4(color, 1.0);
 }

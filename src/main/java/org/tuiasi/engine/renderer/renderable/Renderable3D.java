@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.renderer.camera.MainCamera;
+import org.tuiasi.engine.renderer.shader.DrawMode;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
 import org.tuiasi.engine.renderer.shader.Uniform;
@@ -41,6 +42,9 @@ public class Renderable3D implements IRenderable{
 
     // position and rotation
     Spatial3D transform;
+
+    // draw mode
+    DrawMode drawMode = DrawMode.FILLED;
 
     public Renderable3D(float[] vertices, int[] indices){
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
@@ -260,6 +264,8 @@ public class Renderable3D implements IRenderable{
 
     @Override
     public void render() {
+        shaderProgram.use();
+
         MainCamera camera = MainCamera.getInstance();
 
         Matrix4f projectionMatrix = new Matrix4f();
@@ -276,16 +282,18 @@ public class Renderable3D implements IRenderable{
 
         Matrix4f viewMatrix = camera.getViewMatrix();
 
-//        setUniform(new Uniform<>("hasTexture", hasTexture));
-
         setUniform(new Uniform<>("modelViewProjectionMatrix", projectionMatrix.mul(viewMatrix).mul(modelMatrix)));
         setUniform(new Uniform<>("normalMatrix", modelMatrix.invert().transpose()));
 
-        texture.use();
         shaderProgram.use();
+        texture.use();
 
         glBindVertexArray(VAO);
-        GL20.glDrawElements(GL11.GL_TRIANGLES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
+
+        if(drawMode == DrawMode.FILLED)
+            GL20.glDrawElements(GL11.GL_TRIANGLES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
+        else
+            GL20.glDrawElements(GL11.GL_LINES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
     }
 
 }
