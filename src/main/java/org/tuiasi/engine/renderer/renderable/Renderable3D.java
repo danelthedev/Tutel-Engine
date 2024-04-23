@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.renderer.camera.MainCamera;
+import org.tuiasi.engine.renderer.material.Material;
 import org.tuiasi.engine.renderer.shader.DrawMode;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
@@ -37,6 +38,9 @@ public class Renderable3D implements IRenderable{
     Texture texture;
     boolean hasTexture;
 
+    // material data
+    Material material;
+
     // shader data
     ShaderProgram shaderProgram;
 
@@ -46,104 +50,7 @@ public class Renderable3D implements IRenderable{
     // draw mode
     DrawMode drawMode = DrawMode.FILLED;
 
-    public Renderable3D(float[] vertices, int[] indices){
-        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
-        verticesBuffer = byteBuffer.asFloatBuffer();
-        verticesBuffer.put(vertices);
-        verticesBuffer.flip();
-
-        ByteBuffer indicesByteBuffer = BufferUtils.createByteBuffer(indices.length * Integer.BYTES);
-        indicesBuffer = indicesByteBuffer.asIntBuffer();
-        indicesBuffer.put(indices);
-        indicesBuffer.flip();
-
-        shaderProgram = new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
-                            new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER));
-
-        texture = new Texture();
-        hasTexture = false;
-
-        initVertBuf();
-
-        transform = new Spatial3D();
-    }
-
-    public Renderable3D(List<Vector3f> vertices, List<Integer> indices){
-        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.size() * 3 * Float.BYTES);
-        verticesBuffer = byteBuffer.asFloatBuffer();
-        for(Vector3f vertex : vertices){
-            verticesBuffer.put(vertex.x);
-            verticesBuffer.put(vertex.y);
-            verticesBuffer.put(vertex.z);
-        }
-        verticesBuffer.flip();
-
-        ByteBuffer indicesByteBuffer = BufferUtils.createByteBuffer(indices.size() * Integer.BYTES);
-        indicesBuffer = indicesByteBuffer.asIntBuffer();
-        for(Integer index : indices){
-            indicesBuffer.put(index);
-        }
-        indicesBuffer.flip();
-
-        shaderProgram = new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
-                new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER));
-
-        texture = new Texture();
-        hasTexture = false;
-
-        initVertBuf();
-
-        transform = new Spatial3D();
-    }
-
-    public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram){
-        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
-        verticesBuffer = byteBuffer.asFloatBuffer();
-        verticesBuffer.put(vertices);
-        verticesBuffer.flip();
-
-        ByteBuffer indicesByteBuffer = BufferUtils.createByteBuffer(indices.length * Integer.BYTES);
-        indicesBuffer = indicesByteBuffer.asIntBuffer();
-        indicesBuffer.put(indices);
-        indicesBuffer.flip();
-
-        this.shaderProgram = shaderProgram;
-
-        texture = new Texture();
-        hasTexture = false;
-
-        initVertBuf();
-
-        transform = new Spatial3D();
-    }
-
-    public Renderable3D(List<Vector3f> vertices, List<Integer> indices, ShaderProgram shaderProgram){
-        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.size() * 3 * Float.BYTES);
-        verticesBuffer = byteBuffer.asFloatBuffer();
-        for(Vector3f vertex : vertices){
-            verticesBuffer.put(vertex.x);
-            verticesBuffer.put(vertex.y);
-            verticesBuffer.put(vertex.z);
-        }
-        verticesBuffer.flip();
-
-        ByteBuffer indicesByteBuffer = BufferUtils.createByteBuffer(indices.size() * Integer.BYTES);
-        indicesBuffer = indicesByteBuffer.asIntBuffer();
-        for(Integer index : indices){
-            indicesBuffer.put(index);
-        }
-        indicesBuffer.flip();
-
-        this.shaderProgram = shaderProgram;
-
-        texture = new Texture();
-
-        initVertBuf();
-
-        transform = new Spatial3D();
-    }
-
-    public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Texture texture){
+    public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Texture texture, Material material){
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
         verticesBuffer = byteBuffer.asFloatBuffer();
         verticesBuffer.put(vertices);
@@ -157,46 +64,10 @@ public class Renderable3D implements IRenderable{
         this.shaderProgram = shaderProgram;
 
         this.texture = texture;
-        hasTexture = true;
+        if(texture != null && !texture.getPathToTexture().isEmpty())
+            hasTexture = true;
 
-        initVertBuf();
-
-        transform = new Spatial3D();
-    }
-
-    public Renderable3D(List<Vector3f> vertices, List<Integer> indices, ShaderProgram shaderProgram, Texture texture){
-        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.size() * 3 * Float.BYTES);
-        verticesBuffer = byteBuffer.asFloatBuffer();
-        for(Vector3f vertex : vertices){
-            verticesBuffer.put(vertex.x);
-            verticesBuffer.put(vertex.y);
-            verticesBuffer.put(vertex.z);
-        }
-        verticesBuffer.flip();
-
-        ByteBuffer indicesByteBuffer = BufferUtils.createByteBuffer(indices.size() * Integer.BYTES);
-        indicesBuffer = indicesByteBuffer.asIntBuffer();
-        for(Integer index : indices){
-            indicesBuffer.put(index);
-        }
-        indicesBuffer.flip();
-
-        this.shaderProgram = shaderProgram;
-
-        this.texture = texture;
-        hasTexture = true;
-
-        initVertBuf();
-
-        transform = new Spatial3D();
-    }
-
-    public Renderable3D(Renderable3D renderable3D){
-        this.verticesBuffer = renderable3D.verticesBuffer;
-        this.indicesBuffer = renderable3D.indicesBuffer;
-        this.shaderProgram = renderable3D.shaderProgram;
-        this.texture = renderable3D.texture;
-        this.hasTexture = renderable3D.hasTexture;
+        this.material = material;
 
         initVertBuf();
 
@@ -262,10 +133,7 @@ public class Renderable3D implements IRenderable{
         hasTexture = (texture != null);
     }
 
-    @Override
-    public void render() {
-        shaderProgram.use();
-
+    private void setModelViewMatrix(){
         MainCamera camera = MainCamera.getInstance();
 
         Matrix4f projectionMatrix = new Matrix4f();
@@ -284,8 +152,25 @@ public class Renderable3D implements IRenderable{
 
         setUniform(new Uniform<>("modelViewProjectionMatrix", projectionMatrix.mul(viewMatrix).mul(modelMatrix)));
         setUniform(new Uniform<>("normalMatrix", modelMatrix.invert().transpose()));
+    }
 
+    private void setMaterialUniforms(){
+        setUniform(new Uniform<>("materialAmbient", material.getAmbient()));
+        setUniform(new Uniform<>("materialDiffuse", material.getDiffuse()));
+        setUniform(new Uniform<>("materialSpecular", material.getSpecular()));
+        setUniform(new Uniform<>("materialShininess", material.getShininess()));
+    }
+
+    @Override
+    public void render() {
         shaderProgram.use();
+
+        setModelViewMatrix();
+        setMaterialUniforms();
+
+        setUniform(new Uniform<>("hasTexture", hasTexture));
+        System.out.println(hasTexture);
+
         texture.use();
 
         glBindVertexArray(VAO);

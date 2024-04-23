@@ -20,9 +20,7 @@ void main()
     gl_Position = modelViewProjectionMatrix * vec4(aPos, 1.0);
 
     normal = vec3(normalMatrix * vec4(aNormal, 1));
-
     vertColor = aColor;
     pos = aPos;
-
     texCoord = aTexCoord;
 }

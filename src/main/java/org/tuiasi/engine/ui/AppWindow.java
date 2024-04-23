@@ -28,6 +28,7 @@ import org.tuiasi.engine.renderer.camera.Camera;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.light.LightData;
 import org.tuiasi.engine.renderer.light.LightSource;
+import org.tuiasi.engine.renderer.material.Material;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
 import org.tuiasi.engine.renderer.shader.DrawMode;
 import org.tuiasi.engine.renderer.shader.Shader;
@@ -65,7 +66,7 @@ public class AppWindow {
     public static ImFont appFont;
 
     List<Renderable3D> objects;
-    Renderable3D testObject, axisObject;
+    Renderable3D testObject, testObject2, axisObject;
     LightSource lightSource;
 
     public AppWindow(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
@@ -88,23 +89,24 @@ public class AppWindow {
         lightSource = new LightSource(  new Spatial3D(  new Vector3f(10, 0, 2),
                                                         new Vector3f(0, 0, 0),
                                                         new Vector3f(1, 1, 1)),
-                                        new LightData(   .2f, .9f),
-                                        new Vector3f(1.0f, 1.0f, 1.0f));
+                                        new LightData(  new Vector3f(.2f, .2f, .2f),
+                                                        new Vector3f(1.0f, 1.0f, 1.0f),
+                                                        new Vector3f(1.0f, 1.0f, 1.0f)));
 
         objects = new ArrayList<>();
 
         testObject = new Renderable3D(
                 new float[]{
-                        -0.5f, 0.5f, 0.5f,    1.0f, 0.1f, 0.3f,    0.0f, 0.66f,    -0.5f, 0.5f, 0.5f, // Top left
-                        0.5f, 0.5f, 0.5f,     1.0f, 0.3f, 0.3f,    0.25f, 0.66f,    0.5f, 0.5f, 0.5f, // Top right
-                        -0.5f, -0.5f, 0.5f,   1.0f, 0.3f, 0.3f,    0.0f, 0.33f,    -0.5f, -0.5f, 0.5f, // Bottom left
-                        0.5f, -0.5f, 0.5f,    1.0f, 0.3f, 0.3f,    0.25f, 0.33f,    0.5f, -0.5f, 0.5f, // Bottom right
+                        -0.5f, 0.5f, 0.5f,    1.0f, 1.0f, 1.0f,    0.0f, 0.66f,    -0.5f, 0.5f, 0.5f, // Top left
+                        0.5f, 0.5f, 0.5f,     1.0f, 1.0f, 1.0f,    0.25f, 0.66f,    0.5f, 0.5f, 0.5f, // Top right
+                        -0.5f, -0.5f, 0.5f,   1.0f, 1.0f, 1.0f,    0.0f, 0.33f,    -0.5f, -0.5f, 0.5f, // Bottom left
+                        0.5f, -0.5f, 0.5f,    1.0f, 1.0f, 1.0f,    0.25f, 0.33f,    0.5f, -0.5f, 0.5f, // Bottom right
 
                         // Back face
-                        -0.5f, 0.5f, -0.5f,   1.0f, 0.3f, 0.3f,    0.0f, 0.0f,    -0.5f, 0.5f, -0.5f, // Top left
-                        0.5f, 0.5f, -0.5f,    1.0f, 0.3f, 0.3f,    1.0f, 0.0f,    0.5f, 0.5f, -0.5f, // Top right
-                        -0.5f, -0.5f, -0.5f,  1.0f, 0.3f, 0.3f,    0.0f, 1.0f,    -0.5f, -0.5f, -0.5f, // Bottom left
-                        0.5f, -0.5f, -0.5f,   1.0f, 0.3f, 0.3f,    1.0f, 1.0f,    0.5f, -0.5f, -0.5f, // Bottom right
+                        -0.5f, 0.5f, -0.5f,   1.0f, 1.0f, 1.0f,    0.0f, 0.0f,    -0.5f, 0.5f, -0.5f, // Top left
+                        0.5f, 0.5f, -0.5f,    1.0f, 1.0f, 1.0f,    1.0f, 0.0f,    0.5f, 0.5f, -0.5f, // Top right
+                        -0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,    0.0f, 1.0f,    -0.5f, -0.5f, -0.5f, // Bottom left
+                        0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,    1.0f, 1.0f,    0.5f, -0.5f, -0.5f, // Bottom right
                 },
                 new int[]{
                         // Front face
@@ -127,7 +129,11 @@ public class AppWindow {
                         2, 6, 4
                 },
                 new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Texture("src/main/resources/textures/test_texture.jpg")
+                new Texture("src/main/resources/textures/test_texture.jpg"),
+                new Material(   new Vector3f(0.24725f, 	0.1995f, 	0.0745f),
+                                new Vector3f(0.75164f, 	0.60648f, 	0.22648f),
+                                new Vector3f(0.628281f, 	0.555802f, 	0.366065f),
+                                0.6f)
         );
 
         // axis object that is used to draw the x, y and z axis with different colors
@@ -148,7 +154,8 @@ public class AppWindow {
                         4, 5
                 },
                 new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Texture()
+                new Texture(),
+                new Material()
         );
         axisObject.setDrawMode(DrawMode.WIREFRAME);
 
@@ -252,9 +259,9 @@ public class AppWindow {
                 object.setUniform(new Uniform<>("viewPos", MainCamera.getInstance().getPosition()));
 
                 // only one light source for now, so sending it to all
-                object.setUniform(new Uniform<>("lightColor", lightSource.getColor()));
-                object.setUniform(new Uniform<>("ambient", lightSource.getLightData().getAmbient()));
-                object.setUniform(new Uniform<>("specular", lightSource.getLightData().getSpecular()));
+                object.setUniform(new Uniform<>("lightAmbient", lightSource.getLightData().getAmbient()));
+                object.setUniform(new Uniform<>("lightDiffuse", lightSource.getLightData().getDiffuse()));
+                object.setUniform(new Uniform<>("lightSpecular", lightSource.getLightData().getSpecular()));
 
                 object.render();
             }

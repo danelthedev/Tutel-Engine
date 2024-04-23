@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 
 @Data @AllArgsConstructor
 public class LightData {
-    private float ambient;
-    private float specular;
+    private Vector3f ambient;
+    private Vector3f diffuse;
+    private Vector3f specular;
 }

@@ -10,12 +10,10 @@ public class LightSource {
     private Spatial3D transform;
     private LightData lightData;
 
-    private Vector3f color;
 
-    public LightSource(Spatial3D transform, LightData lightData, Vector3f color){
+    public LightSource(Spatial3D transform, LightData lightData){
         this.transform = transform;
         this.lightData = lightData;
-        this.color = color;
     }
 
 }
