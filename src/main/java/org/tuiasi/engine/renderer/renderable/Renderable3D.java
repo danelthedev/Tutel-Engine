@@ -48,6 +48,10 @@ public class Renderable3D implements IRenderable{
     // draw mode
     DrawMode drawMode = DrawMode.FILLED;
 
+    public Renderable3D(){
+
+    }
+
     public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Texture[] texture, Material material){
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
         verticesBuffer = byteBuffer.asFloatBuffer();
@@ -73,6 +77,21 @@ public class Renderable3D implements IRenderable{
 
         if(!material.equals(new Material()))
             setMaterialUniforms();
+    }
+
+    // function that copies all fields from one renderable to another
+    public void copy(Renderable3D renderable){
+        this.VAO = renderable.getVAO();
+        this.VBO = renderable.getVBO();
+        this.EBO = renderable.getEBO();
+        this.verticesBuffer = renderable.getVerticesBuffer();
+        this.indicesBuffer = renderable.getIndicesBuffer();
+        this.textures = renderable.getTextures();
+        this.hasTexture = renderable.isHasTexture();
+        this.material = renderable.getMaterial();
+        this.shaderProgram = renderable.getShaderProgram();
+        this.transform = renderable.getTransform();
+        this.drawMode = renderable.getDrawMode();
     }
 
     public void initVertBuf(){

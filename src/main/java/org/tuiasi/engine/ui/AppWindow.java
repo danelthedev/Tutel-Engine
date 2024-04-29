@@ -92,77 +92,85 @@ public class AppWindow {
 
         objects = new ArrayList<>();
 
-        testObject = new Renderable3D(
-                new float[]{
-                        -0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-                        0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
-                        0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-                        0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-                        -0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
-                        -0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+        for(int i = 0; i < 10; i++) {
+            testObject = new Renderable3D(
+                    new float[]{
+                            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+                            0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f,
+                            0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
+                            0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
+                            -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,
+                            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
 
-                        -0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
-                        0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
-                        0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-                        0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-                        -0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
-                        -0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+                            -0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+                            0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+                            0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+                            0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+                            -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+                            -0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 
-                        -0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-                        -0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-                        -0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-                        -0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-                        -0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-                        -0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+                            -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+                            -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+                            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+                            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+                            -0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                            -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 
-                        0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-                        0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-                        0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-                        0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-                        0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-                        0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+                            0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+                            0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+                            0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+                            0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+                            0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                            0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 
-                        -0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-                        0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
-                        0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-                        0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-                        -0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
-                        -0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+                            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
+                            0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+                            0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+                            0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+                            -0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+                            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
 
-                        -0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-                        0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
-                        0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-                        0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-                        -0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
-                        -0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  1.0f,  0.0f,  0.0f, 1.0f
-                },
-                new int[]{
-                        // Front face
-                        0, 1, 2,
-                        3, 4, 5,
-                        // Back face
-                        6, 7, 8,
-                        9, 10, 11,
-                        // Top face
-                        12, 13, 14,
-                        15, 16, 17,
-                        // Bottom face
-                        18, 19, 20,
-                        21, 22, 23,
-                        // Right face
-                        24, 25, 26,
-                        27, 28, 29,
-                        // Left face
-                        30, 31, 32,
-                        33, 34, 35
-                },
-                new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Texture[]{  new Texture("src/main/resources/textures/container2.png", 0)
-                },
-                new Material(   new Texture("src/main/resources/textures/container2.png", 1),
-                                new Texture("src/main/resources/textures/container2_specular.png", 2),
-                        16f)
-        );
+                            -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+                            0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+                            0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+                            0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+                            -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+                            -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
+                    },
+                    new int[]{
+                            // Front face
+                            0, 1, 2,
+                            3, 4, 5,
+                            // Back face
+                            6, 7, 8,
+                            9, 10, 11,
+                            // Top face
+                            12, 13, 14,
+                            15, 16, 17,
+                            // Bottom face
+                            18, 19, 20,
+                            21, 22, 23,
+                            // Right face
+                            24, 25, 26,
+                            27, 28, 29,
+                            // Left face
+                            30, 31, 32,
+                            33, 34, 35
+                    },
+                    new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
+                    new Texture[]{new Texture("src/main/resources/textures/container2.png", 0)
+                    },
+                    new Material(new Texture("src/main/resources/textures/container2.png", 1),
+                            new Texture("src/main/resources/textures/container2_specular.png", 2),
+                            16f)
+            );
+
+            testObject.setPosition(new Vector3f((float)Math.random() * 10 - 5, (float)Math.random() * 10 - 5, (float)Math.random() * 10 - 5));
+            testObject.setRotation(new Vector3f((float)Math.random() * 360, (float)Math.random() * 360, (float)Math.random() * 360));
+
+            objects.add(testObject);
+        }
+
 
         // axis object that is used to draw the x, y and z axis with different colors
         axisObject = new Renderable3D(
@@ -187,7 +195,6 @@ public class AppWindow {
         );
         axisObject.setDrawMode(DrawMode.WIREFRAME);
 
-        objects.add(testObject);
         objects.add(axisObject);
 
         testObject.setUniform(new Uniform<>("lightPos", lightSource.getTransform().getPosition()));
@@ -281,7 +288,6 @@ public class AppWindow {
             MainCamera.update();
 
             // render the objects
-            testObject.rotate(new Vector3f(0, 0.01f, 0));
 
             for(Renderable3D object : objects) {
                 object.setUniform(new Uniform<>("lightPos", lightSource.getTransform().getPosition()));
