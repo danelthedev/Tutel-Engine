@@ -27,6 +27,8 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
+// TODO: Switch individual sampler2D uniforms to a single array of samplers
+
 @Data
 public class Renderable3D implements IRenderable{
     // mesh data
@@ -72,6 +74,9 @@ public class Renderable3D implements IRenderable{
         initVertBuf();
 
         transform = new Spatial3D();
+
+        if(!material.equals(new Material()))
+            setMaterialUniforms();
     }
 
     public void initVertBuf(){
@@ -99,13 +104,14 @@ public class Renderable3D implements IRenderable{
         GL20.glVertexAttribPointer(1, 3, GL_FLOAT, false, 11 * Float.BYTES, 3 * Float.BYTES);
         GL20.glEnableVertexAttribArray(1);
 
-        // texture attribute
-        GL20.glVertexAttribPointer(2, 2, GL_FLOAT, false, 11 * Float.BYTES, 6 * Float.BYTES);
+        // normal attribute
+        GL20.glVertexAttribPointer(2, 3, GL_FLOAT, false, 11 * Float.BYTES, 6 * Float.BYTES);
         GL20.glEnableVertexAttribArray(2);
 
-        // normal attribute
-        GL20.glVertexAttribPointer(3, 3, GL_FLOAT, false, 11 * Float.BYTES, 8 * Float.BYTES);
+        // texture attribute
+        GL20.glVertexAttribPointer(3, 2, GL_FLOAT, false, 11 * Float.BYTES, 9 * Float.BYTES);
         GL20.glEnableVertexAttribArray(3);
+
     }
 
     public void setUniform(Uniform<?> value){
@@ -151,12 +157,16 @@ public class Renderable3D implements IRenderable{
 
         setUniform(new Uniform<>("modelViewProjectionMatrix", projectionMatrix.mul(viewMatrix).mul(modelMatrix)));
         setUniform(new Uniform<>("normalMatrix", modelMatrix.invert().transpose()));
+        System.out.println(modelMatrix.invert().transpose());
     }
 
     private void setMaterialUniforms(){
-        setUniform(new Uniform<>("materialAmbient", material.getAmbient()));
-        setUniform(new Uniform<>("materialDiffuse", material.getDiffuse()));
-        setUniform(new Uniform<>("materialSpecular", material.getSpecular()));
+        material.getDiffuse().use();
+        shaderProgram.setUniform(new Uniform<>("diffuseMap", material.getDiffuse().getTextureIndex()));
+
+        material.getSpecular().use();
+        shaderProgram.setUniform(new Uniform<>("specularMap", material.getSpecular().getTextureIndex()));
+
         setUniform(new Uniform<>("materialShininess", material.getShininess()));
     }
 
@@ -165,16 +175,6 @@ public class Renderable3D implements IRenderable{
         shaderProgram.use();
 
         setModelViewMatrix();
-        setMaterialUniforms();
-
-        setUniform(new Uniform<>("hasTexture", hasTexture));
-
-        for(int i = 0; i < textures.length; i++){
-            if(textures[i] != null) {
-                textures[i].use();
-                shaderProgram.setUniform(new Uniform<>("tex" + i, textures[i].getTextureIndex()));
-            }
-        }
 
         glBindVertexArray(VAO);
 

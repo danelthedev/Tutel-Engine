@@ -66,7 +66,7 @@ public class AppWindow {
     public static ImFont appFont;
 
     List<Renderable3D> objects;
-    Renderable3D testObject, testObject2, axisObject;
+    Renderable3D testObject, axisObject;
     LightSource lightSource;
 
     public AppWindow(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
@@ -86,7 +86,7 @@ public class AppWindow {
         imGuiGl3.init(glslVersion);
 
 
-        lightSource = new LightSource(  new Spatial3D(  new Vector3f(10, 0, 2),
+        lightSource = new LightSource(  new Spatial3D(  new Vector3f(10, 10, 10),
                                                         new Vector3f(0, 0, 0),
                                                         new Vector3f(1, 1, 1)),
                                         new LightData(  new Vector3f(.2f, .2f, .2f),
@@ -97,45 +97,74 @@ public class AppWindow {
 
         testObject = new Renderable3D(
                 new float[]{
-                        -0.5f, 0.5f, 0.5f,    1.0f, 1.0f, 1.0f,    1.0f, 0.0f,    -0.5f, 0.5f, 0.5f, // Top left
-                        0.5f, 0.5f, 0.5f,     1.0f, 1.0f, 1.0f,    1.0f, 1.0f,    0.5f, 0.5f, 0.5f, // Top right
-                        -0.5f, -0.5f, 0.5f,   1.0f, 1.0f, 1.0f,    0.0f, 0.0f,    -0.5f, -0.5f, 0.5f, // Bottom left
-                        0.5f, -0.5f, 0.5f,    1.0f, 1.0f, 1.0f,    0.0f, 1.0f,    0.5f, -0.5f, 0.5f, // Bottom right
+                        -0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+                        0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+                        0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+                        0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+                        -0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+                        -0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
 
-                        // Back face
-                        -0.5f, 0.5f, -0.5f,   1.0f, 1.0f, 1.0f,    1.0f, 0.0f,    -0.5f, 0.5f, -0.5f, // Top left
-                        0.5f, 0.5f, -0.5f,    1.0f, 1.0f, 1.0f,    1.0f, 1.0f,    0.5f, 0.5f, -0.5f, // Top right
-                        -0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,    0.0f, 0.0f,    -0.5f, -0.5f, -0.5f, // Bottom left
-                        0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,    0.0f, 1.0f,    0.5f, -0.5f, -0.5f, // Bottom right
+                        -0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+                        0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
+                        0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+                        0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+                        -0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
+                        -0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+
+                        -0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+                        -0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+                        -0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+                        -0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+                        -0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+                        -0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+
+                        0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+                        0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+                        0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+                        0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+                        0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+                        0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+
+                        -0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+                        0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+                        0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+                        0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+                        -0.5f, -0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+                        -0.5f, -0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+
+                        -0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+                        0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+                        0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+                        0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+                        -0.5f,  0.5f,  0.5f,    1.0f, 1.0f,1.0f,         0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+                        -0.5f,  0.5f, -0.5f,    1.0f, 1.0f,1.0f,         0.0f,  1.0f,  0.0f,  0.0f, 1.0f
                 },
                 new int[]{
                         // Front face
                         0, 1, 2,
-                        1, 3, 2,
+                        3, 4, 5,
                         // Back face
-                        4, 6, 5,
-                        5, 6, 7,
+                        6, 7, 8,
+                        9, 10, 11,
                         // Top face
-                        0, 4, 1,
-                        1, 4, 5,
+                        12, 13, 14,
+                        15, 16, 17,
                         // Bottom face
-                        2, 3, 6,
-                        3, 7, 6,
+                        18, 19, 20,
+                        21, 22, 23,
                         // Right face
-                        1, 5, 3,
-                        3, 5, 7,
+                        24, 25, 26,
+                        27, 28, 29,
                         // Left face
-                        0, 2, 4,
-                        2, 6, 4
+                        30, 31, 32,
+                        33, 34, 35
                 },
                 new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Texture[]{  new Texture("src/main/resources/textures/test_texture.jpg", 0),
-                                new Texture("src/main/resources/textures/orangOutline.png", 1)
+                new Texture[]{  new Texture("src/main/resources/textures/container2.png", 0)
                 },
-                new Material(   new Vector3f(0.24725f, 	0.1995f, 	0.0745f),
-                                new Vector3f(0.75164f, 	0.60648f, 	0.22648f),
-                                new Vector3f(0.628281f, 	0.555802f, 	0.366065f),
-                                0.6f)
+                new Material(   new Texture("src/main/resources/textures/container2.png", 1),
+                                new Texture("src/main/resources/textures/container2_specular.png", 2),
+                        16f)
         );
 
         // axis object that is used to draw the x, y and z axis with different colors
@@ -162,7 +191,7 @@ public class AppWindow {
         axisObject.setDrawMode(DrawMode.WIREFRAME);
 
         objects.add(testObject);
-//        objects.add(axisObject);
+        objects.add(axisObject);
 
         testObject.setUniform(new Uniform<>("lightPos", lightSource.getTransform().getPosition()));
 
@@ -255,6 +284,7 @@ public class AppWindow {
             MainCamera.update();
 
             // render the objects
+            testObject.rotate(new Vector3f(0, 0.01f, 0));
 
             for(Renderable3D object : objects) {
                 object.setUniform(new Uniform<>("lightPos", lightSource.getTransform().getPosition()));
