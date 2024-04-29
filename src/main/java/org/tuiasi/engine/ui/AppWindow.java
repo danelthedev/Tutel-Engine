@@ -1,10 +1,12 @@
 package org.tuiasi.engine.ui;
 
-import imgui.*;
+import imgui.ImFont;
+import imgui.ImFontConfig;
+import imgui.ImGui;
+import imgui.ImGuiIO;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,17 +16,12 @@ import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-
-import static java.lang.Math.*;
-import static org.lwjgl.opengl.GL11.*;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.global.IO.KeyboardHandler;
 import org.tuiasi.engine.global.IO.MouseHandler;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
-import org.tuiasi.engine.renderer.camera.Camera;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.light.LightData;
 import org.tuiasi.engine.renderer.light.LightSource;
@@ -40,9 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
+import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Getter @Setter

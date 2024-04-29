@@ -1,10 +1,7 @@
 package org.tuiasi.engine.ui.uiWindows.prefabs;
 
 import imgui.ImVec2;
-import imgui.flag.ImGuiInputTextFlags;
-import org.tuiasi.engine.ui.components.basicComponents.list.ListWithTitle;
 import org.tuiasi.engine.ui.components.basicComponents.list.SimpleList;
-import org.tuiasi.engine.ui.components.basicComponents.textbox.Textbox;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 
 import java.util.List;

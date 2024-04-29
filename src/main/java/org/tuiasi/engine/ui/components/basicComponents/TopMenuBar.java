@@ -2,7 +2,6 @@ package org.tuiasi.engine.ui.components.basicComponents;
 
 import imgui.flag.ImGuiStyleVar;
 import imgui.internal.ImGui;
-import lombok.Getter;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.ui.components.IComponent;
 

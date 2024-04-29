@@ -1,11 +1,7 @@
 package org.tuiasi.engine.renderer.shader;
 
-import lombok.*;
+import lombok.Data;
 import org.joml.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.lwjgl.opengl.GL20.*;
 

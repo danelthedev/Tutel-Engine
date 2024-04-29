@@ -1,6 +1,7 @@
 package org.tuiasi.engine.ui.components.basicComponents.textbox;
 
-import imgui.*;
+import imgui.ImGui;
+import imgui.ImGuiInputTextCallbackData;
 import imgui.callback.ImGuiInputTextCallback;
 import imgui.flag.ImGuiInputTextFlags;
 import imgui.type.ImString;

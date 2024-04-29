@@ -7,7 +7,7 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback;
 public class MouseHandler implements IInputHandler{
 
     private static long window;
-    private static boolean[] buttons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
+    private static final boolean[] buttons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
     private static double xpos, ypos, lastX, lastY, xoffset, yoffset, scroll;
 
     private static final double RESET_THRESHOLD = 0.001; // Adjust as needed

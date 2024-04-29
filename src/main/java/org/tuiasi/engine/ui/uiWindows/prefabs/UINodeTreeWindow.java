@@ -1,7 +1,6 @@
 package org.tuiasi.engine.ui.uiWindows.prefabs;
 
 import imgui.ImVec2;
-import org.tuiasi.engine.ui.components.basicComponents.textbox.Textbox;
 import org.tuiasi.engine.ui.components.basicComponents.tree.TreeNode;
 import org.tuiasi.engine.ui.components.composedComponents.TreeWithTitleAndSearchBar;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;

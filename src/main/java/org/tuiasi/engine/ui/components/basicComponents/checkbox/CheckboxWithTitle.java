@@ -1,7 +1,6 @@
 package org.tuiasi.engine.ui.components.basicComponents.checkbox;
 
 import imgui.ImGui;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

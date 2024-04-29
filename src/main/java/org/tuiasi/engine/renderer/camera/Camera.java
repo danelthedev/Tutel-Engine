@@ -4,7 +4,6 @@ import lombok.Data;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.lwjgl.system.MemoryStack;
 import org.tuiasi.engine.misc.MathMisc;
 
 import static java.lang.Math.*;

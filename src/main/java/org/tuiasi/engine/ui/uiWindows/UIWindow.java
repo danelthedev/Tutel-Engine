@@ -1,24 +1,18 @@
 package org.tuiasi.engine.ui.uiWindows;
 
 //import imgui.ImGui;
-import imgui.ImFont;
-import imgui.ImGuiStyle;
+
+import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;
-import imgui.ImVec2;
-import imgui.internal.ImGuiDockNode;
 import imgui.internal.flag.ImGuiDockNodeFlags;
 import imgui.type.ImInt;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.ui.components.IComponent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Getter @Setter

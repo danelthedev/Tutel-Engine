@@ -1,7 +1,9 @@
 package org.tuiasi.engine.ui.components.basicComponents.tree;
 
 import imgui.ImGui;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Setter @Getter @RequiredArgsConstructor
 public class TreeWithTitle extends Tree{

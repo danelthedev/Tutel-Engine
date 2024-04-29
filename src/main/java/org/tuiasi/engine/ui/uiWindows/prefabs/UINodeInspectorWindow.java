@@ -4,7 +4,6 @@ import imgui.ImVec2;
 import org.tuiasi.engine.ui.components.basicComponents.button.Button;
 import org.tuiasi.engine.ui.components.basicComponents.checkbox.CheckboxWithTitle;
 import org.tuiasi.engine.ui.components.basicComponents.searchbar.SearchbarWithHint;
-import org.tuiasi.engine.ui.components.basicComponents.textbox.Textbox;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 
 public class UINodeInspectorWindow extends UIWindow {

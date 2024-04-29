@@ -1,7 +1,6 @@
 package org.tuiasi.engine.ui.components.basicComponents.tree;
 
 import imgui.ImGui;
-import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiTreeNodeFlags;

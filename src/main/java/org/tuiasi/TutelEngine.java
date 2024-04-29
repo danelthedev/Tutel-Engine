@@ -1,13 +1,12 @@
 package org.tuiasi;
 
 import org.joml.Vector4f;
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFW;
 import org.tuiasi.engine.ui.AppWindow;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 
 public class TutelEngine {
 

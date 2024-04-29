@@ -1,6 +1,5 @@
 package org.tuiasi.engine.global.nodes.spatial;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.joml.Vector3f;
 

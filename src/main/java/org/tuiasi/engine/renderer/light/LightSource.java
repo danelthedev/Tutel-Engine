@@ -1,7 +1,6 @@
 package org.tuiasi.engine.renderer.light;
 
 import lombok.Data;
-import org.joml.Vector3f;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 
 @Data

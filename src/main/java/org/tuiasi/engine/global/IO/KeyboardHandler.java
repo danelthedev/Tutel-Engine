@@ -4,13 +4,11 @@ import lombok.Getter;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
-import static org.lwjgl.glfw.GLFW.glfwGetKey;
-
 public class KeyboardHandler implements IInputHandler{
 
     private static long window;
     @Getter
-    private static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
+    private static final boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
 
     private KeyboardHandler() {
         // Private constructor to prevent instantiation

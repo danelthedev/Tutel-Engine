@@ -1,11 +1,10 @@
 package org.tuiasi.engine.ui;
 
-import imgui.*;
+import imgui.ImVec2;
 import imgui.flag.ImGuiDir;
 import lombok.Getter;
 import lombok.Setter;
 import org.tuiasi.engine.ui.components.basicComponents.TopMenuBar;
-import org.tuiasi.engine.ui.components.basicComponents.textbox.Textbox;
 import org.tuiasi.engine.ui.uiWindows.IUIWindow;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 import org.tuiasi.engine.ui.uiWindows.prefabs.UIFilesWindow;
