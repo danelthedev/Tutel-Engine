@@ -15,6 +15,8 @@ uniform mat4 normalMatrix;
 
 uniform mat4 modelMatrix;
 
+uniform vec3 globalPosition;
+
 out vec3 FragPos;
 
 void main()
@@ -23,6 +25,6 @@ void main()
 
     normal = vec3(normalMatrix * vec4(aNormal, 1));
     vertColor = aColor;
-    pos = aPos;
+    pos = aPos + globalPosition;
     texCoord = aTexCoord;
 }

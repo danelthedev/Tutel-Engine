@@ -55,7 +55,7 @@ public class MainCamera extends Camera {
         // Get the camera's front vector
         Vector3f cameraFront = instance.getCameraFront();
 
-        float speed = 0.001f; // Adjust as needed
+        float speed = 0.003f; // Adjust as needed
         if (KeyboardHandler.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT))
             speed *= 2;
 

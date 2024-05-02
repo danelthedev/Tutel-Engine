@@ -1,10 +1,19 @@
 package org.tuiasi.engine.renderer.light;
 
+import lombok.*;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 
+@Getter @Setter
 public class PointLight extends LightSource{
 
-    public PointLight(Spatial3D transform, LightData lightData) {
+    private float constant, linear, quadratic;
+
+    public PointLight(Spatial3D transform, LightData lightData, float constant, float linear, float quadratic) {
         super(transform, lightData);
+        setType(3);
+
+        this.constant = constant;
+        this.linear = linear;
+        this.quadratic = quadratic;
     }
 }

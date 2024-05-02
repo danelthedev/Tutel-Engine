@@ -50,7 +50,11 @@ public class Texture implements ITexture {
         }
 
         if (image != null) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+            // check if the image has an alpha channel
+            if (nrChannels.get(0) == 4)
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+            else if (nrChannels.get(0) == 3)
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, image);
             glGenerateMipmap(GL_TEXTURE_2D);
         }
         else{

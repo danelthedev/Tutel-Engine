@@ -49,7 +49,6 @@ public class Renderable3D implements IRenderable{
     DrawMode drawMode = DrawMode.FILLED;
 
     public Renderable3D(){
-
     }
 
     public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Texture[] texture, Material material){
@@ -149,6 +148,14 @@ public class Renderable3D implements IRenderable{
         transform.setRotation(rotation);
     }
 
+    public void scale(Vector3f scale){
+        transform.scale(scale);
+    }
+
+    public void setScale(Vector3f scale){
+        transform.setScale(scale);
+    }
+
     public void setTexture(Texture texture, int textureIndex){
         this.textures[textureIndex] = texture;
     }
@@ -172,15 +179,19 @@ public class Renderable3D implements IRenderable{
 
         setUniform(new Uniform<>("modelViewProjectionMatrix", projectionMatrix.mul(viewMatrix).mul(modelMatrix)));
         setUniform(new Uniform<>("normalMatrix", modelMatrix.invert().transpose()));
-        System.out.println(modelMatrix.invert().transpose());
+        setUniform(new Uniform<>("globalPosition", transform.getPosition()));
     }
 
     private void setMaterialUniforms(){
-        material.getDiffuse().use();
-        shaderProgram.setUniform(new Uniform<>("diffuseMap", material.getDiffuse().getTextureIndex()));
+        if(material.getDiffuse() != null) {
+            material.getDiffuse().use();
+            shaderProgram.setUniform(new Uniform<>("diffuseMap", material.getDiffuse().getTextureIndex()));
+        }
 
-        material.getSpecular().use();
-        shaderProgram.setUniform(new Uniform<>("specularMap", material.getSpecular().getTextureIndex()));
+        if(material.getSpecular() != null) {
+            material.getSpecular().use();
+            shaderProgram.setUniform(new Uniform<>("specularMap", material.getSpecular().getTextureIndex()));
+        }
 
         setUniform(new Uniform<>("materialShininess", material.getShininess()));
     }
@@ -190,8 +201,11 @@ public class Renderable3D implements IRenderable{
         shaderProgram.use();
 
         setModelViewMatrix();
+        setMaterialUniforms();
 
         glBindVertexArray(VAO);
+
+
 
         if(drawMode == DrawMode.FILLED)
             GL20.glDrawElements(GL11.GL_TRIANGLES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);

@@ -23,9 +23,11 @@ import org.tuiasi.engine.global.IO.MouseHandler;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.renderer.camera.MainCamera;
-import org.tuiasi.engine.renderer.light.LightData;
-import org.tuiasi.engine.renderer.light.LightSource;
+import org.tuiasi.engine.renderer.light.*;
 import org.tuiasi.engine.renderer.material.Material;
+import org.tuiasi.engine.renderer.primitives.Axes;
+import org.tuiasi.engine.renderer.primitives.Cube;
+import org.tuiasi.engine.renderer.primitives.Plane;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
 import org.tuiasi.engine.renderer.shader.DrawMode;
 import org.tuiasi.engine.renderer.shader.Shader;
@@ -33,6 +35,7 @@ import org.tuiasi.engine.renderer.shader.ShaderProgram;
 import org.tuiasi.engine.renderer.shader.Uniform;
 import org.tuiasi.engine.renderer.texture.Texture;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +66,7 @@ public class AppWindow {
     public static ImFont appFont;
 
     List<Renderable3D> objects;
-    Renderable3D testObject, axisObject;
+    Renderable3D testObject, plane, axisObject;
     LightSource lightSource;
 
     public AppWindow(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
@@ -83,80 +86,34 @@ public class AppWindow {
         imGuiGl3.init(glslVersion);
 
 
-        lightSource = new LightSource(  new Spatial3D(  new Vector3f(10, 10, 10),
-                                                        new Vector3f(0, 0, 0),
-                                                        new Vector3f(1, 1, 1)),
-                                        new LightData(  new Vector3f(.2f, .2f, .2f),
-                                                        new Vector3f(1.0f, 1.0f, 1.0f),
-                                                        new Vector3f(1.0f, 1.0f, 1.0f)));
+        lightSource = new PointLight(           new Spatial3D(  new Vector3f(10, 10, 10),
+                                                                new Vector3f(-0.5f, -0.8f, -0.3f),
+                                                                new Vector3f(1, 1, 1)),
+                                                new LightData(  new Vector3f(.2f, .2f, .2f),
+                                                                new Vector3f(1.0f, 1.0f, 1.0f),
+                                                                new Vector3f(1.0f, 1.0f, 1.0f)),
+                                        1.0f, 0.027f, 0.0028f
+        );
+        lightSource.getTransform().setRotation(lightSource.getTransform().getRotation());
 
         objects = new ArrayList<>();
 
-        for(int i = 0; i < 10; i++) {
+        plane = new Renderable3D(
+                Plane.vertexData,
+                Plane.indexData,
+                new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
+                new Texture[]{new Texture("src/main/resources/textures/colors.png", 0)},
+                new Material(new Texture("src/main/resources/textures/colors.png", 1),
+                        new Texture("src/main/resources/textures/colors.png", 2),
+                        .7f)
+        );
+
+        objects.add(plane);
+
+        for(int i = 0; i < 5; i++) {
             testObject = new Renderable3D(
-                    new float[]{
-                            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-                            0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f,
-                            0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
-                            0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
-                            -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,
-                            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-
-                            -0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-                            0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-                            0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-                            0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-                            -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-                            -0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-
-                            -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-                            -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-                            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-                            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-                            -0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                            -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-
-                            0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-                            0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-                            0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-                            0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-                            0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                            0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-
-                            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
-                            0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-                            0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-                            0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-                            -0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-                            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
-
-                            -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-                            0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-                            0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-                            0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-                            -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-                            -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
-                    },
-                    new int[]{
-                            // Front face
-                            0, 1, 2,
-                            3, 4, 5,
-                            // Back face
-                            6, 7, 8,
-                            9, 10, 11,
-                            // Top face
-                            12, 13, 14,
-                            15, 16, 17,
-                            // Bottom face
-                            18, 19, 20,
-                            21, 22, 23,
-                            // Right face
-                            24, 25, 26,
-                            27, 28, 29,
-                            // Left face
-                            30, 31, 32,
-                            33, 34, 35
-                    },
+                    Cube.vertexData,
+                    Cube.indexData,
                     new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
                     new Texture[]{new Texture("src/main/resources/textures/container2.png", 0)
                     },
@@ -164,9 +121,11 @@ public class AppWindow {
                             new Texture("src/main/resources/textures/container2_specular.png", 2),
                             16f)
             );
+            System.out.println(testObject.getShaderProgram().getFragmentShader().getShaderID());
 
-            testObject.setPosition(new Vector3f((float)Math.random() * 10 - 5, (float)Math.random() * 10 - 5, (float)Math.random() * 10 - 5));
-            testObject.setRotation(new Vector3f((float)Math.random() * 360, (float)Math.random() * 360, (float)Math.random() * 360));
+            testObject.setPosition(new Vector3f((float)Math.random() * 25 - 12.5f, 1 + (float)Math.random() * 10, (float)Math.random() * 25 - 12.5f));
+//            testObject.setRotation(new Vector3f((float)Math.random() * 360, (float)Math.random() * 360, (float)Math.random() * 360));
+            testObject.setScale(new Vector3f(3f, 3f, 3f));
 
             objects.add(testObject);
         }
@@ -174,21 +133,8 @@ public class AppWindow {
 
         // axis object that is used to draw the x, y and z axis with different colors
         axisObject = new Renderable3D(
-                new float[]{
-                        -100.0f, 0.0f, 0.0f, 1, 0, 0, 0, 0, 0, 0, 0,
-                        100.0f, 0.0f, 0.0f, 1, 0, 0, 0, 0, 0, 0, 0,
-
-                        0.0f, -100.0f, 0.0f, 0, 1, 0, 0, 0, 0, 0, 0,
-                        0.0f, 100.0f, 0.0f, 0, 1, 0, 0, 0, 0, 0, 0,
-
-                        0.0f, 0.0f, -100.0f, 0, 0, 1, 0, 0, 0, 0, 0,
-                        0.0f, 0.0f, 100.0f, 0, 0, 1, 0, 0, 0, 0, 0,
-                },
-                new int[]{
-                        0, 1,
-                        2, 3,
-                        4, 5
-                },
+                Axes.vertexData,
+                Axes.indexData,
                 new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
                 new Texture[]{new Texture()},
                 new Material()
@@ -196,8 +142,6 @@ public class AppWindow {
         axisObject.setDrawMode(DrawMode.WIREFRAME);
 
         objects.add(axisObject);
-
-        testObject.setUniform(new Uniform<>("lightPos", lightSource.getTransform().getPosition()));
 
         windowVariables = WindowVariables.getInstance();
     }
@@ -289,14 +233,29 @@ public class AppWindow {
 
             // render the objects
 
+            lightSource.render();
             for(Renderable3D object : objects) {
-                object.setUniform(new Uniform<>("lightPos", lightSource.getTransform().getPosition()));
+//                object.rotate(new Vector3f(0f, 0.01f, 0f));
+
                 object.setUniform(new Uniform<>("viewPos", MainCamera.getInstance().getPosition()));
 
                 // only one light source for now, so sending it to all
-                object.setUniform(new Uniform<>("lightAmbient", lightSource.getLightData().getAmbient()));
-                object.setUniform(new Uniform<>("lightDiffuse", lightSource.getLightData().getDiffuse()));
-                object.setUniform(new Uniform<>("lightSpecular", lightSource.getLightData().getSpecular()));
+
+                object.setUniform(new Uniform<>("light.type", lightSource.getType()));
+                object.setUniform(new Uniform<>("light.position", lightSource.getTransform().getPosition()));
+                object.setUniform(new Uniform<>("light.direction", lightSource.getTransform().getRotation()));
+                object.setUniform(new Uniform<>("light.ambient", lightSource.getLightData().getAmbient()));
+                object.setUniform(new Uniform<>("light.diffuse", lightSource.getLightData().getDiffuse()));
+                object.setUniform(new Uniform<>("light.specular", lightSource.getLightData().getSpecular()));
+                float cst=0f, lin=0f, quad=0f;
+                if(lightSource.getType() == 3) {
+                    cst = ((PointLight) lightSource).getConstant();
+                    lin = ((PointLight) lightSource).getLinear();
+                    quad = ((PointLight) lightSource).getQuadratic();
+                }
+                object.setUniform(new Uniform<>("light.constant", cst));
+                object.setUniform(new Uniform<>("light.linear", lin));
+                object.setUniform(new Uniform<>("light.quadratic", quad));
 
                 object.render();
             }

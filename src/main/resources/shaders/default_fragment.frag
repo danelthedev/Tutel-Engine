@@ -6,12 +6,24 @@ in vec3 normal;
 in vec2 texCoord;
 in vec3 pos;
 
-uniform vec3 lightPos;
 uniform vec3 viewPos;
 
-uniform vec3 lightAmbient;
-uniform vec3 lightDiffuse;
-uniform vec3 lightSpecular;
+struct lightData
+{
+    int type;
+
+    vec3 position;
+    vec3 direction;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
+};
+
+uniform lightData light;
 
 uniform sampler2D diffuseMap;
 uniform sampler2D specularMap;
@@ -21,8 +33,13 @@ vec3 lighting(vec3 objectColor, vec3 pos, vec3 normal, vec3 lightPos, vec3 viewP
               vec3 lightAmbient, vec3 lightDiffuse, vec3 lightSpecular,
               sampler2D materialDiffuse, sampler2D materialSpecular, float specPower)
 {
-    // position related variables
-    vec3 L = normalize(lightPos - pos);
+    // Calculate the light direction (if the light is a directional light)
+    vec3 L;
+    if(light.type != 1)
+        L = normalize(lightPos - pos);
+    else
+        L = normalize(-light.direction);
+
     vec3 V = normalize(viewPos - pos);
     vec3 N = normalize(normal);
     vec3 R = normalize(reflect(-L, N));
@@ -38,6 +55,16 @@ vec3 lighting(vec3 objectColor, vec3 pos, vec3 normal, vec3 lightPos, vec3 viewP
     vec3 ambientColor = lightAmbient * vec3(texture(materialDiffuse, texCoord));
     vec3 diffuseColor = lightDiffuse * (diffCoef * vec3(texture(materialDiffuse, texCoord))) * dot(L,N);
     vec3 specularColor = lightSpecular * (specCoef * vec3(texture(materialSpecular, texCoord)));
+
+    // Calculate point light attenuation
+    if(light.type == 3){
+        float distance = length(lightPos - pos);
+        float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+        ambientColor *= attenuation;
+        diffuseColor *= attenuation;
+        specularColor *= attenuation;
+    }
+
     vec3 col = ( ambientColor + diffuseColor + specularColor) * objectColor;
 
 
@@ -47,8 +74,8 @@ vec3 lighting(vec3 objectColor, vec3 pos, vec3 normal, vec3 lightPos, vec3 viewP
 
 void main()
 {
-    vec3 color = lighting(vertColor, pos, normal, lightPos, viewPos,
-                          lightAmbient, lightDiffuse, lightSpecular,
+    vec3 color = lighting(vertColor, pos, normal, light.position, viewPos,
+                          light.ambient, light.diffuse, light.specular,
                           diffuseMap, specularMap, materialShininess);
 
     fragColor = vec4(color, 1.0);
