@@ -8,6 +8,5 @@ public class DirectionalLight extends LightSource{
 
     public DirectionalLight(Spatial3D transform, LightData lightData) {
         super(transform, lightData);
-        setType(1);
     }
 }

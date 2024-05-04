@@ -10,7 +10,6 @@ public class PointLight extends LightSource{
 
     public PointLight(Spatial3D transform, LightData lightData, float constant, float linear, float quadratic) {
         super(transform, lightData);
-        setType(3);
 
         this.constant = constant;
         this.linear = linear;

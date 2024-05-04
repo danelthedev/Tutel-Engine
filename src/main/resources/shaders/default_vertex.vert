@@ -10,22 +10,17 @@ out vec2 texCoord;
 out vec3 pos;
 out vec3 normal;
 
-uniform mat4 modelViewProjectionMatrix;
-uniform mat4 normalMatrix;
-
-uniform mat4 modelMatrix;
-
-uniform vec3 globalPosition;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 out vec3 FragPos;
 
 void main()
 {
-    gl_Position = modelViewProjectionMatrix * vec4(aPos, 1.0);
-
-    normal = vec3(normalMatrix * vec4(aNormal, 1));
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    normal = vec3(transpose(inverse(model)) * vec4(aNormal, 1));
+    pos = vec3(model * vec4(aPos, 1.0));
     vertColor = aColor;
-    pos = aPos + globalPosition;
-//    pos = gl_Position.xyz;
     texCoord = aTexCoord;
 }

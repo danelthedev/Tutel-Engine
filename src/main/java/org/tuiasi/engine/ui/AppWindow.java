@@ -10,7 +10,6 @@ import imgui.glfw.ImGuiImplGlfw;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
@@ -21,28 +20,16 @@ import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.global.IO.KeyboardHandler;
 import org.tuiasi.engine.global.IO.MouseHandler;
 import org.tuiasi.engine.global.WindowVariables;
-import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.camera.MainCamera;
-import org.tuiasi.engine.renderer.light.*;
-import org.tuiasi.engine.renderer.material.Material;
-import org.tuiasi.engine.renderer.primitives.Axes;
-import org.tuiasi.engine.renderer.primitives.Cube;
-import org.tuiasi.engine.renderer.primitives.Plane;
+import org.tuiasi.engine.renderer.light.DirectionalLight;
+import org.tuiasi.engine.renderer.light.PointLight;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
-import org.tuiasi.engine.renderer.shader.DrawMode;
-import org.tuiasi.engine.renderer.shader.Shader;
-import org.tuiasi.engine.renderer.shader.ShaderProgram;
-import org.tuiasi.engine.renderer.shader.Uniform;
-import org.tuiasi.engine.renderer.texture.Texture;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Getter @Setter
@@ -65,10 +52,7 @@ public class AppWindow {
 
     public static ImFont appFont;
 
-    List<Renderable3D> objects;
-    Renderable3D testObject, plane, axisObject;
-    DirectionalLight directionalLight;
-    PointLight[] pointLights;
+    Renderer renderer;
 
     public AppWindow(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
         //Init class variables
@@ -86,76 +70,8 @@ public class AppWindow {
         imGuiGlfw.init(windowID, true);
         imGuiGl3.init(glslVersion);
 
-
-        directionalLight = new DirectionalLight(                new Spatial3D(  new Vector3f(10, 10, 10),
-                                                                new Vector3f(-0.2f, -1f, .4f),
-                                                                new Vector3f(1, 1, 1)),
-                            new LightData(                      new Vector3f(.2f, .2f, .2f),
-                                                                new Vector3f(1.0f, 1.0f, 1.0f),
-                                                                new Vector3f(1.0f, 1.0f, 1.0f))
-//                ,1.0f, 0.045f, 0.0075f
-        );
-        pointLights = new PointLight[3];
-        for(int i = 1; i < 3; i++) {
-            pointLights[i] = new PointLight(new Spatial3D(new Vector3f(-15 + i * 10, 3, 0),
-                                                            new Vector3f(-0.5f, -0.8f, -0.3f),
-                                                            new Vector3f(1, 1, 1)),
-                                            new LightData(new Vector3f(.2f, .2f, .2f),
-                                                            new Vector3f(1.0f, 1.0f, 1.0f),
-                                                            new Vector3f(1.0f, 1.0f, 1.0f)),
-                                            1.0f, 0.045f, 0.0075f
-            );
-        }
-
-
-        objects = new ArrayList<>();
-
-        plane = new Renderable3D(
-                Plane.vertexData,
-                Plane.indexData,
-                new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Texture[]{new Texture("src/main/resources/textures/orangOutline.png", 0)},
-                new Material(new Texture("src/main/resources/textures/orangOutline.png", 1),
-                        new Texture("src/main/resources/textures/orangOutline.png", 2),
-                        .7f)
-        );
-
-        objects.add(plane);
-
-        for(int i = 0; i < 5; i++) {
-            testObject = new Renderable3D(
-                    Cube.vertexData,
-                    Cube.indexData,
-                    new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                    new Texture[]{new Texture("src/main/resources/textures/container2.png", 0)
-                    },
-                    new Material(new Texture("src/main/resources/textures/container2.png", 1),
-                            new Texture("src/main/resources/textures/container2_specular.png", 2),
-                            16f)
-            );
-            System.out.println(testObject.getShaderProgram().getFragmentShader().getShaderID());
-
-            testObject.setPosition(new Vector3f((float)Math.random() * 25 - 12.5f, 1 + (float)Math.random() * 10, (float)Math.random() * 25 - 12.5f));
-//            testObject.setRotation(new Vector3f((float)Math.random() * 360, (float)Math.random() * 360, (float)Math.random() * 360));
-            testObject.setScale(new Vector3f(3f, 3f, 3f));
-
-            objects.add(testObject);
-        }
-
-
-        // axis object that is used to draw the x, y and z axis with different colors
-        axisObject = new Renderable3D(
-                Axes.vertexData,
-                Axes.indexData,
-                new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Texture[]{new Texture()},
-                new Material()
-        );
-        axisObject.setDrawMode(DrawMode.WIREFRAME);
-
-        objects.add(axisObject);
-
         windowVariables = WindowVariables.getInstance();
+        renderer = new Renderer();
     }
 
     public void destroy() {
@@ -243,42 +159,8 @@ public class AppWindow {
             // update the camera
             MainCamera.update();
 
-            // render the objects
-            for(PointLight pointLight : pointLights){
-                if(pointLight != null)
-                    pointLight.render();
-            }
+            renderer.render();
 
-            for(Renderable3D object : objects) {
-//                object.rotate(new Vector3f(0f, 0.01f, 0f));
-                object.setScale(new Vector3f(3f, 3f, 3f));
-
-                object.setUniform(new Uniform<>("viewPos", MainCamera.getInstance().getPosition()));
-
-                // only one light source for now, so sending it to all
-                object.setUniform(new Uniform<>("directionalLight.type", directionalLight.getType()));
-                object.setUniform(new Uniform<>("directionalLight.position", directionalLight.getTransform().getPosition()));
-                object.setUniform(new Uniform<>("directionalLight.direction", directionalLight.getTransform().getRotation()));
-                object.setUniform(new Uniform<>("directionalLight.ambient", directionalLight.getLightData().getAmbient()));
-                object.setUniform(new Uniform<>("directionalLight.diffuse", directionalLight.getLightData().getDiffuse()));
-                object.setUniform(new Uniform<>("directionalLight.specular", directionalLight.getLightData().getSpecular()));
-
-                for(int i = 1; i < 3; ++ i){
-                    object.setUniform(new Uniform<>("pointLights[" + i + "].position", pointLights[i].getTransform().getPosition()));
-                    object.setUniform(new Uniform<>("pointLights[" + i + "].constant", pointLights[i].getConstant()));
-                    object.setUniform(new Uniform<>("pointLights[" + i + "].linear", pointLights[i].getLinear()));
-                    object.setUniform(new Uniform<>("pointLights[" + i + "].quadratic", pointLights[i].getQuadratic()));
-                    object.setUniform(new Uniform<>("pointLights[" + i + "].ambient", pointLights[i].getLightData().getAmbient()));
-                    object.setUniform(new Uniform<>("pointLights[" + i + "].diffuse", pointLights[i].getLightData().getDiffuse()));
-                    object.setUniform(new Uniform<>("pointLights[" + i + "].specular", pointLights[i].getLightData().getSpecular()));
-                }
-
-
-                object.render();
-            }
-
-            // render the UI
-            defaultEngineEditorUI.renderUI();
             ImGui.render();
             imGuiGl3.renderDrawData(ImGui.getDrawData());
 

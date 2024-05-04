@@ -51,7 +51,7 @@ public class Renderable3D implements IRenderable{
     public Renderable3D(){
     }
 
-    public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Texture[] texture, Material material){
+    public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Texture[] texture, Material material, Spatial3D transform){
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
         verticesBuffer = byteBuffer.asFloatBuffer();
         verticesBuffer.put(vertices);
@@ -72,7 +72,7 @@ public class Renderable3D implements IRenderable{
 
         initVertBuf();
 
-        transform = new Spatial3D();
+        this.transform = transform;
 
         if(!material.equals(new Material()))
             setMaterialUniforms();
@@ -177,9 +177,9 @@ public class Renderable3D implements IRenderable{
 
         Matrix4f viewMatrix = camera.getViewMatrix();
 
-        setUniform(new Uniform<>("modelViewProjectionMatrix", projectionMatrix.mul(viewMatrix).mul(modelMatrix)));
-        setUniform(new Uniform<>("normalMatrix", modelMatrix.invert().transpose()));
-        setUniform(new Uniform<>("globalPosition", transform.getPosition()));
+        setUniform(new Uniform<>("model", modelMatrix));
+        setUniform(new Uniform<>("view", viewMatrix));
+        setUniform(new Uniform<>("projection", projectionMatrix));
     }
 
     private void setMaterialUniforms(){
@@ -204,8 +204,6 @@ public class Renderable3D implements IRenderable{
         setMaterialUniforms();
 
         glBindVertexArray(VAO);
-
-
 
         if(drawMode == DrawMode.FILLED)
             GL20.glDrawElements(GL11.GL_TRIANGLES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
