@@ -67,7 +67,8 @@ public class AppWindow {
 
     List<Renderable3D> objects;
     Renderable3D testObject, plane, axisObject;
-    LightSource lightSource;
+    DirectionalLight directionalLight;
+    PointLight[] pointLights;
 
     public AppWindow(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
         //Init class variables
@@ -86,15 +87,26 @@ public class AppWindow {
         imGuiGl3.init(glslVersion);
 
 
-        lightSource = new PointLight(           new Spatial3D(  new Vector3f(10, 10, 10),
-                                                                new Vector3f(-0.5f, -0.8f, -0.3f),
+        directionalLight = new DirectionalLight(                new Spatial3D(  new Vector3f(10, 10, 10),
+                                                                new Vector3f(-0.2f, -1f, .4f),
                                                                 new Vector3f(1, 1, 1)),
-                                                new LightData(  new Vector3f(.2f, .2f, .2f),
+                            new LightData(                      new Vector3f(.2f, .2f, .2f),
                                                                 new Vector3f(1.0f, 1.0f, 1.0f),
-                                                                new Vector3f(1.0f, 1.0f, 1.0f)),
-                                        1.0f, 0.027f, 0.0028f
+                                                                new Vector3f(1.0f, 1.0f, 1.0f))
+//                ,1.0f, 0.045f, 0.0075f
         );
-        lightSource.getTransform().setRotation(lightSource.getTransform().getRotation());
+        pointLights = new PointLight[3];
+        for(int i = 1; i < 3; i++) {
+            pointLights[i] = new PointLight(new Spatial3D(new Vector3f(-15 + i * 10, 3, 0),
+                                                            new Vector3f(-0.5f, -0.8f, -0.3f),
+                                                            new Vector3f(1, 1, 1)),
+                                            new LightData(new Vector3f(.2f, .2f, .2f),
+                                                            new Vector3f(1.0f, 1.0f, 1.0f),
+                                                            new Vector3f(1.0f, 1.0f, 1.0f)),
+                                            1.0f, 0.045f, 0.0075f
+            );
+        }
+
 
         objects = new ArrayList<>();
 
@@ -102,9 +114,9 @@ public class AppWindow {
                 Plane.vertexData,
                 Plane.indexData,
                 new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Texture[]{new Texture("src/main/resources/textures/colors.png", 0)},
-                new Material(new Texture("src/main/resources/textures/colors.png", 1),
-                        new Texture("src/main/resources/textures/colors.png", 2),
+                new Texture[]{new Texture("src/main/resources/textures/orangOutline.png", 0)},
+                new Material(new Texture("src/main/resources/textures/orangOutline.png", 1),
+                        new Texture("src/main/resources/textures/orangOutline.png", 2),
                         .7f)
         );
 
@@ -232,30 +244,35 @@ public class AppWindow {
             MainCamera.update();
 
             // render the objects
+            for(PointLight pointLight : pointLights){
+                if(pointLight != null)
+                    pointLight.render();
+            }
 
-            lightSource.render();
             for(Renderable3D object : objects) {
 //                object.rotate(new Vector3f(0f, 0.01f, 0f));
+                object.setScale(new Vector3f(3f, 3f, 3f));
 
                 object.setUniform(new Uniform<>("viewPos", MainCamera.getInstance().getPosition()));
 
                 // only one light source for now, so sending it to all
+                object.setUniform(new Uniform<>("directionalLight.type", directionalLight.getType()));
+                object.setUniform(new Uniform<>("directionalLight.position", directionalLight.getTransform().getPosition()));
+                object.setUniform(new Uniform<>("directionalLight.direction", directionalLight.getTransform().getRotation()));
+                object.setUniform(new Uniform<>("directionalLight.ambient", directionalLight.getLightData().getAmbient()));
+                object.setUniform(new Uniform<>("directionalLight.diffuse", directionalLight.getLightData().getDiffuse()));
+                object.setUniform(new Uniform<>("directionalLight.specular", directionalLight.getLightData().getSpecular()));
 
-                object.setUniform(new Uniform<>("light.type", lightSource.getType()));
-                object.setUniform(new Uniform<>("light.position", lightSource.getTransform().getPosition()));
-                object.setUniform(new Uniform<>("light.direction", lightSource.getTransform().getRotation()));
-                object.setUniform(new Uniform<>("light.ambient", lightSource.getLightData().getAmbient()));
-                object.setUniform(new Uniform<>("light.diffuse", lightSource.getLightData().getDiffuse()));
-                object.setUniform(new Uniform<>("light.specular", lightSource.getLightData().getSpecular()));
-                float cst=0f, lin=0f, quad=0f;
-                if(lightSource.getType() == 3) {
-                    cst = ((PointLight) lightSource).getConstant();
-                    lin = ((PointLight) lightSource).getLinear();
-                    quad = ((PointLight) lightSource).getQuadratic();
+                for(int i = 1; i < 3; ++ i){
+                    object.setUniform(new Uniform<>("pointLights[" + i + "].position", pointLights[i].getTransform().getPosition()));
+                    object.setUniform(new Uniform<>("pointLights[" + i + "].constant", pointLights[i].getConstant()));
+                    object.setUniform(new Uniform<>("pointLights[" + i + "].linear", pointLights[i].getLinear()));
+                    object.setUniform(new Uniform<>("pointLights[" + i + "].quadratic", pointLights[i].getQuadratic()));
+                    object.setUniform(new Uniform<>("pointLights[" + i + "].ambient", pointLights[i].getLightData().getAmbient()));
+                    object.setUniform(new Uniform<>("pointLights[" + i + "].diffuse", pointLights[i].getLightData().getDiffuse()));
+                    object.setUniform(new Uniform<>("pointLights[" + i + "].specular", pointLights[i].getLightData().getSpecular()));
                 }
-                object.setUniform(new Uniform<>("light.constant", cst));
-                object.setUniform(new Uniform<>("light.linear", lin));
-                object.setUniform(new Uniform<>("light.quadratic", quad));
+
 
                 object.render();
             }

@@ -12,71 +12,72 @@ struct lightData
 {
     int type;
 
+    // generic
     vec3 position;
     vec3 direction;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
 
+    // point light
     float constant;
     float linear;
     float quadratic;
 };
 
-uniform lightData light;
+uniform lightData directionalLight;
+uniform lightData pointLights[3];
 
 uniform sampler2D diffuseMap;
 uniform sampler2D specularMap;
 uniform float materialShininess;
 
-vec3 lighting(vec3 objectColor, vec3 pos, vec3 normal, vec3 lightPos, vec3 viewPos,
-              vec3 lightAmbient, vec3 lightDiffuse, vec3 lightSpecular,
-              sampler2D materialDiffuse, sampler2D materialSpecular, float specPower)
+vec3 CalcDirLight(lightData light, vec3 normal, vec3 viewDir)
 {
-    // Calculate the light direction (if the light is a directional light)
-    vec3 L;
-    if(light.type != 1)
-        L = normalize(lightPos - pos);
-    else
-        L = normalize(-light.direction);
-
-    vec3 V = normalize(viewPos - pos);
-    vec3 N = normalize(normal);
-    vec3 R = normalize(reflect(-L, N));
-
-    float diffCoef = max(dot(L, N), 0.0);
-
-    // Check if the fragment is facing the light source
-    float specCoef = pow(max(dot(R, V), 0.0), specPower);
-    // if any component of the normal is negative, the fragment is facing away from the light source
-    if(diffCoef == 0)
-        specCoef = 0;
-
-    vec3 ambientColor = lightAmbient * vec3(texture(materialDiffuse, texCoord));
-    vec3 diffuseColor = lightDiffuse * (diffCoef * vec3(texture(materialDiffuse, texCoord))) * dot(L,N);
-    vec3 specularColor = lightSpecular * (specCoef * vec3(texture(materialSpecular, texCoord)));
-
-    // Calculate point light attenuation
-    if(light.type == 3){
-        float distance = length(lightPos - pos);
-        float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-        ambientColor *= attenuation;
-        diffuseColor *= attenuation;
-        specularColor *= attenuation;
-    }
-
-    vec3 col = ( ambientColor + diffuseColor + specularColor) * objectColor;
-
-
-    return clamp(col, 0, 1);
+    vec3 lightDir = normalize(-light.direction);
+    // diffuse shading
+    float diff = max(dot(normal, lightDir), 0.0);
+    // specular shading
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), materialShininess);
+    // combine results
+    vec3 ambient  = light.ambient  * vec3(texture(diffuseMap, texCoord));
+    vec3 diffuse  = light.diffuse  * diff * vec3(texture(diffuseMap, texCoord));
+    vec3 specular = light.specular * spec * vec3(texture(specularMap, texCoord));
+    return (ambient + diffuse + specular);
 }
 
+vec3 CalcPointLight(lightData light, vec3 normal, vec3 fragPos, vec3 viewDir)
+{
+    vec3 lightDir = normalize(light.position - fragPos);
+    // diffuse shading
+    float diff = max(dot(normal, lightDir), 0.0);
+    // specular shading
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), materialShininess);
+    // attenuation
+    float distance    = length(light.position - fragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance +
+    light.quadratic * (distance * distance));
+    // combine results
+    vec3 ambient  = light.ambient  * vec3(texture(diffuseMap, texCoord));
+    vec3 diffuse  = light.diffuse  * diff * vec3(texture(diffuseMap, texCoord));
+    vec3 specular = light.specular * spec * vec3(texture(specularMap, texCoord));
+    ambient  *= attenuation;
+    diffuse  *= attenuation;
+    specular *= attenuation;
+    return (ambient + diffuse + specular);
+}
 
 void main()
 {
-    vec3 color = lighting(vertColor, pos, normal, light.position, viewPos,
-                          light.ambient, light.diffuse, light.specular,
-                          diffuseMap, specularMap, materialShininess);
+    vec3 normal = normalize(normal);
+    vec3 viewDir = normalize(viewPos - pos);
+
+//    vec3 color = CalcDirLight(directionalLight, normal, viewDir);
+    vec3 color = vec3(0);
+    for(int i = 1; i < 3; i++)
+        color += CalcPointLight(pointLights[i], normal, pos, viewDir);
 
     fragColor = vec4(color, 1.0);
 }

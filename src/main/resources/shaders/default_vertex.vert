@@ -26,5 +26,6 @@ void main()
     normal = vec3(normalMatrix * vec4(aNormal, 1));
     vertColor = aColor;
     pos = aPos + globalPosition;
+//    pos = gl_Position.xyz;
     texCoord = aTexCoord;
 }
