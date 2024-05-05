@@ -111,20 +111,16 @@ public class Renderable3D implements IRenderable{
         // set the vertex attributes
 
         // position attribute
-        GL20.glVertexAttribPointer(0, 3, GL_FLOAT, false, 11 * Float.BYTES, 0);
+        GL20.glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * Float.BYTES, 0);
         GL20.glEnableVertexAttribArray(0);
 
-        // color attribute
-        GL20.glVertexAttribPointer(1, 3, GL_FLOAT, false, 11 * Float.BYTES, 3 * Float.BYTES);
+        // normal attribute
+        GL20.glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * Float.BYTES, 3 * Float.BYTES);
         GL20.glEnableVertexAttribArray(1);
 
-        // normal attribute
-        GL20.glVertexAttribPointer(2, 3, GL_FLOAT, false, 11 * Float.BYTES, 6 * Float.BYTES);
-        GL20.glEnableVertexAttribArray(2);
-
         // texture attribute
-        GL20.glVertexAttribPointer(3, 2, GL_FLOAT, false, 11 * Float.BYTES, 9 * Float.BYTES);
-        GL20.glEnableVertexAttribArray(3);
+        GL20.glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * Float.BYTES, 6 * Float.BYTES);
+        GL20.glEnableVertexAttribArray(2);
 
     }
 

@@ -8,6 +8,8 @@ import org.tuiasi.engine.renderer.light.LightData;
 import org.tuiasi.engine.renderer.light.LightSource;
 import org.tuiasi.engine.renderer.light.PointLight;
 import org.tuiasi.engine.renderer.material.Material;
+import org.tuiasi.engine.renderer.modelLoader.Model;
+import org.tuiasi.engine.renderer.modelLoader.ModelLoader;
 import org.tuiasi.engine.renderer.primitives.Axes;
 import org.tuiasi.engine.renderer.primitives.Cube;
 import org.tuiasi.engine.renderer.primitives.Plane;
@@ -34,6 +36,7 @@ public class Renderer {
     DefaultEngineEditorUI editorUI;
 
     public Renderer() {
+
         this.renderables = new ArrayList<>();
         this.lightSources = new ArrayList<>();
         this.editorUI = new DefaultEngineEditorUI();
@@ -67,26 +70,23 @@ public class Renderer {
         );
         addRenderable(plane);
 
-        for(int i = 0; i < 5; ++ i) {
-            Renderable3D testObject = new Renderable3D(
-                    Cube.vertexData,
-                    Cube.indexData,
+        Model customModel =  ModelLoader.test("src/main/resources/models/fish.obj");
+        for(int i = 0; i < 10; ++i) {
+            Renderable3D customObject = new Renderable3D(
+                    customModel.getVertices(),
+                    customModel.getIndices(),
                     new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
                             new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                    new Texture[]{new Texture("src/main/resources/textures/container2.png", 0)},
-                    new Material(new Texture("src/main/resources/textures/container2.png", 1),
-                            new Texture("src/main/resources/textures/container2_specular.png", 2),
+                    new Texture[]{new Texture("src/main/resources/textures/fish_texture.png", 0)},
+                    new Material(new Texture("src/main/resources/textures/fish_texture.png", 1),
+                            new Texture("src/main/resources/textures/fish_texture.png", 2),
                             16f),
                     new Spatial3D()
             );
+            customObject.setPosition(new Vector3f((float)Math.random() * 5, (float)Math.random() * 5, (float)Math.random() * 5));
 
-            Vector3f randomPos = new Vector3f((float) Math.random() * 10 - 5, (float) Math.random() * 10, (float) Math.random() * 10 - 5);
-            Vector3f randomRot = new Vector3f((float) Math.random() * 360, (float) Math.random() * 360, (float) Math.random() * 360);
 
-            testObject.setPosition(randomPos);
-            testObject.setRotation(randomRot);
-
-            addRenderable(testObject);
+            addRenderable(customObject);
         }
     }
 
@@ -145,6 +145,7 @@ public class Renderer {
 
     private void renderObjects(){
         for (Renderable3D renderable : renderables) {
+            renderable.rotate(new Vector3f(0, 0.01f, 0));
             setLightUniforms(renderable);
             renderable.render();
         }
