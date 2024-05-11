@@ -137,45 +137,43 @@ public class AppWindow {
         // add the font Nihonium113-Console.ttf found in resources to the atlas
         ImFontConfig fontConfig = new ImFontConfig();
         fontConfig.setGlyphRanges(io.getFonts().getGlyphRangesDefault());
-        appFont = io.getFonts().addFontFromFileTTF("src/main/resources/Nihonium113-Console.ttf", 14, fontConfig);
+        appFont = io.getFonts().addFontFromFileTTF("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\Nihonium113-Console.ttf", 14, fontConfig);
 
     }
 
 
     public void run() {
+        // clear the previous frame
+        GL11.glClearColor(0.1f, 0.09f, 0.1f, 1.0f);
+        GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        while (!glfwWindowShouldClose(windowID)) {
-            // clear the previous frame
-            GL11.glClearColor(0.1f, 0.09f, 0.1f, 1.0f);
-            GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // create a new frame for both ImGui and GLFW
+        imGuiGlfw.newFrame();
+        ImGui.newFrame();
 
-            // create a new frame for both ImGui and GLFW
-            imGuiGlfw.newFrame();
-            ImGui.newFrame();
+        // update the window data
+        windowVariables.updateGlobalVariables(windowID);
 
-            // update the window data
-            windowVariables.updateGlobalVariables(windowID);
+        // update the camera
+        MainCamera.update();
 
-            // update the camera
-            MainCamera.update();
+        // Render the UI and the scene
+        renderer.render();
 
-            renderer.render();
+        ImGui.render();
+        imGuiGl3.renderDrawData(ImGui.getDrawData());
 
-            ImGui.render();
-            imGuiGl3.renderDrawData(ImGui.getDrawData());
-
-            // manage the viewports of the UI
-            if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
-                final long backupWindowID = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
-                ImGui.updatePlatformWindows();
-                ImGui.renderPlatformWindowsDefault();
-                GLFW.glfwMakeContextCurrent(backupWindowID);
-            }
-
-            // swap the buffers and poll for events
-            GLFW.glfwSwapBuffers(windowID);
-            GLFW.glfwPollEvents();
+        // manage the viewports of the UI
+        if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
+            final long backupWindowID = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
+            ImGui.updatePlatformWindows();
+            ImGui.renderPlatformWindowsDefault();
+            GLFW.glfwMakeContextCurrent(backupWindowID);
         }
+
+        // swap the buffers and poll for events
+        GLFW.glfwSwapBuffers(windowID);
+        GLFW.glfwPollEvents();
     }
 
 }

@@ -1,14 +1,14 @@
 package org.tuiasi.engine.ui.uiWindows.prefabs;
 
 import imgui.ImVec2;
-import org.tuiasi.engine.ui.components.basicComponents.tree.TreeNode;
+import org.tuiasi.engine.logic.AppLogic;
 import org.tuiasi.engine.ui.components.composedComponents.TreeWithTitleAndSearchBar;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class UINodeTreeWindow extends UIWindow {
+
+    TreeWithTitleAndSearchBar treeComponent;
+
     public UINodeTreeWindow(String windowTitle) {
         super(windowTitle);
         addPrefabComponents();
@@ -26,11 +26,9 @@ public class UINodeTreeWindow extends UIWindow {
 
     @Override
     protected void addPrefabComponents(){
-        TreeWithTitleAndSearchBar tree = new TreeWithTitleAndSearchBar("Search", "Nodes", new ArrayList<>(), null, null);
-        tree.addNode(new TreeNode("Node 1", new ArrayList<>(List.of(new TreeNode("Node 1.1"), new TreeNode("Node 1.2")))));
-        tree.addNode(new TreeNode("Node 2"));
-        tree.addNode(new TreeNode("Node 3"));
-        addComponent(tree);
+        treeComponent = new TreeWithTitleAndSearchBar("Search", "Nodes", null, null, null);
+        addComponent(treeComponent);
+
     }
 
     @Override
@@ -38,6 +36,13 @@ public class UINodeTreeWindow extends UIWindow {
 
     }
 
+    @Override
+    public void render() {
+//        if(treeComponent.getTree().getRoot() == null)
+        treeComponent.getTree().setRoot(AppLogic.getRoot());
+
+        super.render();
+    }
 
 
 }

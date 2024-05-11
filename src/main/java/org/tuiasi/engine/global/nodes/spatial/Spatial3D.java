@@ -22,6 +22,7 @@ public class Spatial3D extends Spatial{
         this.scale = new Vector3f(1,1,1);
     }
 
+
     public void translate(Vector3f translation){
         this.position.add(translation);
     }

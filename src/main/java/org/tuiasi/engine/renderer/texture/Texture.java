@@ -32,6 +32,16 @@ public class Texture implements ITexture {
 
     public Texture(String pathToTexture, int textureIndex){
         this.pathToTexture = pathToTexture;
+        if(pathToTexture.split("\\.").length < 2){
+            this.pathToTexture = "";
+            this.format = "";
+            this.width = BufferUtils.createIntBuffer(1);
+            this.height = BufferUtils.createIntBuffer(1);
+            this.nrChannels = BufferUtils.createIntBuffer(1);
+            this.textureID = glGenTextures();
+            return;
+        }
+
         this.format = pathToTexture.split("\\.")[1];
 
         width = BufferUtils.createIntBuffer(1);

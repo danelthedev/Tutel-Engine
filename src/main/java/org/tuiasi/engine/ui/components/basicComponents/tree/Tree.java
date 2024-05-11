@@ -5,35 +5,33 @@ import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiTreeNodeFlags;
 import lombok.*;
+import org.tuiasi.engine.global.nodes.Node;
 
 import java.util.List;
 
-@Setter @Getter @RequiredArgsConstructor @NoArgsConstructor
+@Setter @Getter @RequiredArgsConstructor
 public class Tree extends ITree{
     private String label;
-    @NonNull
-    private List<TreeNode> treeData;
+    private Node root;
     private TreeListener nodeClickListener;
 
     private Integer lastClickedNodeId;  // Variable to store the last clicked node
 
-    public void addNode(TreeNode node) {
-        treeData.add(node);
-    }
-
-    public Tree(List<TreeNode> treeData, TreeListener nodeClickListener) {
-        this.treeData = treeData;
+    public Tree(Node root, TreeListener nodeClickListener) {
+        this.root = root;
         this.nodeClickListener = nodeClickListener;
     }
 
     @Override
     public void render() {
         // Draw a separator as the top border
-        renderTreeNodes(treeData);
+        if(root != null)
+            renderTreeNodes(List.of(root));
     }
 
-    private void renderTreeNodes(List<TreeNode> nodes) {
-        for (TreeNode node : nodes) {
+    private void renderTreeNodes(List<Node> nodes) {
+
+        for (Node node : nodes) {
             // Push ID to ensure a unique ID for each node
             ImGui.pushID(node.hashCode());
 
@@ -70,7 +68,8 @@ public class Tree extends ITree{
 
             if (treeNodeOpen) {
                 // Recursively render child nodes
-                renderTreeNodes(node.getChildren());
+                if(node.getChildren() != null && !node.getChildren().isEmpty())
+                    renderTreeNodes(node.getChildren());
                 // Close the tree node if it's not a leaf
                 ImGui.treePop();
             }
@@ -81,15 +80,19 @@ public class Tree extends ITree{
     }
 
 
-
-    @Override
-    public void setTreeData(List<TreeNode> treeData) {
-        this.treeData = treeData;
-    }
-
     @Override
     public void setNodeClickListener(TreeListener listener) {
         this.nodeClickListener = listener;
+    }
+
+    @Override
+    public Node getNodeByName(String name) {
+        return null;
+    }
+
+    @Override
+    public Node getNodeByPath(String path) {
+        return null;
     }
 
 }

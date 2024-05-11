@@ -44,9 +44,8 @@ public class Renderer {
         axis = new Renderable3D(
                 Axes.vertexData,
                 Axes.indexData,
-                new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
-                                    new Shader("src/main/resources/shaders/solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Texture[]{new Texture()},
+                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
+                                    new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
                 new Material(),
                 new Spatial3D()
         );
@@ -60,27 +59,24 @@ public class Renderer {
         Renderable3D plane = new Renderable3D(
                 Plane.vertexData,
                 Plane.indexData,
-                new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
-                        new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Texture[]{new Texture("src/main/resources/textures/orangOutline.png", 0)},
-                new Material(new Texture("src/main/resources/textures/orangOutline.png", 1),
-                        new Texture("src/main/resources/textures/container2_specular.png", 2),
+                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
+                        new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
+                new Material(new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/textures/orangOutline.png", 0),
+                        new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/textures/container2_specular.png", 1),
                         16f),
                 new Spatial3D()
         );
         addRenderable(plane);
 
-        Model customModel =  ModelLoader.test("src/main/resources/models/fish.obj");
-        for(int i = 0; i < 10; ++i) {
+
+        Model customModel =  ModelLoader.test("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/models/fancyCube.gltf");
+        for(int i = 0; i < 3; ++i) {
             Renderable3D customObject = new Renderable3D(
                     customModel.getVertices(),
                     customModel.getIndices(),
-                    new ShaderProgram(new Shader("src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
-                            new Shader("src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                    new Texture[]{new Texture("src/main/resources/textures/fish_texture.png", 0)},
-                    new Material(new Texture("src/main/resources/textures/fish_texture.png", 1),
-                            new Texture("src/main/resources/textures/fish_texture.png", 2),
-                            16f),
+                    new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
+                            new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
+                    new Material(new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/textures/" + customModel.getTextureName(), 0), new Texture(), 16f),
                     new Spatial3D()
             );
             customObject.setPosition(new Vector3f((float)Math.random() * 5, (float)Math.random() * 5, (float)Math.random() * 5));

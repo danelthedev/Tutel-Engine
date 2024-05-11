@@ -33,7 +33,11 @@ uniform pointLight pointLights[10];
 uniform int pointCount;
 
 uniform sampler2D diffuseMap;
+uniform bool hasDiffuse;
+
 uniform sampler2D specularMap;
+uniform bool hasSpecular;
+
 uniform float materialShininess;
 
 vec3 CalcDirLight(directionalLight light, vec3 normal, vec3 viewDir)
@@ -47,9 +51,22 @@ vec3 CalcDirLight(directionalLight light, vec3 normal, vec3 viewDir)
     if(diff <= 0)
         spec = 0;
     // combine results
-    vec3 ambient  = light.ambient  * vec3(texture(diffuseMap, texCoord));
-    vec3 diffuse  = light.diffuse  * diff * vec3(texture(diffuseMap, texCoord));
-    vec3 specular = light.specular * spec * vec3(texture(specularMap, texCoord));
+    vec3 ambient  = light.ambient;
+    vec3 diffuse  = light.diffuse  * diff;
+    vec3 specular = light.specular * spec;
+
+    if(hasDiffuse){
+        ambient *= vec3(texture(diffuseMap, texCoord));
+        diffuse *= vec3(texture(diffuseMap, texCoord));
+    }
+    else
+        diffuse = vec3(0.0);
+
+    if(hasSpecular)
+        specular *= vec3(texture(specularMap, texCoord));
+    else
+        specular = vec3(0.0);
+
     return (ambient + diffuse + specular);
 }
 
@@ -65,9 +82,22 @@ vec3 CalcPointLight(pointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     float distance = length(light.position - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
     // combine results
-    vec3 ambient  = light.ambient  * vec3(texture(diffuseMap, texCoord));
-    vec3 diffuse  = light.diffuse  * diff * vec3(texture(diffuseMap, texCoord));
-    vec3 specular = light.specular * spec * vec3(texture(specularMap, texCoord));
+    vec3 ambient  = light.ambient;
+    vec3 diffuse  = light.diffuse  * diff;
+    vec3 specular = light.specular * spec;
+
+    if(hasDiffuse){
+        ambient *= vec3(texture(diffuseMap, texCoord));
+        diffuse *= vec3(texture(diffuseMap, texCoord));
+    }
+    else
+        diffuse = vec3(0.0);
+
+    if(hasSpecular)
+        specular *= vec3(texture(specularMap, texCoord));
+    else
+        specular = vec3(0.0);
+
     ambient  *= attenuation;
     diffuse  *= attenuation;
     specular *= attenuation;
@@ -86,6 +116,7 @@ void main()
 
     for(int i = 0; i < pointCount; i++)
         color += CalcPointLight(pointLights[i], normal, pos, viewDir);
+
 
     fragColor = vec4(color, 1.0);
 }

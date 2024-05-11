@@ -26,15 +26,11 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 // TODO: Switch individual sampler2D uniforms to a single array of samplers
 
 @Data
-public class Renderable3D implements IRenderable{
+public class Renderable3D extends Spatial3D implements IRenderable {
     // mesh data
     int VAO, VBO, EBO;
     FloatBuffer verticesBuffer;
     IntBuffer indicesBuffer;
-
-    // texture data
-    Texture[] textures;
-    boolean hasTexture;
 
     // material data
     Material material;
@@ -42,16 +38,10 @@ public class Renderable3D implements IRenderable{
     // shader data
     ShaderProgram shaderProgram;
 
-    // position and rotation
-    Spatial3D transform;
-
     // draw mode
     DrawMode drawMode = DrawMode.FILLED;
 
-    public Renderable3D(){
-    }
-
-    public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Texture[] texture, Material material, Spatial3D transform){
+    public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Material material, Spatial3D transform){
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
         verticesBuffer = byteBuffer.asFloatBuffer();
         verticesBuffer.put(vertices);
@@ -64,15 +54,13 @@ public class Renderable3D implements IRenderable{
 
         this.shaderProgram = shaderProgram;
 
-        this.textures = texture;
-        if(texture != null && !texture[0].getPathToTexture().isEmpty())
-            hasTexture = true;
-
         this.material = material;
 
         initVertBuf();
 
-        this.transform = transform;
+        setRotation(transform.getRotation());
+        setPosition(transform.getPosition());
+        setScale(transform.getScale());
 
         if(!material.equals(new Material()))
             setMaterialUniforms();
@@ -85,11 +73,11 @@ public class Renderable3D implements IRenderable{
         this.EBO = renderable.getEBO();
         this.verticesBuffer = renderable.getVerticesBuffer();
         this.indicesBuffer = renderable.getIndicesBuffer();
-        this.textures = renderable.getTextures();
-        this.hasTexture = renderable.isHasTexture();
         this.material = renderable.getMaterial();
         this.shaderProgram = renderable.getShaderProgram();
-        this.transform = renderable.getTransform();
+        setRotation(renderable.getRotation());
+        setPosition(renderable.getPosition());
+        setScale(renderable.getScale());
         this.drawMode = renderable.getDrawMode();
     }
 
@@ -128,34 +116,6 @@ public class Renderable3D implements IRenderable{
         shaderProgram.setUniform(value);
     }
 
-    public void translate(Vector3f direction){
-        transform.translate(direction);
-    }
-
-    public void setPosition(Vector3f position){
-        transform.setPosition(position);
-    }
-
-    public void rotate(Vector3f rotation){
-        transform.rotate(rotation);
-    }
-
-    public void setRotation(Vector3f rotation){
-        transform.setRotation(rotation);
-    }
-
-    public void scale(Vector3f scale){
-        transform.scale(scale);
-    }
-
-    public void setScale(Vector3f scale){
-        transform.setScale(scale);
-    }
-
-    public void setTexture(Texture texture, int textureIndex){
-        this.textures[textureIndex] = texture;
-    }
-
     private void setModelViewMatrix(){
         MainCamera camera = MainCamera.getInstance();
 
@@ -165,11 +125,11 @@ public class Renderable3D implements IRenderable{
 
         Matrix4f modelMatrix = new Matrix4f();
         modelMatrix.identity();
-        modelMatrix.translate(transform.getPosition());
-        modelMatrix.rotateX((float) Math.toRadians(transform.getRotation().x));
-        modelMatrix.rotateY((float) Math.toRadians(transform.getRotation().y));
-        modelMatrix.rotateZ((float) Math.toRadians(transform.getRotation().z));
-        modelMatrix.scale(transform.getScale());
+        modelMatrix.translate(getPosition());
+        modelMatrix.rotateX((float) Math.toRadians(getRotation().x));
+        modelMatrix.rotateY((float) Math.toRadians(getRotation().y));
+        modelMatrix.rotateZ((float) Math.toRadians(getRotation().z));
+        modelMatrix.scale(getScale());
 
         Matrix4f viewMatrix = camera.getViewMatrix();
 
@@ -179,14 +139,20 @@ public class Renderable3D implements IRenderable{
     }
 
     private void setMaterialUniforms(){
-        if(material.getDiffuse() != null) {
+        if(material.getDiffuse() != null && !material.getDiffuse().getPathToTexture().isEmpty()) {
             material.getDiffuse().use();
             shaderProgram.setUniform(new Uniform<>("diffuseMap", material.getDiffuse().getTextureIndex()));
+            shaderProgram.setUniform(new Uniform<>("hasDiffuse", true));
+        }else {
+            shaderProgram.setUniform(new Uniform<>("hasDiffuse", false));
         }
 
-        if(material.getSpecular() != null) {
+        if(material.getSpecular() != null && !material.getSpecular().getPathToTexture().isEmpty()) {
             material.getSpecular().use();
             shaderProgram.setUniform(new Uniform<>("specularMap", material.getSpecular().getTextureIndex()));
+            shaderProgram.setUniform(new Uniform<>("hasSpecular", true));
+        }else {
+            shaderProgram.setUniform(new Uniform<>("hasSpecular", false));
         }
 
         setUniform(new Uniform<>("materialShininess", material.getShininess()));

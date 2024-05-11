@@ -1,12 +1,13 @@
 package org.tuiasi.engine.renderer.modelLoader;
 
-import org.lwjgl.assimp.AIImporterDesc;
-import org.lwjgl.assimp.AIMesh;
-import org.lwjgl.assimp.AIScene;
-import org.lwjgl.assimp.Assimp;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.assimp.*;
 
 import java.io.File;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ModelLoader {
@@ -15,11 +16,9 @@ public class ModelLoader {
     public static Model test(String path){
         Model model = new Model();
 
-        System.out.println("Loading model from path: " + path);
         File file = new File(path);
-        System.out.println(file.toString());
         if(!file.exists()){
-            System.out.println("File does not exist");
+            System.out.println("File " + path  + " does not exist");
             return model;
         }
 
@@ -54,14 +53,29 @@ public class ModelLoader {
                 indices[i * 3 + 2] = mesh.mFaces().get(i).mIndices().get(2);
             }
 
+
+            int numMaterials = scene.mNumMaterials();
+            PointerBuffer aiMaterials = scene.mMaterials();
+            String textPath = "";
+            if(numMaterials != 0) {
+                AIMaterial aiMaterial = AIMaterial.create(aiMaterials.get(0));
+                AIString textureName = AIString.calloc();
+                int result = Assimp.aiGetMaterialTexture(aiMaterial, Assimp.aiTextureType_DIFFUSE, 0, textureName, (IntBuffer) null, null, null, null, null, null);
+                textPath = textureName.dataString();
+            }else {
+                textPath = "No texture found";
+            }
+
             model.setVertices(vertices);
             model.setIndices(indices);
-
-            System.out.println("Done");
+            model.setTextureName(textPath);
         }catch (Exception e){
             e.printStackTrace();
         }
 
         return model;
     }
+
+
+
 }

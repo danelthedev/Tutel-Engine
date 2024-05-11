@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 public class Model {
     private float[] vertices;
     private int[] indices;
+    String textureName;
 
-    public Model(float[] vertices, int[] indices) {
+    public Model(float[] vertices, int[] indices, String textureName) {
         this.vertices = vertices;
         this.indices = indices;
+        this.textureName = textureName;
     }
 }
