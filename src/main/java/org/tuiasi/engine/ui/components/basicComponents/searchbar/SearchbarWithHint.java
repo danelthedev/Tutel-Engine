@@ -35,6 +35,7 @@ public class SearchbarWithHint extends ISearchbar {
         if (enterPressed && searchListener != null) {
             searchListener.onSearch(searchText.get());
         }
+        ImGui.newLine();
     }
 
 }

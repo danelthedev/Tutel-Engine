@@ -35,6 +35,10 @@ public abstract class IUIWindow {
         this.size = size;
     }
 
+    public void clearComponents(){
+        components.clear();
+    }
+
     public void addComponent(IComponent component) {
         components.add(component);
     }

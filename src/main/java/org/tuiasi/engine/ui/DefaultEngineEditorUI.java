@@ -19,7 +19,7 @@ import java.util.List;
 public class DefaultEngineEditorUI {
 
         private TopMenuBar topMenuBar;
-        private List<IUIWindow> uiWindows;
+        private static List<IUIWindow> uiWindows;
         boolean isSetup = false;
 
         public DefaultEngineEditorUI() {
@@ -56,6 +56,15 @@ public class DefaultEngineEditorUI {
             for (IUIWindow uiWindow : uiWindows) {
                 uiWindow.render();
             }
+        }
+
+        public static IUIWindow getWindow(String windowTitle) {
+            for (IUIWindow uiWindow : uiWindows) {
+                if (uiWindow.getWindowTitle().equals(windowTitle)) {
+                    return uiWindow;
+                }
+            }
+            return null;
         }
 
 }

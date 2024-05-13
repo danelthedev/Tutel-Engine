@@ -45,7 +45,6 @@ public class TreeWithTitleAndSearchBar extends IComponent {
         tree.render();
     }
 
-
     private void filterTreeData() {
 
     }

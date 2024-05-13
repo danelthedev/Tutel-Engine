@@ -1,7 +1,10 @@
 package org.tuiasi.engine.ui.uiWindows.prefabs;
 
 import imgui.ImVec2;
+import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.ui.DefaultEngineEditorUI;
+import org.tuiasi.engine.ui.components.basicComponents.tree.TreeListener;
 import org.tuiasi.engine.ui.components.composedComponents.TreeWithTitleAndSearchBar;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 
@@ -26,7 +29,18 @@ public class UINodeTreeWindow extends UIWindow {
 
     @Override
     protected void addPrefabComponents(){
-        treeComponent = new TreeWithTitleAndSearchBar("Search", "Nodes", null, null, null);
+        treeComponent = new TreeWithTitleAndSearchBar("Search", "Nodes", null, new TreeListener() {
+            @Override
+            public void onNodeClick(Node<?> node) {
+                AppLogic.setSelectedNode(node);
+
+                UINodeInspectorWindow nodeInspectorWindow = ((UINodeInspectorWindow)DefaultEngineEditorUI.getWindow("Node Inspector"));
+                if(nodeInspectorWindow != null){
+                    nodeInspectorWindow.refresh();
+                }
+
+            }
+        }, null);
         addComponent(treeComponent);
 
     }
@@ -38,9 +52,7 @@ public class UINodeTreeWindow extends UIWindow {
 
     @Override
     public void render() {
-//        if(treeComponent.getTree().getRoot() == null)
         treeComponent.getTree().setRoot(AppLogic.getRoot());
-
         super.render();
     }
 
