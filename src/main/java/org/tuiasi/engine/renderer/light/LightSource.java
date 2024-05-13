@@ -2,6 +2,7 @@ package org.tuiasi.engine.renderer.light;
 
 import lombok.Data;
 import org.joml.Vector3f;
+import org.tuiasi.engine.global.nodes.spatial.Spatial;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.renderer.material.Material;
 import org.tuiasi.engine.renderer.primitives.Cube;
@@ -15,14 +16,13 @@ import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 
 @Data
-public class LightSource {
+public class LightSource extends Spatial3D {
 
     private Renderable3D representation;
-    private Spatial3D transform;
     private LightData lightData;
 
     public LightSource(Spatial3D transform, LightData lightData){
-        this.transform = transform;
+        super(transform.getPosition(), transform.getRotation(), transform.getScale());
         this.lightData = lightData;
 
         representation = new Renderable3D(
@@ -35,13 +35,13 @@ public class LightSource {
     }
 
     public void setPosition(Vector3f newPosition){
-        transform.setPosition(newPosition);
-        representation.setPosition(transform.getPosition());
+        setPosition(newPosition);
+        representation.setPosition(getPosition());
     }
 
     public void setRotation(Vector3f newRotation){
-        transform.setRotation(newRotation);
-        representation.setRotation(transform.getRotation());
+        setRotation(newRotation);
+        representation.setRotation(getRotation());
     }
 
     public void render(){

@@ -13,7 +13,18 @@ public class ReflexiveObjectManager {
 
     public ReflexiveObjectManager(Object obj) {
         // get all the fields of the object
-        for (Field field : obj.getClass().getDeclaredFields()) {
+        List<Field> fields = List.of(obj.getClass().getDeclaredFields());
+
+        Class objClass = obj.getClass();
+        while(objClass.getSuperclass() != null && !objClass.getSuperclass().getName().equals("Object")) {
+            fields = new ArrayList<>(fields);
+            fields.addAll(List.of(objClass.getSuperclass().getDeclaredFields()));
+
+            objClass = objClass.getSuperclass();
+        }
+
+        for (Field field : fields) {
+            System.out.println(field.getName());
             // get the name of the field
             String fieldName = field.getName();
 

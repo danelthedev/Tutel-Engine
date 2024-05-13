@@ -30,8 +30,6 @@ public class TreeWithTitleAndSearchBar extends IComponent {
     }
 
     public void render() {
-        ImGui.text(label);
-
         searchbar.render();
         ImGui.newLine();
         ImGui.separator();

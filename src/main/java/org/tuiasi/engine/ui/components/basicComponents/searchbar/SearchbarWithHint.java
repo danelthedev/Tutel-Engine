@@ -14,8 +14,10 @@ public class SearchbarWithHint extends ISearchbar {
 
     private String label;
     private String hint = "Search";
-    private ImString searchText = new ImString();
+    private ImString searchText = new ImString(50);
     private boolean enterPressed = false;
+
+    private boolean isPassword = false;
 
     private SearchListener searchListener;
 
@@ -28,14 +30,31 @@ public class SearchbarWithHint extends ISearchbar {
         this.hint = hint;
     }
 
+    public SearchbarWithHint(String label, String hint, boolean isPassword) {
+        this.label = label;
+        this.hint = hint;
+        this.isPassword = isPassword;
+    }
+
     @Override
     public void render() {
-        enterPressed = ImGui.inputTextWithHint("##Searchbar_" + label, hint, searchText, ImGuiInputTextFlags.EnterReturnsTrue);
+
+//        ImGui.setNextItemWidth(getWidth());
+
+        if(getRatioX() != 0 && getRatioY() != 0 && getWidth() != 0 && getHeight() != 0) {
+            ImGui.setCursorPosX((ImGui.getWindowSizeX() - getWidth()) * getRatioX());
+            ImGui.setCursorPosY((ImGui.getWindowSizeY() - getHeight()) * getRatioY());
+        }
+
+        int flags = isPassword ? ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.Password : ImGuiInputTextFlags.AutoSelectAll;
+
+        enterPressed = ImGui.inputTextWithHint("##Searchbar_" + label, hint, searchText, flags);
         ImGui.sameLine();
         if (enterPressed && searchListener != null) {
             searchListener.onSearch(searchText.get());
         }
         ImGui.newLine();
+        ImGui.separator();
     }
 
 }

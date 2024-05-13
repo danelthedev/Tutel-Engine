@@ -19,7 +19,10 @@ public class Button extends IButton{
 
     @Override
     public void render() {
-        ImGui.button(label + "##Button", getWidth() * ImGui.getWindowWidth(), getHeight() * ImGui.getWindowHeight());
+        ImGui.setCursorPosX((ImGui.getWindowSizeX() - getWidth()) * getRatioX());
+        ImGui.setCursorPosY((ImGui.getWindowSizeY() - getHeight()) * getRatioY());
+
+        ImGui.button(label + "##Button", getWidth(), getHeight());
         if (ImGui.isItemClicked(0)) {
             if (listener != null) {
                 listener.onClick();

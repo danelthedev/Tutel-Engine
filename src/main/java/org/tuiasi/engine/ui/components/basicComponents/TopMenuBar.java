@@ -12,6 +12,10 @@ public class TopMenuBar extends IComponent {
     }
 
     @Override
+    public void setLabel(String label) {
+    }
+
+    @Override
     public void render() {
 
         // top menu bar with 2 options: file and edit

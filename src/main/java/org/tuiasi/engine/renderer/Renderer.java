@@ -1,7 +1,9 @@
 package org.tuiasi.engine.renderer;
 
 import org.joml.Vector3f;
+import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+import org.tuiasi.engine.logic.AppLogic;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.light.DirectionalLight;
 import org.tuiasi.engine.renderer.light.LightData;
@@ -66,6 +68,8 @@ public class Renderer {
                         16f),
                 new Spatial3D()
         );
+
+        Node<Renderable3D> planeNode = new Node<>(AppLogic.getRoot(), "Plane", plane);
         addRenderable(plane);
 
 
@@ -79,28 +83,30 @@ public class Renderer {
                     new Material(new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/textures/" + customModel.getTextureName(), 0), new Texture(), 16f),
                     new Spatial3D()
             );
+            Node<Renderable3D> customModelNode = new Node<>(AppLogic.getRoot(), "Custom model " + i, customObject);
             customObject.setPosition(new Vector3f((float)Math.random() * 5, (float)Math.random() * 5, (float)Math.random() * 5));
-
 
             addRenderable(customObject);
         }
     }
 
     public void addTestLights(){
-        LightSource directionalLight = new DirectionalLight(
+        DirectionalLight directionalLight = new DirectionalLight(
                 new Spatial3D(  new Vector3f(0, 0, 0), new Vector3f(-0.2f, -1.0f, -0.3f), new Vector3f(0, 0, 0)),
                 new LightData(  new Vector3f(.0f, .0f, .0f),
                                 new Vector3f(1.0f, 1.0f, 1.0f),
                                 new Vector3f(1.0f, 1.0f, 1.0f))
         );
+        Node<DirectionalLight> dirLightNode = new Node<>(AppLogic.getRoot(), "Dir Light ", directionalLight);
         addLightSource(directionalLight);
 
-        LightSource pointLight = new PointLight(
+        PointLight pointLight = new PointLight(
                 new Spatial3D(  new Vector3f(0f, 3f, 0f), new Vector3f(-0.2f, -1.0f, -0.3f), new Vector3f(.2f, .2f, .2f)),
                 new LightData(  new Vector3f(.0f, .0f, .0f),
                                 new Vector3f(1.0f, 1.0f, 1.0f),
                                 new Vector3f(1.0f, 1.0f, 1.0f)),
                 1.0f, 0.09f, 0.032f);
+        Node<PointLight> pointLightNode1 = new Node<>(AppLogic.getRoot(), "Point Light 1", pointLight);
         addLightSource(pointLight);
 
         pointLight = new PointLight(
@@ -109,6 +115,7 @@ public class Renderer {
                         new Vector3f(1.0f, 1.0f, 1.0f),
                         new Vector3f(1.0f, 1.0f, 1.0f)),
                 1.0f, 0.09f, 0.032f);
+        Node<PointLight> pointLightNode2 = new Node<>(AppLogic.getRoot(), "Point Light 2", pointLight);
         addLightSource(pointLight);
 
         pointLight = new PointLight(
@@ -117,6 +124,7 @@ public class Renderer {
                         new Vector3f(1.0f, 1.0f, 1.0f),
                         new Vector3f(1.0f, 1.0f, 1.0f)),
                 1.0f, 0.09f, 0.032f);
+        Node<PointLight> pointLightNode3 = new Node<>(AppLogic.getRoot(), "Point Light 3", pointLight);
         addLightSource(pointLight);
     }
 
@@ -141,7 +149,6 @@ public class Renderer {
 
     private void renderObjects(){
         for (Renderable3D renderable : renderables) {
-            renderable.rotate(new Vector3f(0, 0.01f, 0));
             setLightUniforms(renderable);
             renderable.render();
         }
@@ -160,14 +167,14 @@ public class Renderer {
         int pointIndex = 0;
         for (LightSource lightSource : lightSources) {
             if(lightSource instanceof DirectionalLight) {
-                renderable.setUniform(new Uniform<>("directionalLights["+directionalIndex+"].direction", ((DirectionalLight)lightSource).getTransform().getRotation()));
+                renderable.setUniform(new Uniform<>("directionalLights["+directionalIndex+"].direction", ((DirectionalLight)lightSource).getRotation()));
                 renderable.setUniform(new Uniform<>("directionalLights["+directionalIndex+"].ambient", ((DirectionalLight)lightSource).getLightData().getAmbient()));
                 renderable.setUniform(new Uniform<>("directionalLights["+directionalIndex+"].diffuse", ((DirectionalLight)lightSource).getLightData().getDiffuse()));
                 renderable.setUniform(new Uniform<>("directionalLights["+directionalIndex+"].specular", ((DirectionalLight)lightSource).getLightData().getSpecular()));
                 directionalIndex++;
             }
             if(lightSource instanceof PointLight){
-                renderable.setUniform(new Uniform<>("pointLights["+pointIndex+"].position", ((PointLight)lightSource).getTransform().getPosition()));
+                renderable.setUniform(new Uniform<>("pointLights["+pointIndex+"].position", ((PointLight)lightSource).getPosition()));
                 renderable.setUniform(new Uniform<>("pointLights["+pointIndex+"].ambient", ((PointLight)lightSource).getLightData().getAmbient()));
                 renderable.setUniform(new Uniform<>("pointLights["+pointIndex+"].diffuse", ((PointLight)lightSource).getLightData().getDiffuse()));
                 renderable.setUniform(new Uniform<>("pointLights["+pointIndex+"].specular", ((PointLight)lightSource).getLightData().getSpecular()));

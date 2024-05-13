@@ -26,6 +26,7 @@ import org.tuiasi.engine.renderer.light.DirectionalLight;
 import org.tuiasi.engine.renderer.light.PointLight;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -49,8 +50,7 @@ public class AppWindow {
     private DefaultEngineEditorUI defaultEngineEditorUI;
 
     WindowVariables windowVariables;
-
-    public static ImFont appFont;
+    public static HashMap<Integer, ImFont> appFonts;
 
     Renderer renderer;
 
@@ -137,7 +137,10 @@ public class AppWindow {
         // add the font Nihonium113-Console.ttf found in resources to the atlas
         ImFontConfig fontConfig = new ImFontConfig();
         fontConfig.setGlyphRanges(io.getFonts().getGlyphRangesDefault());
-        appFont = io.getFonts().addFontFromFileTTF("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\Nihonium113-Console.ttf", 14, fontConfig);
+
+        appFonts = new HashMap<>();
+        for(int i = 16; i <= 64; ++ i)
+            appFonts.put(i, io.getFonts().addFontFromFileTTF("src/main/resources/Nihonium113-Console.ttf", i, fontConfig));
 
     }
 

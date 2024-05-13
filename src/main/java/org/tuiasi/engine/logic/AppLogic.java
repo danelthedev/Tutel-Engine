@@ -21,13 +21,6 @@ public class AppLogic {
                 new Vector3f(1,1,1)
         ));
 
-        Node<Spatial3D> child1 = new Node<>(root, "Child1", new Spatial3D(
-                new Vector3f(1,0,0),
-                new Vector3f(0,0,0),
-                new Vector3f(1,1,1)
-        ));
-
-        Node<String> child2 = new Node<>(root, "Child2", "Banana");
     }
 
 }
