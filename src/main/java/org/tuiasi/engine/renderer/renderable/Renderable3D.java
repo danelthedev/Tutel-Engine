@@ -7,6 +7,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
+import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.material.Material;
@@ -33,12 +34,14 @@ public class Renderable3D extends Spatial3D implements IRenderable {
     IntBuffer indicesBuffer;
 
     // material data
+    @EditorVisible
     Material material;
 
     // shader data
     ShaderProgram shaderProgram;
 
     // draw mode
+    @EditorVisible
     DrawMode drawMode = DrawMode.FILLED;
 
     public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Material material, Spatial3D transform){

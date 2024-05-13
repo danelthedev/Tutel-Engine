@@ -1,5 +1,7 @@
 package org.tuiasi.engine.global.nodes.reflexive;
 
+import org.tuiasi.engine.global.nodes.EditorVisible;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -24,7 +26,10 @@ public class ReflexiveObjectManager {
         }
 
         for (Field field : fields) {
-            System.out.println(field.getName());
+            if(!field.isAnnotationPresent(EditorVisible.class)) {
+                continue;
+            }
+
             // get the name of the field
             String fieldName = field.getName();
 

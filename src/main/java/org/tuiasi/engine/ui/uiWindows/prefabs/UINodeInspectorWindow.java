@@ -52,6 +52,7 @@ public class UINodeInspectorWindow extends UIWindow {
 
             if(selectedNode.getFieldValue(name) instanceof Vector3f) {
                 Vector3f value = (Vector3f) selectedNode.getFieldValue(name);
+
                 for(int j = 0; j < 3; j++) {
                     SearchbarWithHint field = new SearchbarWithHint(name + " " + j, name + " " + j, false);
 
@@ -79,7 +80,17 @@ public class UINodeInspectorWindow extends UIWindow {
                 }
             }
             else {
+                Object value = selectedNode.getFieldValue(name);
+
                 SearchbarWithHint field = new SearchbarWithHint(name, name, false);
+                field.setSearchListener(new SearchListener() {
+                    @Override
+                    public void onSearch(String searchText) {
+                        // TODO : Implement updating the value of the field for all other variable types
+                    }
+                });
+
+                field.setSearchText(new ImString(String.valueOf(value), 50));
                 addComponent(field);
             }
 

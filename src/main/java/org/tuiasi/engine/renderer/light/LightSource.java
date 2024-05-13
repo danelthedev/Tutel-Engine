@@ -2,6 +2,7 @@ package org.tuiasi.engine.renderer.light;
 
 import lombok.Data;
 import org.joml.Vector3f;
+import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.global.nodes.spatial.Spatial;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.renderer.material.Material;
@@ -19,6 +20,7 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 public class LightSource extends Spatial3D {
 
     private Renderable3D representation;
+    @EditorVisible
     private LightData lightData;
 
     public LightSource(Spatial3D transform, LightData lightData){

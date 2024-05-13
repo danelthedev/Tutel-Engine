@@ -2,12 +2,16 @@ package org.tuiasi.engine.global.nodes.spatial;
 
 import lombok.Data;
 import org.joml.Vector3f;
+import org.tuiasi.engine.global.nodes.EditorVisible;
 
 @Data
 public class Spatial3D extends Spatial{
 
+    @EditorVisible
     private Vector3f position;
+    @EditorVisible
     private Vector3f rotation;
+    @EditorVisible
     private Vector3f scale;
 
     public Spatial3D(Vector3f position, Vector3f rotation, Vector3f scale){
