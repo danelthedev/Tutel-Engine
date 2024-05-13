@@ -9,6 +9,7 @@ public abstract class IComponent {
         float x, y;
         float ratioX, ratioY;
         int flags;
+        boolean separator = false;
 
         public void addFlag(int flag) {
                 flags |= flag;
@@ -29,6 +30,12 @@ public abstract class IComponent {
                 this.ratioY = y;
         }
 
+        public Boolean getSearator(){
+                return separator;
+        }
+        public void setSeparator(boolean separator){
+                this.separator = separator;
+        }
         public abstract void render();
         public abstract String getLabel();
         public abstract void setLabel(String label);

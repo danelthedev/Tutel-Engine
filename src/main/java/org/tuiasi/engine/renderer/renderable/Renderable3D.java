@@ -2,7 +2,6 @@ package org.tuiasi.engine.renderer.renderable;
 
 import lombok.Data;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -14,7 +13,6 @@ import org.tuiasi.engine.renderer.material.Material;
 import org.tuiasi.engine.renderer.shader.DrawMode;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
 import org.tuiasi.engine.renderer.shader.Uniform;
-import org.tuiasi.engine.renderer.texture.Texture;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -142,7 +140,7 @@ public class Renderable3D extends Spatial3D implements IRenderable {
     }
 
     private void setMaterialUniforms(){
-        if(material.getDiffuse() != null && !material.getDiffuse().getPathToTexture().isEmpty()) {
+        if(material.getDiffuse() != null && !material.getDiffuse().getPath().isEmpty()) {
             material.getDiffuse().use();
             shaderProgram.setUniform(new Uniform<>("diffuseMap", material.getDiffuse().getTextureIndex()));
             shaderProgram.setUniform(new Uniform<>("hasDiffuse", true));
@@ -150,7 +148,7 @@ public class Renderable3D extends Spatial3D implements IRenderable {
             shaderProgram.setUniform(new Uniform<>("hasDiffuse", false));
         }
 
-        if(material.getSpecular() != null && !material.getSpecular().getPathToTexture().isEmpty()) {
+        if(material.getSpecular() != null && !material.getSpecular().getPath().isEmpty()) {
             material.getSpecular().use();
             shaderProgram.setUniform(new Uniform<>("specularMap", material.getSpecular().getTextureIndex()));
             shaderProgram.setUniform(new Uniform<>("hasSpecular", true));
@@ -172,8 +170,10 @@ public class Renderable3D extends Spatial3D implements IRenderable {
 
         if(drawMode == DrawMode.FILLED)
             GL20.glDrawElements(GL11.GL_TRIANGLES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
-        else
+        else {
+            glLineWidth(2.0f);
             GL20.glDrawElements(GL11.GL_LINES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
+        }
     }
 
 }

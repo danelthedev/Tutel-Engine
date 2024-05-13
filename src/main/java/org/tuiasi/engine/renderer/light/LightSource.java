@@ -11,6 +11,7 @@ import org.tuiasi.engine.renderer.renderable.Renderable3D;
 import org.tuiasi.engine.renderer.shader.DrawMode;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
+import org.tuiasi.engine.renderer.shader.Uniform;
 import org.tuiasi.engine.renderer.texture.Texture;
 
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
@@ -22,6 +23,8 @@ public class LightSource extends Spatial3D {
     private Renderable3D representation;
     @EditorVisible
     private LightData lightData;
+    @EditorVisible
+    private Boolean enabled = Boolean.TRUE;
 
     public LightSource(Spatial3D transform, LightData lightData){
         super(transform.getPosition(), transform.getRotation(), transform.getScale());
@@ -48,6 +51,10 @@ public class LightSource extends Spatial3D {
 
     public void render(){
         representation.render();
+        if(enabled)
+            representation.setUniform(new Uniform<>("color", new Vector3f(1.0f, 1.0f, 1.0f)));
+        else
+            representation.setUniform(new Uniform<>("color", new Vector3f(0.0f, 0.0f, 0.0f)));
     }
 
 }

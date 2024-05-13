@@ -13,4 +13,6 @@ public class LightData {
     private Vector3f diffuse;
     @EditorVisible
     private Vector3f specular;
+
+
 }

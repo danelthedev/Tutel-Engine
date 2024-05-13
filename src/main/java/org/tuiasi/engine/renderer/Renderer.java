@@ -166,6 +166,9 @@ public class Renderer {
         int directionalIndex = 0;
         int pointIndex = 0;
         for (LightSource lightSource : lightSources) {
+            if(!lightSource.getEnabled())
+                continue;
+
             if(lightSource instanceof DirectionalLight) {
                 renderable.setUniform(new Uniform<>("directionalLights["+directionalIndex+"].direction", ((DirectionalLight)lightSource).getRotation()));
                 renderable.setUniform(new Uniform<>("directionalLights["+directionalIndex+"].ambient", ((DirectionalLight)lightSource).getLightData().getAmbient()));

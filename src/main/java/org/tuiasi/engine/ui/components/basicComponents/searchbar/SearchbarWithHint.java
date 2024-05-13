@@ -39,8 +39,6 @@ public class SearchbarWithHint extends ISearchbar {
     @Override
     public void render() {
 
-//        ImGui.setNextItemWidth(getWidth());
-
         if(getRatioX() != 0 && getRatioY() != 0 && getWidth() != 0 && getHeight() != 0) {
             ImGui.setCursorPosX((ImGui.getWindowSizeX() - getWidth()) * getRatioX());
             ImGui.setCursorPosY((ImGui.getWindowSizeY() - getHeight()) * getRatioY());
@@ -54,7 +52,8 @@ public class SearchbarWithHint extends ISearchbar {
             searchListener.onSearch(searchText.get());
         }
         ImGui.newLine();
-        ImGui.separator();
+        if(getSearator())
+            ImGui.separator();
     }
 
 }

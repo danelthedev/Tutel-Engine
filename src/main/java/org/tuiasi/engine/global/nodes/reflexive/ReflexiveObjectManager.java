@@ -14,7 +14,10 @@ public class ReflexiveObjectManager {
     private Map<String, ReflexiveFieldAccesor> rfas = new HashMap<String, ReflexiveFieldAccesor>();
 
     public ReflexiveObjectManager(Object obj) {
-        // get all the fields of the object
+        processFields(obj, "");
+    }
+
+    private void processFields(Object obj, String prefix) {
         List<Field> fields = List.of(obj.getClass().getDeclaredFields());
 
         Class objClass = obj.getClass();
@@ -26,14 +29,12 @@ public class ReflexiveObjectManager {
         }
 
         for (Field field : fields) {
-            if(!field.isAnnotationPresent(EditorVisible.class)) {
+            if (!field.isAnnotationPresent(EditorVisible.class)) {
                 continue;
             }
 
-            // get the name of the field
             String fieldName = field.getName();
 
-            // get the getter method
             Method getter = null;
             try {
                 getter = obj.getClass().getMethod("get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1));
@@ -41,7 +42,6 @@ public class ReflexiveObjectManager {
                 // ignore
             }
 
-            // get the setter method
             Method setter = null;
             try {
                 setter = obj.getClass().getMethod("set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1), field.getType());
@@ -49,11 +49,28 @@ public class ReflexiveObjectManager {
                 // ignore
             }
 
-            // create a new ReflexiveFieldAccesor
             ReflexiveFieldAccesor rfa = new ReflexiveFieldAccesor(field, obj, getter, setter);
 
-            // add the ReflexiveFieldAccesor to the map
-            rfas.put(fieldName, rfa);
+            rfas.put(prefix + fieldName, rfa);
+
+            // If the field is a user-defined class, recursively process its fields
+            if (!field.getType().isPrimitive() && !field.getType().getName().startsWith("java.")) {
+                try {
+                    field.setAccessible(true);
+                    Object nestedObj = field.get(obj);
+                    if (nestedObj != null) {
+                        processFields(nestedObj, prefix + fieldName + " ");
+                        // After processing nested fields, check if any were added to the rfas map
+                        // If so, remove the entry for the current field
+                        if (rfas.keySet().stream().anyMatch(key -> key.startsWith(prefix + fieldName + " "))) {
+                            rfas.remove(prefix + fieldName);
+                        }
+                    }
+                } catch (IllegalAccessException e) {
+                    // ignore
+                }
+            }
+
         }
     }
 

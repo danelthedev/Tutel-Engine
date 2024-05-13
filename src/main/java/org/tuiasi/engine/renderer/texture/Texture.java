@@ -3,6 +3,7 @@ package org.tuiasi.engine.renderer.texture;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.lwjgl.BufferUtils;
+import org.tuiasi.engine.global.nodes.EditorVisible;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -17,12 +18,14 @@ import static org.lwjgl.stb.STBImage.stbi_load;
 @Data @AllArgsConstructor
 public class Texture implements ITexture {
     private IntBuffer width, height, nrChannels;
-    private String pathToTexture, format;
+    @EditorVisible
+    private String path;
+    private String format;
     private ByteBuffer image;
     private int textureID, textureIndex;
 
     public Texture(){
-        this.pathToTexture = "";
+        this.path = "";
         this.format = "";
         this.width = BufferUtils.createIntBuffer(1);
         this.height = BufferUtils.createIntBuffer(1);
@@ -30,10 +33,10 @@ public class Texture implements ITexture {
         this.textureID = glGenTextures();
     }
 
-    public Texture(String pathToTexture, int textureIndex){
-        this.pathToTexture = pathToTexture;
-        if(pathToTexture.split("\\.").length < 2){
-            this.pathToTexture = "";
+    public Texture(String path, int textureIndex){
+        this.path = path;
+        if(path.split("\\.").length < 2){
+            this.path = "";
             this.format = "";
             this.width = BufferUtils.createIntBuffer(1);
             this.height = BufferUtils.createIntBuffer(1);
@@ -42,7 +45,7 @@ public class Texture implements ITexture {
             return;
         }
 
-        this.format = pathToTexture.split("\\.")[1];
+        this.format = path.split("\\.")[1];
 
         width = BufferUtils.createIntBuffer(1);
         height = BufferUtils.createIntBuffer(1);
@@ -54,7 +57,7 @@ public class Texture implements ITexture {
         glBindTexture(GL_TEXTURE_2D, textureID);
 
         try {
-            image = stbi_load(pathToTexture, width, height, nrChannels, 0);
+            image = stbi_load(path, width, height, nrChannels, 0);
         }   catch (Exception e){
             e.printStackTrace();
         }
@@ -68,14 +71,14 @@ public class Texture implements ITexture {
             glGenerateMipmap(GL_TEXTURE_2D);
         }
         else{
-            System.out.println("Failed to load texture at path: " + pathToTexture);
+            System.out.println("Failed to load texture at path: " + path);
         }
 
         stbi_image_free(image);
     }
 
     public void use(){
-        if(!pathToTexture.isEmpty()) {
+        if(!path.isEmpty()) {
             glActiveTexture(GL_TEXTURE0 + textureIndex);
             glBindTexture(GL_TEXTURE_2D, textureID);
 //            System.out.println("Using texture " + textureID + " at path: " + pathToTexture);

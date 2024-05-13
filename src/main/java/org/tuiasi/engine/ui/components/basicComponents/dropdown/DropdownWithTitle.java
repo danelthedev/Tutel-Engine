@@ -21,7 +21,7 @@ public class DropdownWithTitle extends IDropdown{
     public DropdownWithTitle(String label, String[] items) {
         this.label = label;
         this.items = items;
-        this.descriptions = new String[items.length];
+        this.descriptions = null;
         this.selectedItemIndex = 0; // Default to the first item
     }
 
@@ -55,9 +55,10 @@ public class DropdownWithTitle extends IDropdown{
 
         ImGui.setNextItemWidth(getWidth());
 
-        ImGui.setCursorPosX((ImGui.getWindowSizeX() - getWidth()) * getRatioX());
-        ImGui.setCursorPosY((ImGui.getWindowSizeY() - getHeight()) * getRatioY());
-
+        if(getRatioX() != 0 && getRatioY() != 0 && getWidth() != 0 && getHeight() != 0) {
+            ImGui.setCursorPosX((ImGui.getWindowSizeX() - getWidth()) * getRatioX());
+            ImGui.setCursorPosY((ImGui.getWindowSizeY() - getHeight()) * getRatioY());
+        }
 
         if (ImGui.beginCombo(label + "##Dropdown", items[selectedItemIndex])) {
 
@@ -66,7 +67,9 @@ public class DropdownWithTitle extends IDropdown{
                 // Render the dropdown
                 if(ImGui.isItemHovered(ImGuiHoveredFlags.AllowWhenBlockedByActiveItem | ImGuiHoveredFlags.AllowWhenDisabled
                 | ImGuiHoveredFlags.AllowWhenOverlapped)) {
-                    ImGui.setTooltip(descriptions[i-1]);
+                    // if tooltips are available, show them
+                    if(descriptions != null && i < descriptions.length)
+                        ImGui.setTooltip(descriptions[i-1]);
                 }
 
                 boolean isSelected = selectedItemIndex == i;
@@ -84,10 +87,12 @@ public class DropdownWithTitle extends IDropdown{
 
             if(ImGui.isItemHovered(ImGuiHoveredFlags.AllowWhenBlockedByActiveItem | ImGuiHoveredFlags.AllowWhenDisabled
                     | ImGuiHoveredFlags.AllowWhenOverlapped)) {
-                ImGui.setTooltip(descriptions[descriptions.length - 1]);
+                if(descriptions != null)
+                    ImGui.setTooltip(descriptions[descriptions.length - 1]);
             }
 
             ImGui.endCombo();
+
         }
     }
 
