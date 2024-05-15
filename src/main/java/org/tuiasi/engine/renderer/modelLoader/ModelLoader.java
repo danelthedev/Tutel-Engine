@@ -64,7 +64,7 @@ public class ModelLoader {
                 textPath = "No texture found";
             }
 
-            model = new Model(vertices, indices, textPath);
+            model = new Model(path, vertices, indices, textPath);
         }catch (Exception e){
             e.printStackTrace();
         }

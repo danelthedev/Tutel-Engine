@@ -26,12 +26,20 @@ public class Tree extends ITree{
     public void render() {
         // Draw a separator as the top border
         if(root != null)
-            renderTreeNodes(List.of(root));
+            renderTreeNodes(List.of(root), null);
     }
 
-    private void renderTreeNodes(List<Node> nodes) {
+    public void render(List<Node<?>> filteredNodes) {
+        if(root != null)
+            renderTreeNodes(List.of(root), filteredNodes);
+    }
+
+    private void renderTreeNodes(List<Node<?>> nodes, List<Node<?>> filteredNodes) {
 
         for (Node node : nodes) {
+            if(filteredNodes != null && (!filteredNodes.isEmpty() && !filteredNodes.contains(node)))
+                continue;
+
             // Push ID to ensure a unique ID for each node
             ImGui.pushID(node.hashCode());
 
@@ -50,6 +58,7 @@ public class Tree extends ITree{
 
             ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 0, 5);
             // Render the tree node
+
             boolean treeNodeOpen = ImGui.treeNodeEx(node.getName() + "##TreeNode", flags);
 
             // Check if the item (label) is clicked, regardless of whether the node is open or closed
@@ -69,7 +78,7 @@ public class Tree extends ITree{
             if (treeNodeOpen) {
                 // Recursively render child nodes
                 if(node.getChildren() != null && !node.getChildren().isEmpty())
-                    renderTreeNodes(node.getChildren());
+                    renderTreeNodes(node.getChildren(), filteredNodes);
                 // Close the tree node if it's not a leaf
                 ImGui.treePop();
             }
@@ -86,7 +95,21 @@ public class Tree extends ITree{
     }
 
     @Override
-    public Node getNodeByName(String name) {
+    public Node<?> getNodeByName(String name) {
+        if(root != null)
+            return getNodeByName(root, name);
+
+        return null;
+    }
+
+    private Node<?> getNodeByName(Node<?> node, String name) {
+        if(node.getName().equals(name))
+            return node;
+        for(Node<?> child : node.getChildren()) {
+            Node<?> found = getNodeByName(child, name);
+            if(found != null)
+                return found;
+        }
         return null;
     }
 

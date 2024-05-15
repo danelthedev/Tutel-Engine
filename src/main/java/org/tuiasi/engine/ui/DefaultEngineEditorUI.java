@@ -10,10 +10,7 @@ import org.tuiasi.engine.ui.components.composedComponents.Dialog.DialogType;
 import org.tuiasi.engine.ui.components.composedComponents.Dialog.FileDialog;
 import org.tuiasi.engine.ui.uiWindows.IUIWindow;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
-import org.tuiasi.engine.ui.uiWindows.prefabs.UIFilesWindow;
-import org.tuiasi.engine.ui.uiWindows.prefabs.UILogsWindow;
-import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeInspectorWindow;
-import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeTreeWindow;
+import org.tuiasi.engine.ui.uiWindows.prefabs.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,19 +48,26 @@ public class DefaultEngineEditorUI {
             mainWindow.addDockedWindow(nodeTreeWindow, ImGuiDir.Left, 0.2f);
             uiWindows.add(nodeTreeWindow);
 
-
-
             UIFilesWindow filesWindow = new UIFilesWindow("Files", new ImVec2(0, 0), new ImVec2(100, 100));
             filesWindow.setDocked(true);
             nodeTreeWindow.addDockedWindow(filesWindow, ImGuiDir.Down, 0.2f);
             uiWindows.add(filesWindow);
+
         }
 
         public void renderUI() {
             topMenuBar.render();
-            for (IUIWindow uiWindow : uiWindows) {
-                uiWindow.render();
+            for (int i = 0; i < uiWindows.size(); i++) {
+                uiWindows.get(i).render();
             }
+        }
+
+        public static void addWindow(IUIWindow window) {
+            uiWindows.add(window);
+        }
+
+        public static void removeWindow(IUIWindow window) {
+            uiWindows.remove(window);
         }
 
         public static IUIWindow getWindow(String windowTitle) {

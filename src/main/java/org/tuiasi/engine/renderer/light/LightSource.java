@@ -5,7 +5,9 @@ import org.joml.Vector3f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.global.nodes.spatial.Spatial;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.material.Material;
+import org.tuiasi.engine.renderer.mesh.Mesh;
 import org.tuiasi.engine.renderer.primitives.Cube;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
 import org.tuiasi.engine.renderer.shader.DrawMode;
@@ -26,17 +28,34 @@ public class LightSource extends Spatial3D {
     @EditorVisible
     private Boolean enabled = Boolean.TRUE;
 
+    public LightSource(){
+        super();
+        lightData = new LightData();
+
+        Mesh cubeMesh = new Mesh("", Cube.vertexData, Cube.indexData);
+        representation = new Renderable3D(
+                cubeMesh,
+                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_vertex.vert", GL_VERTEX_SHADER), new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
+                new Material(),
+                new Spatial3D(getPosition(), getRotation(), new Vector3f(.2f,.2f,.2f))
+        );
+
+        Renderer.addLightSource(this);
+    }
+
     public LightSource(Spatial3D transform, LightData lightData){
         super(transform.getPosition(), transform.getRotation(), transform.getScale());
         this.lightData = lightData;
 
+        Mesh cubeMesh = new Mesh("", Cube.vertexData, Cube.indexData);
         representation = new Renderable3D(
-                Cube.vertexData,
-                Cube.indexData,
-                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER), new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
+                cubeMesh,
+                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_vertex.vert", GL_VERTEX_SHADER), new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
                 new Material(),
-                transform
+                new Spatial3D(getPosition(), getRotation(), new Vector3f(.2f,.2f,.2f))
             );
+
+        Renderer.addLightSource(this);
     }
 
     public void setPosition(Vector3f newPosition){

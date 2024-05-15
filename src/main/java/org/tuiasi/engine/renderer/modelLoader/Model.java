@@ -6,17 +6,16 @@ import org.tuiasi.engine.renderer.mesh.Mesh;
 
 @Data @NoArgsConstructor
 public class Model {
-    private String path;
     private Mesh mesh;
-    private float[] vertices;
-    private int[] indices;
+
+    String path;
+    String meshName;
     String textureName;
 
-    public Model(float[] vertices, int[] indices, String textureName) {
+    public Model(String path, float[] vertices, int[] indices, String textureName) {
         mesh = new Mesh(path, vertices, indices);
-
-        this.vertices = vertices;
-        this.indices = indices;
+        this.path = path.substring(0, path.lastIndexOf("\\"));
+        this.meshName = path.substring(path.lastIndexOf("\\") + 1);
         this.textureName = textureName;
     }
 }

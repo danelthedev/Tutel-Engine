@@ -10,6 +10,7 @@ import org.tuiasi.engine.renderer.light.LightData;
 import org.tuiasi.engine.renderer.light.LightSource;
 import org.tuiasi.engine.renderer.light.PointLight;
 import org.tuiasi.engine.renderer.material.Material;
+import org.tuiasi.engine.renderer.mesh.Mesh;
 import org.tuiasi.engine.renderer.modelLoader.Model;
 import org.tuiasi.engine.renderer.modelLoader.ModelLoader;
 import org.tuiasi.engine.renderer.primitives.Axes;
@@ -32,39 +33,41 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 public class Renderer {
 
     Renderable3D axis;
-    List<Renderable3D> renderables;
-    List<LightSource> lightSources;
+    static List<Renderable3D> renderables;
+    static List<LightSource> lightSources;
 
     DefaultEngineEditorUI editorUI;
 
     public Renderer() {
 
-        this.renderables = new ArrayList<>();
-        this.lightSources = new ArrayList<>();
+        renderables = new ArrayList<>();
+        lightSources = new ArrayList<>();
         this.editorUI = new DefaultEngineEditorUI();
 
+        Mesh axisMesh = new Mesh("", Axes.vertexData, Axes.indexData);
+        axisMesh.setDrawMode(DrawMode.WIREFRAME);
+
         axis = new Renderable3D(
-                Axes.vertexData,
-                Axes.indexData,
-                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
-                                    new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
+                axisMesh,
+                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_vertex.vert", GL_VERTEX_SHADER),
+                                    new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
                 new Material(),
                 new Spatial3D()
         );
-        axis.setDrawMode(DrawMode.WIREFRAME);
 
         addTestObjects();
         addTestLights();
     }
 
     public void addTestObjects() {
+        Mesh planeMesh = new Mesh("", Plane.vertexData, Plane.indexData);
+
         Renderable3D plane = new Renderable3D(
-                Plane.vertexData,
-                Plane.indexData,
-                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
-                        new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Material(new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/textures/orangOutline.png", 0),
-                        new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/textures/container2_specular.png", 1),
+                planeMesh,
+                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_vertex.vert", GL_VERTEX_SHADER),
+                        new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_fragment.frag", GL_FRAGMENT_SHADER)),
+                new Material(new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\textures\\orangOutline.png", 0),
+                        new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\textures\\container2_specular.png", 1),
                         16f),
                 new Spatial3D()
         );
@@ -72,67 +75,32 @@ public class Renderer {
         Node<Renderable3D> planeNode = new Node<>(AppLogic.getRoot(), "Plane", plane);
         addRenderable(plane);
 
-
-        Model customModel =  ModelLoader.load("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/models/fancyCube.gltf");
-        for(int i = 0; i < 3; ++i) {
-            Renderable3D customObject = new Renderable3D(
-                    customModel.getVertices(),
-                    customModel.getIndices(),
-                    new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
-                            new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                    new Material(new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/textures/" + customModel.getTextureName(), 0), new Texture(1), 16f),
-                    new Spatial3D()
-            );
-            Node<Renderable3D> customModelNode = new Node<>(AppLogic.getRoot(), "Custom model " + i, customObject);
-            customObject.setPosition(new Vector3f((float)Math.random() * 5, (float)Math.random() * 5, (float)Math.random() * 5));
-
-            addRenderable(customObject);
-        }
     }
 
     public void addTestLights(){
         DirectionalLight directionalLight = new DirectionalLight(
-                new Spatial3D(  new Vector3f(0, 0, 0), new Vector3f(-0.2f, -1.0f, -0.3f), new Vector3f(0, 0, 0)),
+                new Spatial3D(  new Vector3f(0, 0, 0), new Vector3f(-0.2f, -1.0f, -0.3f), new Vector3f(1f, 1f, 1f)),
                 new LightData(  new Vector3f(.0f, .0f, .0f),
                                 new Vector3f(1.0f, 1.0f, 1.0f),
                                 new Vector3f(1.0f, 1.0f, 1.0f))
         );
         Node<DirectionalLight> dirLightNode = new Node<>(AppLogic.getRoot(), "Dir Light ", directionalLight);
-        addLightSource(directionalLight);
 
         PointLight pointLight = new PointLight(
-                new Spatial3D(  new Vector3f(0f, 3f, 0f), new Vector3f(-0.2f, -1.0f, -0.3f), new Vector3f(.2f, .2f, .2f)),
+                new Spatial3D(  new Vector3f(0f, 3f, 0f), new Vector3f(-0.2f, -1.0f, -0.3f), new Vector3f(1f, 1f, 1f)),
                 new LightData(  new Vector3f(.0f, .0f, .0f),
                                 new Vector3f(1.0f, 1.0f, 1.0f),
                                 new Vector3f(1.0f, 1.0f, 1.0f)),
                 1.0f, 0.09f, 0.032f);
         Node<PointLight> pointLightNode1 = new Node<>(AppLogic.getRoot(), "Point Light 1", pointLight);
-        addLightSource(pointLight);
 
-        pointLight = new PointLight(
-                new Spatial3D(  new Vector3f(5f, 3f, 0f), new Vector3f(-0.2f, -1.0f, -0.3f), new Vector3f(.2f, .2f, .2f)),
-                new LightData(  new Vector3f(.0f, .0f, .0f),
-                        new Vector3f(1.0f, 1.0f, 1.0f),
-                        new Vector3f(1.0f, 1.0f, 1.0f)),
-                1.0f, 0.09f, 0.032f);
-        Node<PointLight> pointLightNode2 = new Node<>(AppLogic.getRoot(), "Point Light 2", pointLight);
-        addLightSource(pointLight);
-
-        pointLight = new PointLight(
-                new Spatial3D(  new Vector3f(0f, 3f, 5f), new Vector3f(-0.2f, -1.0f, -0.3f), new Vector3f(.2f, .2f, .2f)),
-                new LightData(  new Vector3f(.0f, .0f, .0f),
-                        new Vector3f(1.0f, 1.0f, 1.0f),
-                        new Vector3f(1.0f, 1.0f, 1.0f)),
-                1.0f, 0.09f, 0.032f);
-        Node<PointLight> pointLightNode3 = new Node<>(AppLogic.getRoot(), "Point Light 3", pointLight);
-        addLightSource(pointLight);
     }
 
-    public void addRenderable(Renderable3D renderable) {
+    public static void addRenderable(Renderable3D renderable) {
         renderables.add(renderable);
     }
 
-    public void addLightSource(LightSource lightSource) {
+    public static void addLightSource(LightSource lightSource) {
         lightSources.add(lightSource);
     }
 

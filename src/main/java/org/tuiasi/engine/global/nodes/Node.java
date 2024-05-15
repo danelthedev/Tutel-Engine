@@ -59,6 +59,15 @@ public class Node<T> {
         children.remove(child);
     }
 
+    public Node getChildByName(String name){
+        for(Node<?> child : children){
+            if(child.getName().equals(name)){
+                return child;
+            }
+        }
+        return null;
+    }
+
     public void printTree(){
         printTree(0);
     }

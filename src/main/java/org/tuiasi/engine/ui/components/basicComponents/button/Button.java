@@ -28,6 +28,11 @@ public class Button extends IButton{
                 listener.onClick();
             }
         }
+
+        if(isSeparator()){
+            ImGui.separator();
+        }
+
     }
 
 }

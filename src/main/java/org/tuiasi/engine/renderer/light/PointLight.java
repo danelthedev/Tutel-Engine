@@ -10,6 +10,10 @@ public class PointLight extends LightSource{
     @EditorVisible
     private float constant, linear, quadratic;
 
+    public PointLight(){
+        super();
+    }
+
     public PointLight(Spatial3D transform, LightData lightData, float constant, float linear, float quadratic) {
         super(transform, lightData);
 
@@ -17,4 +21,5 @@ public class PointLight extends LightSource{
         this.linear = linear;
         this.quadratic = quadratic;
     }
+
 }

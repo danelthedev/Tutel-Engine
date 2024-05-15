@@ -62,6 +62,21 @@ public class UINodeInspectorWindow extends UIWindow {
             Label label = new Label(name, false, 16);
             addComponent(label);
 
+            if(selectedNode.getFieldValue(name) == null) {
+                SearchbarWithHint field = new SearchbarWithHint(name, name, false);
+                field.setSeparator(true);
+                field.setSearchListener(new SearchListener() {
+                    @Override
+                    public void onSearch(String searchText) {
+                        selectedNode.setFieldValue(name, searchText);
+                    }
+                });
+
+                ImString displayedValue = selectedNode.getFieldValue(name) != null ? new ImString(selectedNode.getFieldValue(name).toString(), 250) : new ImString("", 250);
+
+                field.setSearchText(displayedValue);
+                addComponent(field);
+            }else
             // Vector2f
             if(selectedNode.getFieldValue(name) instanceof Vector2f) {
                 Vector3f value = (Vector3f) selectedNode.getFieldValue(name);
@@ -235,8 +250,8 @@ public class UINodeInspectorWindow extends UIWindow {
                 field.setSearchText(new ImString(value, 250));
                 addComponent(field);
 
-                // if the string contains "path" or "file" add a browse button
-                if(name.toLowerCase().contains("path") || name.toLowerCase().contains("file")){
+                // if the string contains "material" or "mesh" and "path" add a browse button
+                if((name.toLowerCase().contains("material") || name.toLowerCase().contains("mesh")) && name.toLowerCase().contains("path")){
                     field.setEditable(false);
                     FileDialog fileDialog = new FileDialog("Browse " + name, DialogType.FILE, field);
                     fileDialog.setSeparator(true);
@@ -258,7 +273,9 @@ public class UINodeInspectorWindow extends UIWindow {
                     }
                 });
 
-                field.setSearchText(new ImString(selectedNode.getFieldValue(name).toString(), 50));
+                ImString displayedValue = selectedNode.getFieldValue(name) != null ? new ImString(selectedNode.getFieldValue(name).toString(), 250) : new ImString("", 250);
+
+                field.setSearchText(displayedValue);
                 addComponent(field);
             }
 

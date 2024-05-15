@@ -41,6 +41,7 @@ public class Texture implements ITexture {
     }
 
     public Texture(String path, int textureIndex){
+        this();
         this.path = path;
         this.previousPath = path;
         createTexture(path, textureIndex);
@@ -98,7 +99,6 @@ public class Texture implements ITexture {
         if(!path.isEmpty()) {
             glActiveTexture(GL_TEXTURE0 + textureIndex);
             glBindTexture(GL_TEXTURE_2D, textureID);
-//            System.out.println("Using texture " + textureID + " at path: " + path);
         }
         else
             glBindTexture(GL_TEXTURE_2D, 0);

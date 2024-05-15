@@ -1,30 +1,58 @@
 package org.tuiasi.engine.renderer.mesh;
 
+import lombok.Data;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.global.nodes.EditorVisible;
+import org.tuiasi.engine.renderer.modelLoader.Model;
+import org.tuiasi.engine.renderer.modelLoader.ModelLoader;
+import org.tuiasi.engine.renderer.shader.DrawMode;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
+@Data
 public class Mesh {
 
     @EditorVisible
-    String pathToMesh="";
+    String path="";
     int VAO, VBO, EBO;
     FloatBuffer verticesBuffer;
     IntBuffer indicesBuffer;
 
-    public Mesh(String pathToMesh, float[] vertices, int[] indices){
-        this.pathToMesh = pathToMesh;
+    @EditorVisible
+    DrawMode drawMode = DrawMode.FILLED;
+
+    public Mesh(){
+        this.path = "";
+        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(0);
+        verticesBuffer = byteBuffer.asFloatBuffer();
+        indicesBuffer = BufferUtils.createIntBuffer(0);
+    }
+
+    public Mesh(String path){
+        this.path = path;
+
+        Model model = ModelLoader.load(path);
+
+        verticesBuffer = model.getMesh().getVerticesBuffer();
+        indicesBuffer = model.getMesh().getIndicesBuffer();
+
+        initVertBuf();
+    }
+
+    public Mesh(String path, float[] vertices, int[] indices){
+        this.path = path;
 
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
         verticesBuffer = byteBuffer.asFloatBuffer();
@@ -68,5 +96,16 @@ public class Mesh {
         GL20.glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * Float.BYTES, 6 * Float.BYTES);
         GL20.glEnableVertexAttribArray(2);
 
+    }
+
+    public void render() {
+        glBindVertexArray(VAO);
+
+        if (drawMode == DrawMode.FILLED)
+            GL20.glDrawElements(GL11.GL_TRIANGLES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
+        else {
+            glLineWidth(2.0f);
+            GL20.glDrawElements(GL11.GL_LINES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
+        }
     }
 }

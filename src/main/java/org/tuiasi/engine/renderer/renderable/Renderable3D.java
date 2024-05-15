@@ -8,17 +8,23 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.material.Material;
+import org.tuiasi.engine.renderer.mesh.Mesh;
 import org.tuiasi.engine.renderer.shader.DrawMode;
+import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
 import org.tuiasi.engine.renderer.shader.Uniform;
+import org.tuiasi.engine.renderer.texture.Texture;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
+import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
@@ -26,13 +32,6 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 @Data
 public class Renderable3D extends Spatial3D implements IRenderable {
-    // mesh data
-    @EditorVisible
-    String pathToModel="";
-    int VAO, VBO, EBO;
-    FloatBuffer verticesBuffer;
-    IntBuffer indicesBuffer;
-
     // material data
     @EditorVisible
     Material material;
@@ -40,86 +39,53 @@ public class Renderable3D extends Spatial3D implements IRenderable {
     // shader data
     ShaderProgram shaderProgram;
 
-    // draw mode
+    // mesh
     @EditorVisible
-    DrawMode drawMode = DrawMode.FILLED;
+    Mesh mesh;
+    String previousMeshPath = "";
 
-    public Renderable3D(float[] vertices, int[] indices, ShaderProgram shaderProgram, Material material, Spatial3D transform){
-        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(vertices.length * Float.BYTES);
-        verticesBuffer = byteBuffer.asFloatBuffer();
-        verticesBuffer.put(vertices);
-        verticesBuffer.flip();
+    public Renderable3D() {
+        this(new Mesh(),
+                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_vertex.vert", GL_VERTEX_SHADER),
+                        new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_fragment.frag", GL_FRAGMENT_SHADER)),
+                new Material(new Texture(0), new Texture(1), 32.0f),
+                new Spatial3D());
 
-        ByteBuffer indicesByteBuffer = BufferUtils.createByteBuffer(indices.length * Integer.BYTES);
-        indicesBuffer = indicesByteBuffer.asIntBuffer();
-        indicesBuffer.put(indices);
-        indicesBuffer.flip();
+        Renderer.addRenderable(this);
+    }
+
+    public Renderable3D(Mesh mesh, ShaderProgram shaderProgram, Material material, Spatial3D transform) {
+        this.mesh = mesh;
+        previousMeshPath = mesh.getPath();
 
         this.shaderProgram = shaderProgram;
-
         this.material = material;
-
-        initVertBuf();
 
         setRotation(transform.getRotation());
         setPosition(transform.getPosition());
         setScale(transform.getScale());
 
-        if(!material.equals(new Material()))
+        if (!material.equals(new Material()))
             setMaterialUniforms();
+
+        Renderer.addRenderable(this);
     }
 
     // function that copies all fields from one renderable to another
-    public void copy(Renderable3D renderable){
-        this.VAO = renderable.getVAO();
-        this.VBO = renderable.getVBO();
-        this.EBO = renderable.getEBO();
-        this.verticesBuffer = renderable.getVerticesBuffer();
-        this.indicesBuffer = renderable.getIndicesBuffer();
+    public void copy(Renderable3D renderable) {
+        this.mesh = renderable.getMesh();
         this.material = renderable.getMaterial();
         this.shaderProgram = renderable.getShaderProgram();
         setRotation(renderable.getRotation());
         setPosition(renderable.getPosition());
         setScale(renderable.getScale());
-        this.drawMode = renderable.getDrawMode();
     }
 
-    public void initVertBuf(){
-        // create a vertex array object to store the vertex buffer object
-        VAO = glGenVertexArrays();
-        glBindVertexArray(VAO);
-
-        // create a vertex buffer object to store the vertices
-        VBO = GL15.glGenBuffers();
-        GL15.glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        GL15.glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
-
-        // create element buffer object
-        EBO = GL15.glGenBuffers();
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, EBO);
-        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
-
-        // set the vertex attributes
-
-        // position attribute
-        GL20.glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * Float.BYTES, 0);
-        GL20.glEnableVertexAttribArray(0);
-
-        // normal attribute
-        GL20.glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * Float.BYTES, 3 * Float.BYTES);
-        GL20.glEnableVertexAttribArray(1);
-
-        // texture attribute
-        GL20.glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * Float.BYTES, 6 * Float.BYTES);
-        GL20.glEnableVertexAttribArray(2);
-
-    }
-
-    public void setUniform(Uniform<?> value){
+    public void setUniform(Uniform<?> value) {
         shaderProgram.setUniform(value);
     }
 
-    private void setModelViewMatrix(){
+    private void setModelViewMatrix() {
         MainCamera camera = MainCamera.getInstance();
 
         Matrix4f projectionMatrix = new Matrix4f();
@@ -141,20 +107,20 @@ public class Renderable3D extends Spatial3D implements IRenderable {
         setUniform(new Uniform<>("projection", projectionMatrix));
     }
 
-    private void setMaterialUniforms(){
-        if(material.getDiffuse() != null && !material.getDiffuse().getPath().isEmpty()) {
+    private void setMaterialUniforms() {
+        if (material.getDiffuse() != null && !material.getDiffuse().getPath().isEmpty()) {
             material.getDiffuse().use();
             shaderProgram.setUniform(new Uniform<>("diffuseMap", material.getDiffuse().getTextureIndex()));
             shaderProgram.setUniform(new Uniform<>("hasDiffuse", true));
-        }else {
+        } else {
             shaderProgram.setUniform(new Uniform<>("hasDiffuse", false));
         }
 
-        if(material.getSpecular() != null && !material.getSpecular().getPath().isEmpty()) {
+        if (material.getSpecular() != null && !material.getSpecular().getPath().isEmpty()) {
             material.getSpecular().use();
             shaderProgram.setUniform(new Uniform<>("specularMap", material.getSpecular().getTextureIndex()));
             shaderProgram.setUniform(new Uniform<>("hasSpecular", true));
-        }else {
+        } else {
             shaderProgram.setUniform(new Uniform<>("hasSpecular", false));
         }
 
@@ -163,19 +129,23 @@ public class Renderable3D extends Spatial3D implements IRenderable {
 
     @Override
     public void render() {
+        if(!previousMeshPath.equals(mesh.getPath())) {
+            previousMeshPath = mesh.getPath();
+            mesh = new Mesh(mesh.getPath());
+        }
+
         shaderProgram.use();
 
         setModelViewMatrix();
         setMaterialUniforms();
 
-        glBindVertexArray(VAO);
+        if (mesh == null) {
 
-        if(drawMode == DrawMode.FILLED)
-            GL20.glDrawElements(GL11.GL_TRIANGLES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
-        else {
-            glLineWidth(2.0f);
-            GL20.glDrawElements(GL11.GL_LINES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
         }
+        else{
+            mesh.render();
+        }
+
     }
 
 }
