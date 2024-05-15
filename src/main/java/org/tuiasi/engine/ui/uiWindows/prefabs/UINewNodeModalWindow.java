@@ -57,7 +57,7 @@ public class UINewNodeModalWindow extends UIWindow {
         Node<?> root = new Node<>(null, "Node", Node.class);
         Node<?> spatial = new Node<>(root, "Spatial", Spatial.class);
         Node<?> spatial3D = new Node<>(spatial, "Spatial3D", Spatial3D.class);
-        Node<?> spatial2D = new Node<>(spatial, "Spatial3D", Spatial2D.class);
+        Node<?> spatial2D = new Node<>(spatial, "Spatial2D", Spatial2D.class);
         Node<?> renderable3D = new Node<>(spatial3D, "Renderable3D", Renderable3D.class);
         Node<?> lightSource = new Node<>(root, "Light Source", LightSource.class);
         Node<?> directionalLight = new Node<>(lightSource, "Directional Light", DirectionalLight.class);

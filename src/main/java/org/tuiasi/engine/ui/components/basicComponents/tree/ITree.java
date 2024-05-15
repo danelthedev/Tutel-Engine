@@ -5,10 +5,10 @@ import org.tuiasi.engine.ui.components.IComponent;
 
 public abstract class ITree extends IComponent {
 
-    public abstract void setRoot(Node root);
+    public abstract void setRoot(Node<?> root);
     public abstract void setNodeClickListener(TreeListener listener);
 
-    public abstract Node getNodeByName(String name);
-    public abstract Node getNodeByPath(String path);
+    public abstract Node<?> getNodeByName(String name);
+    public abstract Node<?> getNodeByPath(String path);
 
 }

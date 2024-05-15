@@ -52,10 +52,23 @@ public class UINodeInspectorWindow extends UIWindow {
     }
 
     public void refresh(){
-        // get the selected node from the AppLogic
-        System.out.println("Refreshing inspector");
         clearComponents();
         Node<?> selectedNode = AppLogic.getSelectedNode();
+
+        // add a label with the name of the selected node and a textbox that allows the user to change the name
+        Label nameLabel = new Label("Name", false, 16);
+        addComponent(nameLabel);
+        SearchbarWithHint nameField = new SearchbarWithHint("Name", "Name", false);
+        nameField.setSearchListener(new SearchListener() {
+            @Override
+            public void onSearch(String searchText) {
+                selectedNode.setName(searchText);
+            }
+        });
+        nameField.setSearchText(new ImString(selectedNode.getName(), 250));
+        nameField.setSeparator(true);
+        addComponent(nameField);
+
         // iterate over all the fields of the selected node and add labels and input fields for each field
         for(int i = 0; i < selectedNode.getFields().size(); i++) {
             String name = selectedNode.getFields().get(i);

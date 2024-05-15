@@ -73,8 +73,6 @@ public class Renderer {
         );
 
         Node<Renderable3D> planeNode = new Node<>(AppLogic.getRoot(), "Plane", plane);
-        addRenderable(plane);
-
     }
 
     public void addTestLights(){
@@ -100,11 +98,21 @@ public class Renderer {
         renderables.add(renderable);
     }
 
+    public static void removeRenderable(Renderable3D renderable) {
+        renderables.remove(renderable);
+    }
+
     public static void addLightSource(LightSource lightSource) {
         lightSources.add(lightSource);
     }
 
+    public static void removeLightSource(LightSource lightSource) {
+        renderables.remove(lightSource.getRepresentation());
+        lightSources.remove(lightSource);
+    }
+
     public void render() {
+        System.out.println(renderables.size());
         renderObjects();
         renderAxis();
         renderLights();
@@ -116,9 +124,9 @@ public class Renderer {
     }
 
     private void renderObjects(){
-        for (Renderable3D renderable : renderables) {
-            setLightUniforms(renderable);
-            renderable.render();
+        for(int i = 0; i < renderables.size(); ++i){
+            setLightUniforms(renderables.get(i));
+            renderables.get(i).render();
         }
     }
 

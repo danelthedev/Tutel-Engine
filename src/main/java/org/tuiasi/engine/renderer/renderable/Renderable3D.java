@@ -51,7 +51,6 @@ public class Renderable3D extends Spatial3D implements IRenderable {
                 new Material(new Texture(0), new Texture(1), 32.0f),
                 new Spatial3D());
 
-        Renderer.addRenderable(this);
     }
 
     public Renderable3D(Mesh mesh, ShaderProgram shaderProgram, Material material, Spatial3D transform) {

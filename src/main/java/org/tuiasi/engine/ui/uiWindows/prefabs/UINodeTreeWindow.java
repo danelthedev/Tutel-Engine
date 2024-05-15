@@ -1,8 +1,14 @@
 package org.tuiasi.engine.ui.uiWindows.prefabs;
 
+import imgui.ImGui;
 import imgui.ImVec2;
+import org.lwjgl.glfw.GLFW;
+import org.tuiasi.engine.global.IO.KeyboardHandler;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.renderer.Renderer;
+import org.tuiasi.engine.renderer.light.LightSource;
+import org.tuiasi.engine.renderer.renderable.Renderable3D;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.components.basicComponents.button.Button;
 import org.tuiasi.engine.ui.components.basicComponents.tree.TreeListener;
@@ -70,7 +76,31 @@ public class UINodeTreeWindow extends UIWindow {
     public void render() {
         treeComponent.getTree().setRoot(AppLogic.getRoot());
         super.render();
+
+        // Add key listener for delete key
+        if (KeyboardHandler.isKeyPressed(GLFW.GLFW_KEY_DELETE)) {
+            Node<?> selectedNode = AppLogic.getSelectedNode();
+            if (selectedNode != null && selectedNode.getParent() != null) {
+                deleteNodeAndChildren(selectedNode);
+                AppLogic.setSelectedNode(null); // Clear the selected node
+            }
+        }
     }
 
+    private void deleteNodeAndChildren(Node<?> node) {
+        if (node.getValue() instanceof Renderable3D) {
+            Renderer.removeRenderable((Renderable3D) node.getValue());
+        }
+        else if (node.getValue() instanceof LightSource) {
+            Renderer.removeLightSource((LightSource) node.getValue());
+        }
+
+        for (int i = node.getChildren().size() - 1; i >= 0; i--) {
+            Node<?> child = node.getChildren().get(i);
+            deleteNodeAndChildren(child);
+        }
+
+        node.getParent().removeChild(node);
+    }
 
 }

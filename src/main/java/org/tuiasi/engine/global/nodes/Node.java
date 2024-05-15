@@ -13,12 +13,14 @@ import java.util.Random;
 public class Node<T> {
     private Integer salt;
 
+    @EditorVisible
     private String name;
     private ArrayList<Node<?>> children;
     private Node<?> parent;
 
     private T value;
     private ReflexiveObjectManager rom;
+
 
     public Node(Node<?> parent, String name){
         this.salt = new Random().nextInt();

@@ -12,12 +12,12 @@ import java.util.List;
 @Setter @Getter @RequiredArgsConstructor
 public class Tree extends ITree{
     private String label;
-    private Node root;
+    private Node<?> root;
     private TreeListener nodeClickListener;
 
     private Integer lastClickedNodeId;  // Variable to store the last clicked node
 
-    public Tree(Node root, TreeListener nodeClickListener) {
+    public Tree(Node<?> root, TreeListener nodeClickListener) {
         this.root = root;
         this.nodeClickListener = nodeClickListener;
     }
