@@ -94,6 +94,8 @@ public class DropdownWithTitle extends IDropdown{
             ImGui.endCombo();
 
         }
+        if(isSeparator())
+            ImGui.separator();
     }
 
 }

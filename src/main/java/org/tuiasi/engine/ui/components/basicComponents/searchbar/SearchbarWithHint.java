@@ -18,6 +18,7 @@ public class SearchbarWithHint extends ISearchbar {
     private boolean enterPressed = false;
 
     private boolean isPassword = false;
+    private boolean isEditable = true;
 
     private SearchListener searchListener;
 
@@ -36,6 +37,12 @@ public class SearchbarWithHint extends ISearchbar {
         this.isPassword = isPassword;
     }
 
+    public void trigger() {
+        if (searchListener != null) {
+            searchListener.onSearch(searchText.get());
+        }
+    }
+
     @Override
     public void render() {
 
@@ -44,7 +51,8 @@ public class SearchbarWithHint extends ISearchbar {
             ImGui.setCursorPosY((ImGui.getWindowSizeY() - getHeight()) * getRatioY());
         }
 
-        int flags = isPassword ? ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.Password : ImGuiInputTextFlags.AutoSelectAll;
+        int flags = isPassword ? ImGuiInputTextFlags.Password : 0;
+        flags |= isEditable ? ImGuiInputTextFlags.EnterReturnsTrue : ImGuiInputTextFlags.ReadOnly;
 
         enterPressed = ImGui.inputTextWithHint("##Searchbar_" + label, hint, searchText, flags);
         ImGui.sameLine();

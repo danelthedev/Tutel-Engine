@@ -2,6 +2,7 @@ package org.tuiasi.engine.ui.uiWindows.prefabs;
 
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.extension.imguifiledialog.flag.ImGuiFileDialogFlags;
 import imgui.type.ImString;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -17,6 +18,8 @@ import org.tuiasi.engine.ui.components.basicComponents.dropdown.DropdownWithTitl
 import org.tuiasi.engine.ui.components.basicComponents.label.Label;
 import org.tuiasi.engine.ui.components.basicComponents.searchbar.SearchListener;
 import org.tuiasi.engine.ui.components.basicComponents.searchbar.SearchbarWithHint;
+import org.tuiasi.engine.ui.components.composedComponents.Dialog.DialogType;
+import org.tuiasi.engine.ui.components.composedComponents.Dialog.FileDialog;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 
 import java.util.ArrayList;
@@ -220,8 +223,8 @@ public class UINodeInspectorWindow extends UIWindow {
             // String
             else if(selectedNode.getFieldValue(name) instanceof String){
                 String value = (String) selectedNode.getFieldValue(name);
+                System.out.println(name);
                 SearchbarWithHint field = new SearchbarWithHint(name, name, false);
-                field.setSeparator(true);
                 field.setSearchListener(new SearchListener() {
                     @Override
                     public void onSearch(String searchText) {
@@ -229,8 +232,20 @@ public class UINodeInspectorWindow extends UIWindow {
                     }
                 });
 
-                field.setSearchText(new ImString(value, 50));
+                field.setSearchText(new ImString(value, 250));
                 addComponent(field);
+
+                // if the string contains "path" or "file" add a browse button
+                if(name.toLowerCase().contains("path") || name.toLowerCase().contains("file")){
+                    field.setEditable(false);
+                    FileDialog fileDialog = new FileDialog("Browse " + name, DialogType.FILE, field);
+                    fileDialog.setSeparator(true);
+                    addComponent(fileDialog);
+                }
+                else{
+                    field.setSeparator(true);
+                }
+
             }
             // Everything else uses a searchbar with hint
             else {

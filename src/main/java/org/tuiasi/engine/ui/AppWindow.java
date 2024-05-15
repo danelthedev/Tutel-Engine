@@ -138,6 +138,7 @@ public class AppWindow {
         ImFontConfig fontConfig = new ImFontConfig();
         fontConfig.setGlyphRanges(io.getFonts().getGlyphRangesDefault());
 
+
         appFonts = new HashMap<>();
         for(int i = 16; i <= 64; ++ i)
             appFonts.put(i, io.getFonts().addFontFromFileTTF("src/main/resources/Nihonium113-Console.ttf", i, fontConfig));

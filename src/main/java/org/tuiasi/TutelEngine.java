@@ -1,5 +1,6 @@
 package org.tuiasi;
 
+import imgui.ImGui;
 import org.joml.Vector4f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;

@@ -1,11 +1,13 @@
 package org.tuiasi.engine.ui;
 
-import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiDir;
 import lombok.Getter;
 import lombok.Setter;
+import org.tuiasi.engine.ui.components.IComponent;
 import org.tuiasi.engine.ui.components.basicComponents.TopMenuBar;
+import org.tuiasi.engine.ui.components.composedComponents.Dialog.DialogType;
+import org.tuiasi.engine.ui.components.composedComponents.Dialog.FileDialog;
 import org.tuiasi.engine.ui.uiWindows.IUIWindow;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 import org.tuiasi.engine.ui.uiWindows.prefabs.UIFilesWindow;
@@ -13,6 +15,7 @@ import org.tuiasi.engine.ui.uiWindows.prefabs.UILogsWindow;
 import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeInspectorWindow;
 import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeTreeWindow;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +25,8 @@ public class DefaultEngineEditorUI {
         private TopMenuBar topMenuBar;
         private static List<IUIWindow> uiWindows;
         boolean isSetup = false;
+
+        IComponent fileDialog;
 
         public DefaultEngineEditorUI() {
             uiWindows = new ArrayList<>();
@@ -45,6 +50,8 @@ public class DefaultEngineEditorUI {
             nodeTreeWindow.setDocked(true);
             mainWindow.addDockedWindow(nodeTreeWindow, ImGuiDir.Left, 0.2f);
             uiWindows.add(nodeTreeWindow);
+
+
 
             UIFilesWindow filesWindow = new UIFilesWindow("Files", new ImVec2(0, 0), new ImVec2(100, 100));
             filesWindow.setDocked(true);

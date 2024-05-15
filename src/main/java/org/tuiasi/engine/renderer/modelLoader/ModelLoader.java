@@ -11,14 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ModelLoader {
-
-
-    public static Model test(String path){
+    public static Model load(String path){
         Model model = new Model();
 
         File file = new File(path);
-        if(!file.exists()){
-            System.out.println("File " + path  + " does not exist");
+        if(!file.exists()) {
+            System.out.println("File " + path + " does not exist");
             return model;
         }
 
@@ -66,9 +64,7 @@ public class ModelLoader {
                 textPath = "No texture found";
             }
 
-            model.setVertices(vertices);
-            model.setIndices(indices);
-            model.setTextureName(textPath);
+            model = new Model(vertices, indices, textPath);
         }catch (Exception e){
             e.printStackTrace();
         }

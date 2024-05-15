@@ -73,14 +73,14 @@ public class Renderer {
         addRenderable(plane);
 
 
-        Model customModel =  ModelLoader.test("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/models/fancyCube.gltf");
+        Model customModel =  ModelLoader.load("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/models/fancyCube.gltf");
         for(int i = 0; i < 3; ++i) {
             Renderable3D customObject = new Renderable3D(
                     customModel.getVertices(),
                     customModel.getIndices(),
                     new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/default_vertex.vert", GL_VERTEX_SHADER),
                             new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/shaders/default_fragment.frag", GL_FRAGMENT_SHADER)),
-                    new Material(new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/textures/" + customModel.getTextureName(), 0), new Texture(), 16f),
+                    new Material(new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src/main/resources/textures/" + customModel.getTextureName(), 0), new Texture(1), 16f),
                     new Spatial3D()
             );
             Node<Renderable3D> customModelNode = new Node<>(AppLogic.getRoot(), "Custom model " + i, customObject);

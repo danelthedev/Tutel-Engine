@@ -27,6 +27,8 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 @Data
 public class Renderable3D extends Spatial3D implements IRenderable {
     // mesh data
+    @EditorVisible
+    String pathToModel="";
     int VAO, VBO, EBO;
     FloatBuffer verticesBuffer;
     IntBuffer indicesBuffer;

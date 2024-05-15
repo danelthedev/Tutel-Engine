@@ -20,12 +20,14 @@ public class Texture implements ITexture {
     private IntBuffer width, height, nrChannels;
     @EditorVisible
     private String path;
+    private String previousPath;
     private String format;
     private ByteBuffer image;
     private int textureID, textureIndex;
 
     public Texture(){
         this.path = "";
+        this.previousPath = "";
         this.format = "";
         this.width = BufferUtils.createIntBuffer(1);
         this.height = BufferUtils.createIntBuffer(1);
@@ -33,8 +35,18 @@ public class Texture implements ITexture {
         this.textureID = glGenTextures();
     }
 
+    public Texture(int textureIndex){
+        this();
+        this.textureIndex = textureIndex;
+    }
+
     public Texture(String path, int textureIndex){
         this.path = path;
+        this.previousPath = path;
+        createTexture(path, textureIndex);
+    }
+
+    private void createTexture(String path, int textureIndex){
         if(path.split("\\.").length < 2){
             this.path = "";
             this.format = "";
@@ -78,10 +90,15 @@ public class Texture implements ITexture {
     }
 
     public void use(){
+        if(!previousPath.equals(path)){
+            createTexture(path, textureIndex);
+            previousPath = path;
+        }
+
         if(!path.isEmpty()) {
             glActiveTexture(GL_TEXTURE0 + textureIndex);
             glBindTexture(GL_TEXTURE_2D, textureID);
-//            System.out.println("Using texture " + textureID + " at path: " + pathToTexture);
+//            System.out.println("Using texture " + textureID + " at path: " + path);
         }
         else
             glBindTexture(GL_TEXTURE_2D, 0);

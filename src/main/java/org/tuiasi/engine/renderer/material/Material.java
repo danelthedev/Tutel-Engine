@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.renderer.texture.Texture;
 
-@Data @AllArgsConstructor @NoArgsConstructor
+@Data @NoArgsConstructor @AllArgsConstructor
 public class Material implements IMaterial{
     @EditorVisible
     private Texture diffuse;
@@ -14,4 +14,5 @@ public class Material implements IMaterial{
     private Texture specular;
     @EditorVisible
     private float shininess;
+
 }
