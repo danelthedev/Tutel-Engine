@@ -112,7 +112,6 @@ public class Renderer {
     }
 
     public void render() {
-        System.out.println(renderables.size());
         renderObjects();
         renderAxis();
         renderLights();

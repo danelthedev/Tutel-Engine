@@ -1,8 +1,13 @@
 package org.tuiasi.engine.global.IO;
 
+import org.joml.Matrix4f;
 import org.joml.Vector2d;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.tuiasi.engine.global.WindowVariables;
+import org.tuiasi.engine.renderer.camera.MainCamera;
 
 public class MouseHandler implements IInputHandler{
 
@@ -59,6 +64,8 @@ public class MouseHandler implements IInputHandler{
         return false;
     }
 
+
+
     public static Vector2d getMousePosition() {
         return new Vector2d(xpos, ypos);
     }
@@ -77,15 +84,10 @@ public class MouseHandler implements IInputHandler{
         return new Vector2d(xoffset, yoffset);
     }
 
-    public static double getScroll() {
-        return scroll;
-    }
-
     public static void cleanup() {
         GLFW.glfwSetMouseButtonCallback(window, null);
         GLFW.glfwSetCursorPosCallback(window, null);
         GLFW.glfwSetScrollCallback(window, null);
     }
-
 
 }

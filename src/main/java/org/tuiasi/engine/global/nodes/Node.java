@@ -97,4 +97,18 @@ public class Node<T> {
         return rom.getValue(fieldName);
     }
 
+    public Node<?> findNode(NodeSearchFunction function){
+        if(function.search(this)){
+            return this;
+        }
+
+        for(Node<?> child : children){
+            Node<?> found = child.findNode(function);
+            if(found != null){
+                return found;
+            }
+        }
+
+        return null;
+    }
 }

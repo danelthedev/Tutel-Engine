@@ -10,6 +10,7 @@ import imgui.glfw.ImGuiImplGlfw;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
@@ -144,7 +145,6 @@ public class AppWindow {
             appFonts.put(i, io.getFonts().addFontFromFileTTF("src/main/resources/Nihonium113-Console.ttf", i, fontConfig));
 
     }
-
 
     public void run() {
         // clear the previous frame

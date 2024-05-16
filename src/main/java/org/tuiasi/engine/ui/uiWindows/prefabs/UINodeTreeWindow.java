@@ -55,7 +55,6 @@ public class UINodeTreeWindow extends UIWindow {
             @Override
             public void onNodeClick(Node<?> node) {
                 AppLogic.setSelectedNode(node);
-
                 UINodeInspectorWindow nodeInspectorWindow = ((UINodeInspectorWindow)DefaultEngineEditorUI.getWindow("Node Inspector"));
                 if(nodeInspectorWindow != null){
                     nodeInspectorWindow.refresh();

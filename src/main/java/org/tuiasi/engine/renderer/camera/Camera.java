@@ -1,10 +1,12 @@
 package org.tuiasi.engine.renderer.camera;
 
 import lombok.Data;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
+import org.joml.*;
+import org.tuiasi.engine.global.IO.MouseHandler;
+import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.misc.MathMisc;
+
+import java.lang.Math;
 
 import static java.lang.Math.*;
 
@@ -17,7 +19,7 @@ public abstract class Camera {
     private Vector4f position;
     private Vector4f rotation;
 
-    private Matrix4f viewMatrix;
+    private Matrix4f viewMatrix, projectionMatrix;
 
     public Camera(float fov, float aspect, float near, float far){
         this.fov = fov;
@@ -49,6 +51,11 @@ public abstract class Camera {
                                             getCameraFront().add(position.x, position.y, position.z),
                                             new Vector3f(0, 1, 0));
         return viewMatrix;
+    }
+
+    public Matrix4f calculateProjectionMatrix() {
+        projectionMatrix = new Matrix4f().perspective(fov, aspect, near, far);
+        return projectionMatrix;
     }
 
     public void move(float x, float y, float z) {
@@ -89,4 +96,29 @@ public abstract class Camera {
 
         return direction.normalize();
     }
+
+    public Vector3f getRayDirection(){
+        WindowVariables windowVariables = WindowVariables.getInstance();
+        Vector2d mousePos = MouseHandler.getMousePosition();
+
+        // get the ray direction from the camera position and the position of the mouse
+        Vector3f rayOrigin = new Vector3f(position.x, position.y, position.z);
+        Vector3f rayDirection = new Vector3f();
+        float x = (2.0f * (float)mousePos.x) / windowVariables.getWidth() - 1.0f;
+        float y = 1.0f - (2.0f * (float)mousePos.y) / windowVariables.getHeight();
+        float z = 1.0f;
+        Vector4f rayClip = new Vector4f(x, y, z, 1.0f);
+        Vector4f rayEye = new Vector4f();
+        Matrix4f projCopy = new Matrix4f(projectionMatrix);
+        projCopy.invert().transform(rayClip, rayEye);
+        rayEye.z = -1.0f;
+        rayEye.w = 0.0f;
+        Vector4f rayWorld = new Vector4f();
+        Matrix4f viewCopy = new Matrix4f(viewMatrix);
+        viewCopy.invert().transform(rayEye, rayWorld);
+        rayDirection = new Vector3f(rayWorld.x, rayWorld.y, rayWorld.z);
+        rayDirection.normalize();
+        return rayDirection;
+    }
+
 }

@@ -20,7 +20,7 @@ public class TutelEngine {
     AppWindow appWindow;
 
     // Logic update rate
-    private static final double TARGET_UPS = 1.0; // Target updates per second
+    private static final double TARGET_UPS = 60.0; // Target updates per second
 
     public void run() {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -51,6 +51,7 @@ public class TutelEngine {
             // Update logic if enough time has elapsed
             while (accumulatedTime >= 1.0 / TARGET_UPS) {
                 // Update logic of the engine
+                AppLogic.run();
 
                 accumulatedTime -= 1.0 / TARGET_UPS;
             }

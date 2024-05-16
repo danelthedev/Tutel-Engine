@@ -6,6 +6,7 @@ import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiTreeNodeFlags;
 import lombok.*;
 import org.tuiasi.engine.global.nodes.Node;
+import org.tuiasi.engine.logic.AppLogic;
 
 import java.util.List;
 
@@ -49,6 +50,10 @@ public class Tree extends ITree{
             flags |= ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth;
 
             // Check if the current node is the last clicked one
+
+            if(AppLogic.getSelectedNode() != null && AppLogic.getSelectedNode().hashCode() == node.hashCode())
+                lastClickedNodeId = node.hashCode();
+
             boolean isLastClickedNode = lastClickedNodeId != null && lastClickedNodeId.equals(node.hashCode());
 
             // Highlight the last clicked node

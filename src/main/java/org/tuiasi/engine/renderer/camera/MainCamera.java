@@ -34,6 +34,7 @@ public class MainCamera extends Camera {
             getInstance();
 
         instance.calculateViewMatrix();
+        instance.calculateProjectionMatrix();
 
         // if right click is pressed, allow camera to be moved and rotated
         if (MouseHandler.isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_RIGHT)) {
@@ -94,6 +95,7 @@ public class MainCamera extends Camera {
         float sensitivity = 0.001f;
         instance.rotate((float) (mouseDelta.y * sensitivity), (float) (mouseDelta.x * sensitivity), 0);
     }
+
 
 }
 

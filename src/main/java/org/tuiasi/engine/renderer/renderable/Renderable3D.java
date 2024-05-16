@@ -2,10 +2,14 @@ package org.tuiasi.engine.renderer.renderable;
 
 import lombok.Data;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
+import org.tuiasi.engine.global.IO.MouseHandler;
+import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.renderer.Renderer;
@@ -138,12 +142,7 @@ public class Renderable3D extends Spatial3D implements IRenderable {
         setModelViewMatrix();
         setMaterialUniforms();
 
-        if (mesh == null) {
-
-        }
-        else{
-            mesh.render();
-        }
+        mesh.render();
 
     }
 
