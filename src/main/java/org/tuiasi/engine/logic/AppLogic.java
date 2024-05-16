@@ -45,7 +45,6 @@ public class AppLogic {
                 }
             }
         }
-        System.out.println("Currently selected node: " + selectedNode.getName());
     }
 
 }

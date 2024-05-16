@@ -6,13 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.tuiasi.engine.ui.components.IComponent;
 import org.tuiasi.engine.ui.components.basicComponents.TopMenuBar;
-import org.tuiasi.engine.ui.components.composedComponents.Dialog.DialogType;
-import org.tuiasi.engine.ui.components.composedComponents.Dialog.FileDialog;
 import org.tuiasi.engine.ui.uiWindows.IUIWindow;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 import org.tuiasi.engine.ui.uiWindows.prefabs.*;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +17,17 @@ import java.util.List;
 public class DefaultEngineEditorUI {
 
         private TopMenuBar topMenuBar;
+        @Getter
         private static List<IUIWindow> uiWindows;
+        @Getter
+        private static List<IComponent> popups;
         boolean isSetup = false;
 
         IComponent fileDialog;
 
         public DefaultEngineEditorUI() {
             uiWindows = new ArrayList<>();
+            popups = new ArrayList<>();
 
             topMenuBar = new TopMenuBar();
             UIWindow mainWindow = new UIWindow("Main Window", new ImVec2(0, 0), null, true);
@@ -56,10 +57,21 @@ public class DefaultEngineEditorUI {
         }
 
         public void renderUI() {
-            topMenuBar.render();
             for (int i = 0; i < uiWindows.size(); i++) {
                 uiWindows.get(i).render();
             }
+            for(int i = 0; i < popups.size(); i++){
+                popups.get(i).render();
+            }
+            topMenuBar.render();
+        }
+
+        public static void addPopup(IComponent popup) {
+            popups.add(popup);
+        }
+
+        public static void removePopup(IComponent popup) {
+            popups.remove(popup);
         }
 
         public static void addWindow(IUIWindow window) {

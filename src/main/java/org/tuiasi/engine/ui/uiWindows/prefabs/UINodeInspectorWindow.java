@@ -1,29 +1,22 @@
 package org.tuiasi.engine.ui.uiWindows.prefabs;
 
-import imgui.ImGui;
 import imgui.ImVec2;
-import imgui.extension.imguifiledialog.flag.ImGuiFileDialogFlags;
 import imgui.type.ImString;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.logic.AppLogic;
-import org.tuiasi.engine.ui.components.basicComponents.button.Button;
 import org.tuiasi.engine.ui.components.basicComponents.checkbox.Checkbox;
 import org.tuiasi.engine.ui.components.basicComponents.checkbox.CheckboxListener;
-import org.tuiasi.engine.ui.components.basicComponents.checkbox.CheckboxWithTitle;
 import org.tuiasi.engine.ui.components.basicComponents.dropdown.DropdownListener;
 import org.tuiasi.engine.ui.components.basicComponents.dropdown.DropdownWithTitle;
 import org.tuiasi.engine.ui.components.basicComponents.label.Label;
 import org.tuiasi.engine.ui.components.basicComponents.searchbar.SearchListener;
 import org.tuiasi.engine.ui.components.basicComponents.searchbar.SearchbarWithHint;
 import org.tuiasi.engine.ui.components.composedComponents.Dialog.DialogType;
-import org.tuiasi.engine.ui.components.composedComponents.Dialog.FileDialog;
+import org.tuiasi.engine.ui.components.composedComponents.Dialog.FileDialogFromButton;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class UINodeInspectorWindow extends UIWindow {
 
@@ -251,7 +244,6 @@ public class UINodeInspectorWindow extends UIWindow {
             // String
             else if(selectedNode.getFieldValue(name) instanceof String){
                 String value = (String) selectedNode.getFieldValue(name);
-                System.out.println(name);
                 SearchbarWithHint field = new SearchbarWithHint(name, name, false);
                 field.setSearchListener(new SearchListener() {
                     @Override
@@ -266,9 +258,9 @@ public class UINodeInspectorWindow extends UIWindow {
                 // if the string contains "material" or "mesh" and "path" add a browse button
                 if((name.toLowerCase().contains("material") || name.toLowerCase().contains("mesh")) && name.toLowerCase().contains("path")){
                     field.setEditable(false);
-                    FileDialog fileDialog = new FileDialog("Browse " + name, DialogType.FILE, field);
-                    fileDialog.setSeparator(true);
-                    addComponent(fileDialog);
+                    FileDialogFromButton fileDialogFromButton = new FileDialogFromButton("Browse " + name, DialogType.FILE, field);
+                    fileDialogFromButton.setSeparator(true);
+                    addComponent(fileDialogFromButton);
                 }
                 else{
                     field.setSeparator(true);
