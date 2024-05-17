@@ -1,21 +1,20 @@
 package org.tuiasi.engine.ui.components.basicComponents;
 
-import imgui.ImVec2;
 import imgui.flag.ImGuiStyleVar;
 import imgui.internal.ImGui;
 import lombok.Getter;
 import lombok.Setter;
 import org.tuiasi.engine.global.WindowVariables;
+import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.components.IComponent;
 import org.tuiasi.engine.ui.components.composedComponents.Dialog.DialogType;
 import org.tuiasi.engine.ui.components.composedComponents.Dialog.FileDialog;
-import org.tuiasi.engine.ui.components.composedComponents.Dialog.FileDialogFromButton;
 
 import java.io.File;
-import java.util.List;
 
 public class TopMenuBar extends IComponent {
+
 
     FileDialog fileDialog;
     @Getter @Setter
@@ -67,20 +66,16 @@ public class TopMenuBar extends IComponent {
     }
 
     // TODO: Use this to create the node file structure
-    public void listf(String directoryName, List<File> files) {
-        // if the directory name is .git, ignore
-
+    public void listf(String directoryName, Node<File> parentNode) {
         File directory = new File(directoryName);
 
         // Get all files from a directory.
         File[] fList = directory.listFiles();
         if(fList != null)
             for (File file : fList) {
-                if (file.isFile()) {
-                    System.out.println(file.getAbsolutePath());
-                    files.add(file);
-                } else if (file.isDirectory()) {
-                    listf(file.getAbsolutePath(), files);
+                Node<File> fileNode = new Node<>(parentNode, file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("\\") + 1), file);
+                if (file.isDirectory()) {
+                    listf(file.getAbsolutePath(), fileNode);
                 }
             }
     }

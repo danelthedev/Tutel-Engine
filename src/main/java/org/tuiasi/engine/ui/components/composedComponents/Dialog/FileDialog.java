@@ -6,11 +6,14 @@ import imgui.extension.imguifiledialog.flag.ImGuiFileDialogFlags;
 import imgui.type.ImString;
 import lombok.Getter;
 import lombok.Setter;
+import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.components.IComponent;
 import org.tuiasi.engine.ui.components.basicComponents.TopMenuBar;
 import org.tuiasi.engine.ui.components.basicComponents.searchbar.SearchbarWithHint;
+import org.tuiasi.engine.ui.uiWindows.prefabs.UIFilesWindow;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
@@ -70,10 +73,15 @@ public class FileDialog extends IComponent {
                        if(path.isPresent())
                            i = path.get().lastIndexOf("\\");
                        String workPath = path.isPresent() && !path.get().endsWith(".") ? path.get().substring(0, i) : currentDirectory;
-                       ((TopMenuBar) originator).setWorkDirectory(workPath);
-                       System.out.println("Work directory: " + workPath);
-                       ((TopMenuBar) originator).listf(workPath, new ArrayList<>());
+                       String folderName = path.isPresent() ? path.get().substring(i + 1) : currentDirectory.substring(currentDirectory.lastIndexOf("\\") + 1);
 
+                       ((TopMenuBar) originator).setWorkDirectory(workPath);
+
+                       Node<File> rootNode = new Node<>(null, folderName, new File(workPath));
+                       ((TopMenuBar) originator).listf(workPath, rootNode);
+                       UIFilesWindow treeWindow = (UIFilesWindow) DefaultEngineEditorUI.getWindow("Files"); // Get the UIFilesWindow instance
+                       if(treeWindow != null)
+                           treeWindow.getTreeComponent().getTree().setRoot(rootNode);
                    }
                }
                ImGuiFileDialog.close();

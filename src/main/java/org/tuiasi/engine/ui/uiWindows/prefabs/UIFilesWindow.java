@@ -1,12 +1,25 @@
 package org.tuiasi.engine.ui.uiWindows.prefabs;
 
 import imgui.ImVec2;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.tuiasi.engine.global.nodes.Node;
+import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.components.basicComponents.list.SimpleList;
+import org.tuiasi.engine.ui.components.basicComponents.tree.TreeListener;
+import org.tuiasi.engine.ui.components.composedComponents.TreeWithTitleAndSearchBar;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 
 import java.util.List;
 
+@Getter
+@Setter
 public class UIFilesWindow extends UIWindow {
+
+    TreeWithTitleAndSearchBar treeComponent;
+
     public UIFilesWindow(String windowTitle) {
         super(windowTitle);
         addPrefabComponents();
@@ -24,11 +37,22 @@ public class UIFilesWindow extends UIWindow {
 
     @Override
     protected void addPrefabComponents(){
-        SimpleList filesList = new SimpleList("Logs", List.of("file1", "file2", "file3"));
-        addComponent(filesList);
+        treeComponent = new TreeWithTitleAndSearchBar("Search", "Nodes", null, new TreeListener() {
+            @Override
+            public void onNodeClick(Node<?> node) {
+
+            }
+        }, null);
+        addComponent(treeComponent);
     }
 
     @Override
     protected void configurePrefabComponents(){
     }
+
+    @Override
+    public void render() {
+        super.render();
+    }
+
 }
