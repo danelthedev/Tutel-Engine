@@ -3,6 +3,8 @@ package org.tuiasi.engine.renderer.camera;
 import org.joml.Vector2d;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.logic.EngineState;
 import org.tuiasi.engine.logic.IO.KeyboardHandler;
 import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.WindowVariables;
@@ -36,23 +38,24 @@ public class MainCamera extends Camera {
         instance.calculateViewMatrix();
         instance.calculateProjectionMatrix();
 
-        // if right click is pressed, allow camera to be moved and rotated
-        if (MouseHandler.isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_RIGHT)) {
-            // capture the mouse
-            GLFW.glfwSetInputMode(WindowVariables.getInstance().getWindowID(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+        cameraManipulationLogic();
 
-            cameraMoveLogic();
-            cameraRotateLogic();
-
-        }
-        else{
-            // release the mouse
-            GLFW.glfwSetInputMode(WindowVariables.getInstance().getWindowID(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
-        }
 
     }
 
-    private static void cameraMoveLogic(){
+    private static void cameraManipulationLogic(){
+        if(AppLogic.getEngineState() == EngineState.EDITOR) {
+            if (MouseHandler.isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_RIGHT)) {
+                GLFW.glfwSetInputMode(WindowVariables.getInstance().getWindowID(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+                editorCameraMovement();
+                editorCameraRotation();
+            }
+            else
+                GLFW.glfwSetInputMode(WindowVariables.getInstance().getWindowID(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+        }
+    }
+
+    private static void editorCameraMovement(){
         // Get the camera's front vector
         Vector3f cameraFront = instance.getCameraFront();
 
@@ -89,7 +92,7 @@ public class MainCamera extends Camera {
         }
     }
 
-    private static void cameraRotateLogic(){
+    private static void editorCameraRotation(){
         Vector2d mouseDelta = MouseHandler.getMouseOffset();
         // Update rotation based on mouse offset
         float sensitivity = 0.001f;

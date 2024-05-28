@@ -14,6 +14,7 @@ import org.joml.Vector4f;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -34,6 +35,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class AppWindow {
 
     private int width, height;
+    private boolean maximized;
     private boolean resized;
     private String title;
     private Vector4f clearColor;
@@ -50,10 +52,11 @@ public class AppWindow {
 
     Renderer renderer;
 
-    public AppWindow(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
+    public AppWindow(int width, int height, boolean maximized, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
         //Init class variables
         this.width = width;
         this.height = height;
+        this.maximized = maximized;
         this.title = title;
         this.clearColor = clearColor;
         this.resized = false;
@@ -96,8 +99,16 @@ public class AppWindow {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        windowID = glfwCreateWindow(width, height, title, NULL, NULL);
-        glfwMaximizeWindow(windowID);
+
+        if(maximized) {
+            // get size of the monitor
+            long monitor = glfwGetPrimaryMonitor();
+            GLFWVidMode vidMode = glfwGetVideoMode(monitor);
+            windowID = glfwCreateWindow(vidMode.width(), vidMode.height(), title, NULL, NULL);
+            glfwMaximizeWindow(windowID);
+        }else{
+            windowID = glfwCreateWindow(width, height, title, NULL, NULL);
+        }
 
         if (windowID == NULL) {
             System.out.println("Unable to create window");

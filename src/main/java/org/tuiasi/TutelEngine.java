@@ -26,7 +26,7 @@ public class TutelEngine {
 
     private void init() {
         AppLogic.init();
-        appWindow = new AppWindow(1920, 1080, "Tutel Engine", new Vector4f(0.25f, 0.25f, 0.25f, 0.25f), new DefaultEngineEditorUI());
+        appWindow = new AppWindow(1920, 1080, true, "Tutel Engine", new Vector4f(0.25f, 0.25f, 0.25f, 0.25f), new DefaultEngineEditorUI());
         appWindow.init();
     }
 
