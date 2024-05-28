@@ -1,6 +1,8 @@
 package org.tuiasi.engine.global.nodes.physics.body;
 
-public class KinematicBody implements IBody{
+import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+
+public class KinematicBody extends Spatial3D implements IBody{
     @Override
     public void physRun() {
 

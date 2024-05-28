@@ -3,6 +3,9 @@ package org.tuiasi.engine.ui.uiWindows.prefabs;
 import imgui.ImVec2;
 import imgui.internal.flag.ImGuiDockNodeFlags;
 import org.tuiasi.engine.global.nodes.Node;
+import org.tuiasi.engine.global.nodes.physics.body.KinematicBody;
+import org.tuiasi.engine.global.nodes.physics.body.RigidBody;
+import org.tuiasi.engine.global.nodes.physics.body.StaticBody;
 import org.tuiasi.engine.global.nodes.spatial.Spatial;
 import org.tuiasi.engine.global.nodes.spatial.Spatial2D;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
@@ -54,10 +57,17 @@ public class UINewNodeModalWindow extends UIWindow {
         }, null);
 
         Node<?> root = new Node<>(null, "Node", Node.class);
+
         Node<?> spatial = new Node<>(root, "Spatial", Spatial.class);
         Node<?> spatial3D = new Node<>(spatial, "Spatial3D", Spatial3D.class);
         Node<?> spatial2D = new Node<>(spatial, "Spatial2D", Spatial2D.class);
+
+        Node<?> staticBody = new Node<>(spatial3D, "StaticBody", StaticBody.class);
+        Node<?> kinematicBody = new Node<>(spatial3D, "KinematicBody", KinematicBody.class);
+        Node<?> rigidBody = new Node<>(spatial3D, "RigidBody", RigidBody.class);
+
         Node<?> renderable3D = new Node<>(spatial3D, "Renderable3D", Renderable3D.class);
+
         Node<?> lightSource = new Node<>(root, "Light Source", LightSource.class);
         Node<?> directionalLight = new Node<>(lightSource, "Directional Light", DirectionalLight.class);
         Node<?> pointLight = new Node<>(lightSource, "Point Light", PointLight.class);

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+import org.tuiasi.engine.global.nodes.physics.body.IBody;
 import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
@@ -25,6 +26,7 @@ public class AppLogic {
     static Node<?> selectedNode;
 
     static List<Node<?>> nodesWithScripts;
+    static List<Node<?>> physicsNodes;
 
     public static void init(){
         root = new Node<>(null, "Root", new Spatial3D(
@@ -35,6 +37,7 @@ public class AppLogic {
         selectedNode = root;
 
         nodesWithScripts = new ArrayList<>();
+        physicsNodes = new ArrayList<>();
     }
 
     public static void initializeNodes(){
@@ -46,6 +49,10 @@ public class AppLogic {
         if(node.getScriptObj() != null){
             nodesWithScripts.add(node);
             node.getScriptObj().init();
+        }
+
+        if(node.getValue() instanceof IBody){
+            physicsNodes.add(node);
         }
 
         for(Node<?> child : node.getChildren()){
@@ -77,11 +84,16 @@ public class AppLogic {
             for(Node<?> node : nodesWithScripts){
                 node.getScriptObj().run();
             }
+            for(Node<?> node: physicsNodes){
+                ((IBody)node.getValue()).physRun();
+            }
+
         }
     }
 
     public static void cleanNodeQueue(){
         nodesWithScripts.clear();
+        physicsNodes.clear();
     }
 
 }
