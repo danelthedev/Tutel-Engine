@@ -2,7 +2,6 @@ package org.tuiasi.engine.renderer.material;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.renderer.texture.Texture;
 

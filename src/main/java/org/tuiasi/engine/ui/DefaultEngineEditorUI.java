@@ -8,7 +8,10 @@ import org.tuiasi.engine.ui.components.IComponent;
 import org.tuiasi.engine.ui.components.basicComponents.TopMenuBar;
 import org.tuiasi.engine.ui.uiWindows.IUIWindow;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
-import org.tuiasi.engine.ui.uiWindows.prefabs.*;
+import org.tuiasi.engine.ui.uiWindows.prefabs.UIFilesWindow;
+import org.tuiasi.engine.ui.uiWindows.prefabs.UILogsWindow;
+import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeInspectorWindow;
+import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeTreeWindow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +26,10 @@ public class DefaultEngineEditorUI {
         private static List<IComponent> popups;
         boolean isSetup = false;
 
-        IComponent fileDialog;
+        @Getter @Setter
+        static boolean displayingUI = true;
+
+//        IComponent fileDialog;
 
         public DefaultEngineEditorUI() {
             uiWindows = new ArrayList<>();
@@ -57,11 +63,13 @@ public class DefaultEngineEditorUI {
         }
 
         public void renderUI() {
-            for (int i = 0; i < uiWindows.size(); i++) {
-                uiWindows.get(i).render();
-            }
-            for(int i = 0; i < popups.size(); i++){
-                popups.get(i).render();
+            if (displayingUI) {
+                for (int i = 0; i < uiWindows.size(); i++) {
+                    uiWindows.get(i).render();
+                }
+                for (int i = 0; i < popups.size(); i++) {
+                    popups.get(i).render();
+                }
             }
             topMenuBar.render();
         }

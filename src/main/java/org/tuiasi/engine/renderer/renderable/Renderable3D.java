@@ -2,35 +2,19 @@ package org.tuiasi.engine.renderer.renderable;
 
 import lombok.Data;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
-import org.tuiasi.engine.global.IO.MouseHandler;
-import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.material.Material;
 import org.tuiasi.engine.renderer.mesh.Mesh;
-import org.tuiasi.engine.renderer.shader.DrawMode;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
 import org.tuiasi.engine.renderer.shader.Uniform;
 import org.tuiasi.engine.renderer.texture.Texture;
 
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 // TODO: Switch individual sampler2D uniforms to a single array of samplers
 

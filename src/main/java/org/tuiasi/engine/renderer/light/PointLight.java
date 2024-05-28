@@ -1,6 +1,7 @@
 package org.tuiasi.engine.renderer.light;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 

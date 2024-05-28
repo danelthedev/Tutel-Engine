@@ -1,13 +1,8 @@
-package org.tuiasi.engine.global.IO;
+package org.tuiasi.engine.logic.IO;
 
-import org.joml.Matrix4f;
 import org.joml.Vector2d;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
-import org.tuiasi.engine.global.WindowVariables;
-import org.tuiasi.engine.renderer.camera.MainCamera;
 
 public class MouseHandler implements IInputHandler{
 

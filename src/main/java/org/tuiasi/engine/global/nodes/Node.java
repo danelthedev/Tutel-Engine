@@ -3,7 +3,8 @@ package org.tuiasi.engine.global.nodes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.tuiasi.engine.global.nodes.reflexive.ReflexiveObjectManager;
+import org.tuiasi.engine.global.nodes.reflective.ReflectiveObjectManager;
+import org.tuiasi.engine.logic.codeProcessor.IScript;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,11 @@ public class Node<T> {
     private Node<?> parent;
 
     private T value;
-    private ReflexiveObjectManager rom;
+    private ReflectiveObjectManager rom;
+
+    @EditorVisible
+    private String script;
+    private IScript scriptObj;
 
 
     public Node(Node<?> parent, String name){
@@ -43,7 +48,7 @@ public class Node<T> {
     public Node(Node<?> parent, String name, T value){
         this(parent, name);
         this.value = value;
-        this.rom = new ReflexiveObjectManager(value);
+        this.rom = new ReflectiveObjectManager(value);
     }
 
     // override hash function

@@ -8,7 +8,7 @@ import imgui.type.ImString;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.tuiasi.engine.global.IO.KeyboardHandler;
+import org.tuiasi.engine.logic.IO.KeyboardHandler;
 
 @Getter @Setter @NoArgsConstructor
 public class Textbox extends ITextbox{

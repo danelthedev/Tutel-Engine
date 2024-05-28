@@ -1,4 +1,4 @@
-package org.tuiasi.engine.global.nodes.reflexive;
+package org.tuiasi.engine.global.nodes.reflective;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 @Data
-public class ReflexiveFieldAccesor {
+public class ReflectiveFieldAccesor {
     private String fieldName;
 
     private Field field;
@@ -15,7 +15,7 @@ public class ReflexiveFieldAccesor {
     private Method getter;
     private Method setter;
 
-    public ReflexiveFieldAccesor(Field field, Object obj,  Method getter, Method setter) {
+    public ReflectiveFieldAccesor(Field field, Object obj, Method getter, Method setter) {
         this.fieldName = field.getName();
         this.field = field;
         this.obj = obj;

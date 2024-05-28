@@ -4,8 +4,12 @@ import imgui.flag.ImGuiStyleVar;
 import imgui.internal.ImGui;
 import lombok.Getter;
 import lombok.Setter;
+import org.lwjgl.opengl.GL11;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.global.nodes.Node;
+import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.logic.EngineState;
+import org.tuiasi.engine.renderer.texture.Texture;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.components.IComponent;
 import org.tuiasi.engine.ui.components.composedComponents.Dialog.DialogType;
@@ -19,6 +23,13 @@ public class TopMenuBar extends IComponent {
     FileDialog fileDialog;
     @Getter @Setter
     String workDirectory = "";
+
+    Texture playTexture, stopTexture;
+
+    public TopMenuBar(){
+        playTexture = null;
+        stopTexture = null;
+    }
 
     public String getLabel() {
         return "TopMenuBar";
@@ -53,13 +64,39 @@ public class TopMenuBar extends IComponent {
                     DefaultEngineEditorUI.addPopup(fileDialog);
                 }
             }
+
             ImGui.endMenu();
         }
 
-        if (ImGui.beginMenu("Edit")) {
+        if (ImGui.beginMenu("Window")) {
+
+            if(ImGui.menuItem(DefaultEngineEditorUI.isDisplayingUI() ? "Disable UI" : "Enable UI")){
+                DefaultEngineEditorUI.setDisplayingUI(!DefaultEngineEditorUI.isDisplayingUI());
+            }
+
             ImGui.endMenu();
         }
 
+
+        // play button
+        ImGui.setCursorPosX((imgui.ImGui.getWindowSizeX() - 30));
+        if(playTexture == null) {
+            playTexture = new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\textures\\uiTextures\\play.png", 0);
+            stopTexture = new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\textures\\uiTextures\\stop.png", 0);
+        }
+        Texture currentStateTexture = AppLogic.getEngineState() == EngineState.PLAY ? stopTexture : playTexture;
+        if(ImGui.imageButton(currentStateTexture.getTextureID(), 25, 20)){
+            if(AppLogic.getEngineState() == EngineState.PLAY){
+                AppLogic.setEngineState(EngineState.EDITOR);
+                AppLogic.cleanNodeQueue();
+                DefaultEngineEditorUI.setDisplayingUI(true);
+            }
+            else{
+                AppLogic.setEngineState(EngineState.PLAY);
+                AppLogic.initializeNodes();
+                DefaultEngineEditorUI.setDisplayingUI(false);
+            }
+        }
 
         ImGui.endMainMenuBar();
         ImGui.popStyleVar();

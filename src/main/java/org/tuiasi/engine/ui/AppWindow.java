@@ -10,7 +10,6 @@ import imgui.glfw.ImGuiImplGlfw;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
@@ -18,17 +17,13 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-import org.tuiasi.engine.global.IO.KeyboardHandler;
-import org.tuiasi.engine.global.IO.MouseHandler;
+import org.tuiasi.engine.logic.IO.KeyboardHandler;
+import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.camera.MainCamera;
-import org.tuiasi.engine.renderer.light.DirectionalLight;
-import org.tuiasi.engine.renderer.light.PointLight;
-import org.tuiasi.engine.renderer.renderable.Renderable3D;
 
 import java.util.HashMap;
-import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -73,6 +68,7 @@ public class AppWindow {
 
         windowVariables = WindowVariables.getInstance();
         renderer = new Renderer();
+
     }
 
     public void destroy() {
@@ -101,6 +97,7 @@ public class AppWindow {
 
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         windowID = glfwCreateWindow(width, height, title, NULL, NULL);
+        glfwMaximizeWindow(windowID);
 
         if (windowID == NULL) {
             System.out.println("Unable to create window");
@@ -142,7 +139,7 @@ public class AppWindow {
 
         appFonts = new HashMap<>();
         for(int i = 16; i <= 64; ++ i)
-            appFonts.put(i, io.getFonts().addFontFromFileTTF("src/main/resources/Nihonium113-Console.ttf", i, fontConfig));
+            appFonts.put(i, io.getFonts().addFontFromFileTTF("C:\\Users\\Danel\\IdeaProjects\\licenta\\target\\classes\\Nihonium113-Console.ttf", i, fontConfig));
 
     }
 

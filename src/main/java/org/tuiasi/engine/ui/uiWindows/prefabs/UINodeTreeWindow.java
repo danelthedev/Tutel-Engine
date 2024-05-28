@@ -1,9 +1,8 @@
 package org.tuiasi.engine.ui.uiWindows.prefabs;
 
-import imgui.ImGui;
 import imgui.ImVec2;
 import org.lwjgl.glfw.GLFW;
-import org.tuiasi.engine.global.IO.KeyboardHandler;
+import org.tuiasi.engine.logic.IO.KeyboardHandler;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.logic.AppLogic;
 import org.tuiasi.engine.renderer.Renderer;

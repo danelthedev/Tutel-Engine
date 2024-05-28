@@ -3,18 +3,15 @@ package org.tuiasi.engine.renderer.light;
 import lombok.Data;
 import org.joml.Vector3f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
-import org.tuiasi.engine.global.nodes.spatial.Spatial;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.material.Material;
 import org.tuiasi.engine.renderer.mesh.Mesh;
 import org.tuiasi.engine.renderer.primitives.Cube;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
-import org.tuiasi.engine.renderer.shader.DrawMode;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
 import org.tuiasi.engine.renderer.shader.Uniform;
-import org.tuiasi.engine.renderer.texture.Texture;
 
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;

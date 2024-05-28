@@ -7,6 +7,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.logic.codeProcessor.IScript;
 import org.tuiasi.engine.ui.components.basicComponents.checkbox.Checkbox;
 import org.tuiasi.engine.ui.components.basicComponents.checkbox.CheckboxListener;
 import org.tuiasi.engine.ui.components.basicComponents.dropdown.DropdownListener;
@@ -17,6 +18,12 @@ import org.tuiasi.engine.ui.components.basicComponents.searchbar.SearchbarWithHi
 import org.tuiasi.engine.ui.components.composedComponents.Dialog.DialogType;
 import org.tuiasi.engine.ui.components.composedComponents.Dialog.FileDialogFromButton;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
+
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
+import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public class UINodeInspectorWindow extends UIWindow {
 
@@ -61,6 +68,40 @@ public class UINodeInspectorWindow extends UIWindow {
         nameField.setSearchText(new ImString(selectedNode.getName(), 250));
         nameField.setSeparator(true);
         addComponent(nameField);
+
+        // add a label with the word "Script" and a textbox with browse button that allows the user to change the script
+        Label scriptLabel = new Label("Script", false, 16);
+        addComponent(scriptLabel);
+        SearchbarWithHint scriptField = new SearchbarWithHint("Script", "Script", false);
+        scriptField.setSearchListener(new SearchListener() {
+            @Override
+            public void onSearch(String searchText) {
+                selectedNode.setScript(searchText);
+                scriptField.setSearchText(new ImString(searchText, 250));
+
+                JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+                int result = compiler.run(null, null, null, new File(searchText).getPath());
+
+                try {
+                    String classPath = searchText.substring(0, searchText.lastIndexOf("\\"));
+                    String className = searchText.substring(searchText.lastIndexOf("\\") + 1, searchText.lastIndexOf("."));
+
+                    URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{new File(classPath).toURI().toURL()});
+                    Class<?> script = Class.forName(className, true, classLoader);
+                    IScript scriptInstance = (IScript) script.getDeclaredConstructor().newInstance();
+                    selectedNode.setScriptObj(scriptInstance);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        scriptField.setSearchText(selectedNode.getScript() == null ? new ImString("", 250) : new ImString(selectedNode.getScript(), 250));
+        addComponent(scriptField);
+
+        scriptField.setEditable(false);
+        FileDialogFromButton scriptBrowse = new FileDialogFromButton("Browse script", DialogType.FILE, scriptField);
+        scriptBrowse.setSeparator(true);
+        addComponent(scriptBrowse);
 
         // iterate over all the fields of the selected node and add labels and input fields for each field
         for(int i = 0; i < selectedNode.getFields().size(); i++) {

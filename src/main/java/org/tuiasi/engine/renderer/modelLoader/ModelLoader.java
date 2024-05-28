@@ -5,10 +5,6 @@ import org.lwjgl.assimp.*;
 
 import java.io.File;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ModelLoader {
     public static Model load(String path){

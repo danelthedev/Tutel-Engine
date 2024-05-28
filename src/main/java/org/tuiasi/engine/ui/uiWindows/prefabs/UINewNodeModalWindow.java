@@ -1,7 +1,6 @@
 package org.tuiasi.engine.ui.uiWindows.prefabs;
 
 import imgui.ImVec2;
-import imgui.internal.ImGuiDockNode;
 import imgui.internal.flag.ImGuiDockNodeFlags;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.spatial.Spatial;

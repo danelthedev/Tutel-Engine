@@ -4,7 +4,9 @@ import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiTreeNodeFlags;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.logic.AppLogic;
 

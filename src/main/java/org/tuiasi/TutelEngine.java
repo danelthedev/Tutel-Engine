@@ -1,15 +1,10 @@
 package org.tuiasi;
 
-import imgui.ImGui;
 import org.joml.Vector4f;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFW;
 import org.tuiasi.engine.logic.AppLogic;
-import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.ui.AppWindow;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
-
-import java.util.Scanner;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;

@@ -3,8 +3,8 @@ package org.tuiasi.engine.renderer.camera;
 import org.joml.Vector2d;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import org.tuiasi.engine.global.IO.KeyboardHandler;
-import org.tuiasi.engine.global.IO.MouseHandler;
+import org.tuiasi.engine.logic.IO.KeyboardHandler;
+import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.WindowVariables;
 
 public class MainCamera extends Camera {

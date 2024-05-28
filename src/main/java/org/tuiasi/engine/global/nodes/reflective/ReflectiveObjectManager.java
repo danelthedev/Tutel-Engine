@@ -1,4 +1,4 @@
-package org.tuiasi.engine.global.nodes.reflexive;
+package org.tuiasi.engine.global.nodes.reflective;
 
 import org.tuiasi.engine.global.nodes.EditorVisible;
 
@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ReflexiveObjectManager {
+public class ReflectiveObjectManager {
 
-    private Map<String, ReflexiveFieldAccesor> rfas = new HashMap<String, ReflexiveFieldAccesor>();
+    private Map<String, ReflectiveFieldAccesor> rfas = new HashMap<String, ReflectiveFieldAccesor>();
 
-    public ReflexiveObjectManager(Object obj) {
+    public ReflectiveObjectManager(Object obj) {
         processFields(obj, "");
     }
 
@@ -49,7 +49,7 @@ public class ReflexiveObjectManager {
                 // ignore
             }
 
-            ReflexiveFieldAccesor rfa = new ReflexiveFieldAccesor(field, obj, getter, setter);
+            ReflectiveFieldAccesor rfa = new ReflectiveFieldAccesor(field, obj, getter, setter);
 
             rfas.put(prefix + fieldName, rfa);
 
@@ -67,7 +67,7 @@ public class ReflexiveObjectManager {
                         }
                     }
                 } catch (IllegalAccessException e) {
-                    // ignore
+                    e.printStackTrace();
                 }
             }
 

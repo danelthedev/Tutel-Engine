@@ -1,4 +1,4 @@
-package org.tuiasi.engine.global.IO;
+package org.tuiasi.engine.logic.IO;
 
 public interface IInputHandler {
 
