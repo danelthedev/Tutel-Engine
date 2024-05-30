@@ -56,7 +56,7 @@ public class LightSource extends Spatial3D {
     }
 
     public void setPosition(Vector3f newPosition){
-        setPosition(newPosition);
+        super.setPosition(newPosition);
         representation.setPosition(getPosition());
     }
 

@@ -126,7 +126,7 @@ public class UINodeInspectorWindow extends UIWindow {
             }else
             // Vector2f
             if(selectedNode.getFieldValue(name) instanceof Vector2f) {
-                Vector3f value = (Vector3f) selectedNode.getFieldValue(name);
+                Vector2f value = (Vector2f) selectedNode.getFieldValue(name);
                 for (int j = 0; j < 2; j++) {
                     // add a label saying x,y,z,w depending on the j value
                     Label compLabel = new Label(String.valueOf((char)('x' + j)), true, 16);
@@ -139,8 +139,10 @@ public class UINodeInspectorWindow extends UIWindow {
                             // depending on the j value, set the x, y or z value of the vector
                             try {
                                 if (finalJ == 0) {
+                                    selectedNode.setFieldValue(name, new Vector2f(Float.parseFloat(searchText), value.y));
                                     value.x = Float.parseFloat(searchText);
                                 } else {
+                                    selectedNode.setFieldValue(name, new Vector2f(value.x, Float.parseFloat(searchText)));
                                     value.y = Float.parseFloat(searchText);
                                 }
                             } catch (NumberFormatException e) {
@@ -170,10 +172,13 @@ public class UINodeInspectorWindow extends UIWindow {
                             // depending on the j value, set the x, y or z value of the vector
                             try {
                                 if (finalJ == 0) {
+                                    selectedNode.setFieldValue(name, new Vector3f(Float.parseFloat(searchText), value.y, value.z));
                                     value.x = Float.parseFloat(searchText);
                                 } else if (finalJ == 1) {
+                                    selectedNode.setFieldValue(name, new Vector3f(value.x, Float.parseFloat(searchText), value.z));
                                     value.y = Float.parseFloat(searchText);
                                 } else {
+                                    selectedNode.setFieldValue(name, new Vector3f(value.x, value.y, Float.parseFloat(searchText)));
                                     value.z = Float.parseFloat(searchText);
                                 }
                             } catch (NumberFormatException e) {
@@ -203,12 +208,16 @@ public class UINodeInspectorWindow extends UIWindow {
                             // depending on the j value, set the x, y or z value of the vector
                             try {
                                 if (finalJ == 0) {
+                                    selectedNode.setFieldValue(name, new Vector4f(Float.parseFloat(searchText), value.y, value.z, value.w));
                                     value.x = Float.parseFloat(searchText);
                                 } else if (finalJ == 1) {
+                                    selectedNode.setFieldValue(name, new Vector4f(value.x, Float.parseFloat(searchText), value.z, value.w));
                                     value.y = Float.parseFloat(searchText);
                                 } else if (finalJ == 2) {
+                                    selectedNode.setFieldValue(name, new Vector4f(value.x, value.y, Float.parseFloat(searchText), value.w));
                                     value.z = Float.parseFloat(searchText);
-                                } else {
+                                }else {
+                                    selectedNode.setFieldValue(name, new Vector4f(value.x, value.y, value.z, Float.parseFloat(searchText)));
                                     value.w = Float.parseFloat(searchText);
                                 }
                             } catch (NumberFormatException e) {

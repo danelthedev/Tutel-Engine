@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.tuiasi.engine.global.nodes.reflective.ReflectiveObjectManager;
+import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.logic.codeProcessor.IScript;
 
 import java.util.ArrayList;
@@ -49,6 +50,12 @@ public class Node<T> {
         this(parent, name);
         this.value = value;
         this.rom = new ReflectiveObjectManager(value);
+
+        if(parent != null){
+            if(value instanceof Spatial3D && parent.getValue() instanceof Spatial3D){
+                ((Spatial3D) parent.getValue()).addChild((Spatial3D) value);
+            }
+        }
     }
 
     // override hash function

@@ -6,28 +6,48 @@ import org.joml.Vector4f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 public class Spatial3D extends Spatial{
 
     @EditorVisible
-    private Vector3f position;
+    protected Vector3f position;
     @EditorVisible
-    private Vector3f rotation;
+    protected Vector3f rotation;
     @EditorVisible
-    private Vector3f scale;
+    protected Vector3f scale;
+
+    private Spatial3D parent;
+    private List<Spatial3D> children;
 
     public Spatial3D(Vector3f position, Vector3f rotation, Vector3f scale){
         this.position = position;
         this.rotation = rotation;
         this.scale = scale;
+        children = new ArrayList<>();
     }
 
     public Spatial3D(){
         this.position = new Vector3f(0,0,0);
         this.rotation = new Vector3f(0,0,0);
         this.scale = new Vector3f(1,1,1);
+        children = new ArrayList<>();
     }
 
+    public void addChild(Spatial3D child){
+        children.add(child);
+        child.setParent(this);
+    }
+
+    public void setPosition(Vector3f newPosition) {
+        Vector3f delta = new Vector3f(newPosition).sub(position);
+        position = newPosition;
+        for (Spatial3D child : children) {
+            child.translate(delta);
+        }
+    }
 
     public void translate(Vector3f translation){
         this.position.add(translation);
