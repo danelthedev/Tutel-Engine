@@ -9,25 +9,21 @@ import org.tuiasi.engine.logic.IO.KeyboardHandler;
 import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.WindowVariables;
 
-public class MainCamera extends Camera {
-    private static MainCamera instance;
+public class MainCamera {
+    private static Camera instance;
 
-    private MainCamera(float fov, float aspect, float near, float far) {
-        super(fov, aspect, near, far);
-    }
-
-    public static MainCamera getInstance() {
+    public static Camera getInstance() {
         WindowVariables windowVariables = WindowVariables.getInstance();
 
         if (instance == null) {
-            instance = new MainCamera((float) Math.toRadians(45.0f), (float) windowVariables.getWidth() / windowVariables.getHeight(), 0.1f, 1000.0f);
+            instance = new Camera((float) Math.toRadians(45.0f), (float) windowVariables.getWidth() / windowVariables.getHeight(), 0.1f, 1000.0f);
         }
         return instance;
     }
 
     // thread safe method to set the instance to another camera
     public static synchronized void setInstance(Camera camera) {
-        instance = (MainCamera) camera;
+        instance = camera;
     }
 
     public static void update(){
@@ -39,8 +35,6 @@ public class MainCamera extends Camera {
         instance.calculateProjectionMatrix();
 
         cameraManipulationLogic();
-
-
     }
 
     private static void cameraManipulationLogic(){

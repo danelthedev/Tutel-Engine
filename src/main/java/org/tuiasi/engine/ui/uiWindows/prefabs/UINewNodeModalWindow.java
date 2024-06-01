@@ -10,6 +10,7 @@ import org.tuiasi.engine.global.nodes.spatial.Spatial;
 import org.tuiasi.engine.global.nodes.spatial.Spatial2D;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.renderer.camera.Camera;
 import org.tuiasi.engine.renderer.light.DirectionalLight;
 import org.tuiasi.engine.renderer.light.LightSource;
 import org.tuiasi.engine.renderer.light.PointLight;
@@ -57,6 +58,8 @@ public class UINewNodeModalWindow extends UIWindow {
         }, null);
 
         Node<?> root = new Node<>(null, "Node", Node.class);
+
+        Node<?> camera3D = new Node<>(root, "Camera3D", Camera.class);
 
         Node<?> spatial = new Node<>(root, "Spatial", Spatial.class);
         Node<?> spatial3D = new Node<>(spatial, "Spatial3D", Spatial3D.class);

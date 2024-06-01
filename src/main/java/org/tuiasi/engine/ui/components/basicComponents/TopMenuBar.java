@@ -9,6 +9,7 @@ import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.logic.AppLogic;
 import org.tuiasi.engine.logic.EngineState;
+import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.texture.Texture;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.components.IComponent;
@@ -88,6 +89,7 @@ public class TopMenuBar extends IComponent {
         if(ImGui.imageButton(currentStateTexture.getTextureID(), 25, 20)){
             if(AppLogic.getEngineState() == EngineState.PLAY){
                 AppLogic.setEngineState(EngineState.EDITOR);
+                MainCamera.setInstance(AppLogic.getEditorCamera());
                 AppLogic.cleanNodeQueue();
                 DefaultEngineEditorUI.setDisplayingUI(true);
             }

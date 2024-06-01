@@ -5,6 +5,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2d;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.misc.MathMisc;
@@ -12,15 +13,34 @@ import org.tuiasi.engine.misc.MathMisc;
 import static java.lang.Math.*;
 
 @Data
-public abstract class Camera {
-    private float fov;
-    private float aspect;
-    private float near;
-    private float far;
+public class Camera {
+    @EditorVisible
+    private Float fov;
+    @EditorVisible
+    private Float aspect;
+    @EditorVisible
+    private Float near;
+    @EditorVisible
+    private Float far;
+    @EditorVisible
     private Vector4f position;
+    @EditorVisible
     private Vector4f rotation;
+    @EditorVisible
+    private Boolean isMainCamera = Boolean.FALSE;;
 
     private Matrix4f viewMatrix, projectionMatrix;
+
+    public Camera(){
+        this.fov = (float) Math.toRadians(45.0f);
+        this.aspect = (float) WindowVariables.getInstance().getWidth() / WindowVariables.getInstance().getHeight();
+        this.near = 0.1f;
+        this.far = 1000.0f;
+        this.position = new Vector4f(0, 0, 0, 0);
+        this.rotation = new Vector4f(0, (float) (-PI/2), 0, 0);
+
+        this.viewMatrix = new Matrix4f();
+    }
 
     public Camera(float fov, float aspect, float near, float far){
         this.fov = fov;
@@ -46,7 +66,6 @@ public abstract class Camera {
     }
 
     public Matrix4f calculateViewMatrix() {
-
         // use the position vector and front vector in the lookAt function to calculate the view matrix
         viewMatrix = new Matrix4f().lookAt( new Vector3f(position.x, position.y, position.z),
                                             getCameraFront().add(position.x, position.y, position.z),

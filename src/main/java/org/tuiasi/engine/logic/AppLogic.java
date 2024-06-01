@@ -4,10 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.global.nodes.physics.body.IBody;
 import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+import org.tuiasi.engine.renderer.camera.Camera;
+import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeInspectorWindow;
 
@@ -28,7 +31,18 @@ public class AppLogic {
     static List<Node<?>> nodesWithScripts;
     static List<Node<?>> physicsNodes;
 
+    @Getter
+    static Camera editorCamera;
+
+    @Getter
+    static List<Camera> cameras;
+
     public static void init(){
+        WindowVariables windowVariables = WindowVariables.getInstance();
+        editorCamera = new Camera((float) Math.toRadians(45.0f), (float) windowVariables.getWidth() / windowVariables.getHeight(), 0.1f, 1000.0f);
+
+        MainCamera.setInstance(editorCamera);
+
         root = new Node<>(null, "Root", new Spatial3D(
                 new Vector3f(0,0,0),
                 new Vector3f(0,0,0),
@@ -38,6 +52,8 @@ public class AppLogic {
 
         nodesWithScripts = new ArrayList<>();
         physicsNodes = new ArrayList<>();
+
+        cameras = new ArrayList<>();
     }
 
     public static void initializeNodes(){
@@ -53,6 +69,12 @@ public class AppLogic {
 
         if(node.getValue() instanceof IBody){
             physicsNodes.add(node);
+        }
+
+        if(node.getValue() instanceof Camera){
+            cameras.add((Camera) node.getValue());
+            if(((Camera) node.getValue()).getIsMainCamera())
+                MainCamera.setInstance((Camera) node.getValue());
         }
 
         for(Node<?> child : node.getChildren()){
@@ -94,6 +116,7 @@ public class AppLogic {
     public static void cleanNodeQueue(){
         nodesWithScripts.clear();
         physicsNodes.clear();
+        cameras.clear();
     }
 
 }

@@ -5,6 +5,7 @@ import org.joml.Matrix4f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.renderer.Renderer;
+import org.tuiasi.engine.renderer.camera.Camera;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.material.Material;
 import org.tuiasi.engine.renderer.mesh.Mesh;
@@ -73,7 +74,7 @@ public class Renderable3D extends Spatial3D implements IRenderable {
     }
 
     private void setModelViewMatrix() {
-        MainCamera camera = MainCamera.getInstance();
+        Camera camera = MainCamera.getInstance();
 
         Matrix4f projectionMatrix = new Matrix4f();
         projectionMatrix.identity();
