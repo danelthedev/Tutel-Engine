@@ -45,22 +45,49 @@ public class Spatial3D extends Spatial{
         Vector3f delta = new Vector3f(newPosition).sub(position);
         position = newPosition;
         for (Spatial3D child : children) {
-            child.translate(delta);
+            Vector3f childNewPosition = new Vector3f(child.getPosition()).add(delta);
+            child.setPosition(childNewPosition);
         }
     }
 
     public void translate(Vector3f translation){
         this.position.add(translation);
+        for (Spatial3D child : children) {
+            child.translate(translation);
+        }
+    }
+
+    public void setRotation(Vector3f newRotation) {
+        Vector3f deltaRotation = new Vector3f(newRotation).sub(rotation);
+        rotation = newRotation;
+        for (Spatial3D child : children) {
+            Vector3f childNewRotation = new Vector3f(child.getRotation()).add(deltaRotation);
+            child.setRotation(childNewRotation);
+        }
     }
 
     public void rotate(Vector3f rotation){
         this.rotation.add(rotation);
+        for (Spatial3D child : children) {
+            child.rotate(rotation);
+        }
     }
 
-    public void scale(Vector3f scale){
-        this.scale.add(scale);
+    public void setScale(Vector3f newScale) {
+        Vector3f deltaScale = new Vector3f(newScale).div(scale);
+        scale = newScale;
+        for (Spatial3D child : children) {
+            Vector3f childNewScale = new Vector3f(child.getScale()).mul(deltaScale);
+            child.setScale(childNewScale);
+        }
     }
 
+    public void scale(Vector3f scaleChange){
+        this.scale.mul(scaleChange);
+        for (Spatial3D child : children) {
+            child.scale(scaleChange);
+        }
+    }
 
     public boolean isMouseHovered(){
         // test raycasting

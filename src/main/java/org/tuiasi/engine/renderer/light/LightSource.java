@@ -61,7 +61,7 @@ public class LightSource extends Spatial3D {
     }
 
     public void setRotation(Vector3f newRotation){
-        setRotation(newRotation);
+        super.setRotation(newRotation);
         representation.setRotation(getRotation());
     }
 
