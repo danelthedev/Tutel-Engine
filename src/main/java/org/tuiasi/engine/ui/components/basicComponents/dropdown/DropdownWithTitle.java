@@ -74,7 +74,6 @@ public class DropdownWithTitle extends IDropdown{
 
                 boolean isSelected = selectedItemIndex == i;
                 if (ImGui.selectable(items[i] + "##OptionOfDropdown_" + label, isSelected)) {
-
                     selectedItemIndex = i;
                     if (listener != null) {
                         listener.onItemSelected(i);

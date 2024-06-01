@@ -281,16 +281,17 @@ public class UINodeInspectorWindow extends UIWindow {
                     enumValues[index++] = enumValue.toString();
                 }
                 DropdownWithTitle dropdown = new DropdownWithTitle(name, enumValues);
-                dropdown.setSelectedItemIndex(((Enum)selectedNode.getFieldValue(name)).ordinal());
-                dropdown.setWidth(200);
-                dropdown.setSeparator(true);
-
                 dropdown.setListener(new DropdownListener() {
                     @Override
                     public void onItemSelected(int index) {
                         selectedNode.setFieldValue(name, selectedNode.getFieldValue(name).getClass().getEnumConstants()[index]);
                     }
                 });
+
+//                dropdown.setSelectedItemIndex(((Enum)selectedNode.getFieldValue(name)).ordinal());
+                dropdown.setWidth(200);
+                dropdown.setSeparator(true);
+
 
                 addComponent(dropdown);
             }

@@ -11,7 +11,8 @@ import org.tuiasi.engine.renderer.light.LightSource;
 import org.tuiasi.engine.renderer.light.PointLight;
 import org.tuiasi.engine.renderer.material.Material;
 import org.tuiasi.engine.renderer.mesh.Mesh;
-import org.tuiasi.engine.renderer.primitives.Axes;
+import org.tuiasi.engine.renderer.modelLoader.ModelLoader;
+import org.tuiasi.engine.renderer.primitives.Axis;
 import org.tuiasi.engine.renderer.primitives.Plane;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
 import org.tuiasi.engine.renderer.shader.DrawMode;
@@ -41,7 +42,7 @@ public class Renderer {
         lightSources = new ArrayList<>();
         this.editorUI = new DefaultEngineEditorUI();
 
-        Mesh axisMesh = new Mesh("", Axes.vertexData, Axes.indexData);
+        Mesh axisMesh = new Mesh("", Axis.vertexData, Axis.indexData);
         axisMesh.setDrawMode(DrawMode.WIREFRAME);
 
         axis = new Renderable3D(
@@ -52,25 +53,9 @@ public class Renderer {
                 new Spatial3D()
         );
 
-        addTestObjects();
         addTestLights();
     }
 
-    public void addTestObjects() {
-        Mesh planeMesh = new Mesh("", Plane.vertexData, Plane.indexData);
-
-        Renderable3D plane = new Renderable3D(
-                planeMesh,
-                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_vertex.vert", GL_VERTEX_SHADER),
-                        new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_fragment.frag", GL_FRAGMENT_SHADER)),
-                new Material(new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\textures\\orangOutline.png", 0),
-                        new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\textures\\container2_specular.png", 1),
-                        16f),
-                new Spatial3D()
-        );
-
-        Node<Renderable3D> planeNode = new Node<>(AppLogic.getRoot(), "Plane", plane);
-    }
 
     public void addTestLights(){
         DirectionalLight directionalLight = new DirectionalLight(
@@ -79,16 +64,7 @@ public class Renderer {
                                 new Vector3f(1.0f, 1.0f, 1.0f),
                                 new Vector3f(1.0f, 1.0f, 1.0f))
         );
-        Node<DirectionalLight> dirLightNode = new Node<>(AppLogic.getRoot(), "Dir Light ", directionalLight);
-
-        PointLight pointLight = new PointLight(
-                new Spatial3D(  new Vector3f(0f, 3f, 0f), new Vector3f(-0.2f, -1.0f, -0.3f), new Vector3f(1f, 1f, 1f)),
-                new LightData(  new Vector3f(.0f, .0f, .0f),
-                                new Vector3f(1.0f, 1.0f, 1.0f),
-                                new Vector3f(1.0f, 1.0f, 1.0f)),
-                1.0f, 0.09f, 0.032f);
-        Node<PointLight> pointLightNode1 = new Node<>(AppLogic.getRoot(), "Point Light 1", pointLight);
-
+        Node<DirectionalLight> dirLightNode = new Node<>(AppLogic.getRoot(), "Dir Light", directionalLight);
     }
 
     public static void addRenderable(Renderable3D renderable) {
@@ -116,7 +92,8 @@ public class Renderer {
     }
 
     private void renderAxis(){
-        axis.render();
+        if(axis != null)
+            axis.render();
     }
 
     private void renderObjects(){

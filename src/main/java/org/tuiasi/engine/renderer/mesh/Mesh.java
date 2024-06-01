@@ -8,6 +8,8 @@ import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.renderer.modelLoader.Model;
 import org.tuiasi.engine.renderer.modelLoader.ModelLoader;
+import org.tuiasi.engine.renderer.primitives.Cube;
+import org.tuiasi.engine.renderer.primitives.Plane;
 import org.tuiasi.engine.renderer.shader.DrawMode;
 
 import java.nio.ByteBuffer;
@@ -29,17 +31,15 @@ public class Mesh {
     FloatBuffer verticesBuffer;
     IntBuffer indicesBuffer;
 
-    @EditorVisible
+//    @EditorVisible
     DrawMode drawMode = DrawMode.FILLED;
 
     public Mesh(){
-        this.path = "";
-        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(0);
-        verticesBuffer = byteBuffer.asFloatBuffer();
-        indicesBuffer = BufferUtils.createIntBuffer(0);
+        this("", Cube.vertexData, Cube.indexData);
     }
 
     public Mesh(String path){
+        this("", Cube.vertexData, Cube.indexData);
         this.path = path;
 
         Model model = ModelLoader.load(path);
@@ -49,6 +49,7 @@ public class Mesh {
 
         initVertBuf();
     }
+
 
     public Mesh(String path, float[] vertices, int[] indices){
         this.path = path;
