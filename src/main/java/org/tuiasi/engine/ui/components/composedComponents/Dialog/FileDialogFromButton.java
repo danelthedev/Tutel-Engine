@@ -3,9 +3,11 @@ package org.tuiasi.engine.ui.components.composedComponents.Dialog;
 import imgui.ImGui;
 import imgui.extension.imguifiledialog.ImGuiFileDialog;
 import imgui.extension.imguifiledialog.flag.ImGuiFileDialogFlags;
+import imgui.flag.ImGuiCond;
 import imgui.type.ImString;
 import lombok.Getter;
 import lombok.Setter;
+import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.ui.components.IComponent;
 import org.tuiasi.engine.ui.components.basicComponents.searchbar.SearchbarWithHint;
 
@@ -34,9 +36,15 @@ public class FileDialogFromButton extends IComponent {
             ImGui.sameLine();
             if (ImGui.button("Browse##" + label)) {
                 isActive = true;
+                System.out.println("clickedbutton blyad");
+
+                // using ImGui.setNextWindowPos set the position of the modal to the center of the screen
+                ImGui.setNextWindowPos((float) WindowVariables.getInstance().getWidth() / 2, (float) WindowVariables.getInstance().getHeight() / 2, ImGuiCond.Appearing);
+
                 ImGuiFileDialog.openModal("browse-key", "Choose File", ".*", ".", 1, 42, ImGuiFileDialogFlags.None);
             }
             if (ImGuiFileDialog.display("browse-key", ImGuiFileDialogFlags.None, 200, 400, 800, 600)) {
+                System.out.println("plplplplplplpl");
                 if (ImGuiFileDialog.isOk()) {
                     selection = ImGuiFileDialog.getSelection();
                     userData = ImGuiFileDialog.getUserDatas();

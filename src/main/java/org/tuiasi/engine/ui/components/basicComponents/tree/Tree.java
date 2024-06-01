@@ -104,24 +104,16 @@ public class Tree extends ITree{
     @Override
     public Node<?> getNodeByName(String name) {
         if(root != null)
-            return getNodeByName(root, name);
+            return root.getNodeByName(name);
 
-        return null;
-    }
-
-    private Node<?> getNodeByName(Node<?> node, String name) {
-        if(node.getName().equals(name))
-            return node;
-        for(Node<?> child : node.getChildren()) {
-            Node<?> found = getNodeByName(child, name);
-            if(found != null)
-                return found;
-        }
         return null;
     }
 
     @Override
-    public Node getNodeByPath(String path) {
+    public Node<?> getNodeByPath(String path) {
+        if(root != null)
+            return root.getNodeByPath(path);
+
         return null;
     }
 

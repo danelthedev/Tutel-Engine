@@ -8,6 +8,7 @@ import org.joml.Vector4f;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.logic.AppLogic;
 import org.tuiasi.engine.logic.codeProcessor.IScript;
+import org.tuiasi.engine.logic.codeProcessor.UserScript;
 import org.tuiasi.engine.ui.components.basicComponents.checkbox.Checkbox;
 import org.tuiasi.engine.ui.components.basicComponents.checkbox.CheckboxListener;
 import org.tuiasi.engine.ui.components.basicComponents.dropdown.DropdownListener;
@@ -88,8 +89,10 @@ public class UINodeInspectorWindow extends UIWindow {
 
                     URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{new File(classPath).toURI().toURL()});
                     Class<?> script = Class.forName(className, true, classLoader);
-                    IScript scriptInstance = (IScript) script.getDeclaredConstructor().newInstance();
+                    UserScript scriptInstance = (UserScript) script.getDeclaredConstructor().newInstance();
                     selectedNode.setScriptObj(scriptInstance);
+                    selectedNode.getScriptObj().setRoot(AppLogic.getRoot());
+                    scriptInstance.setAttachedNode(selectedNode);
                 }catch (Exception e) {
                     e.printStackTrace();
                 }

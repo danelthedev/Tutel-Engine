@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.tuiasi.engine.global.nodes.reflective.ReflectiveObjectManager;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.logic.codeProcessor.IScript;
+import org.tuiasi.engine.logic.codeProcessor.UserScript;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class Node<T> {
 
     @EditorVisible
     private String script;
-    private IScript scriptObj;
+    private UserScript scriptObj;
 
 
     public Node(Node<?> parent, String name){
@@ -123,4 +124,43 @@ public class Node<T> {
 
         return null;
     }
+
+    public Node<?> getNodeByName(String name) {
+        if (this.name.equals(name)) {
+            return this;
+        }
+        for (Node<?> child : children) {
+            Node<?> found = child.getNodeByName(name);
+            if (found != null) {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    public Node<?> getNodeByPath(String path) {
+        String[] names = path.split("/");
+        Node<?> currentNode = this;
+        for (String name : names) {
+            currentNode = currentNode.getChildByName(name);
+            if (currentNode == null) {
+                return null;
+            }
+        }
+        return currentNode;
+    }
+
+    public Node<?> getNodeByScript(IScript script) {
+        if (this.scriptObj == script) {
+            return this;
+        }
+        for (Node<?> child : children) {
+            Node<?> found = child.getNodeByScript(script);
+            if (found != null) {
+                return found;
+            }
+        }
+        return null;
+    }
+
 }
