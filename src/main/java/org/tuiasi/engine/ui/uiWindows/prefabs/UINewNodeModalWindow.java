@@ -6,6 +6,7 @@ import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.physics.body.KinematicBody;
 import org.tuiasi.engine.global.nodes.physics.body.RigidBody;
 import org.tuiasi.engine.global.nodes.physics.body.StaticBody;
+import org.tuiasi.engine.global.nodes.physics.collider.Collider3D;
 import org.tuiasi.engine.global.nodes.spatial.Spatial;
 import org.tuiasi.engine.global.nodes.spatial.Spatial2D;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
@@ -64,6 +65,8 @@ public class UINewNodeModalWindow extends UIWindow {
         Node<?> spatial = new Node<>(root, "Spatial", Spatial.class);
         Node<?> spatial3D = new Node<>(spatial, "Spatial3D", Spatial3D.class);
         Node<?> spatial2D = new Node<>(spatial, "Spatial2D", Spatial2D.class);
+
+        Node<?> collider3D = new Node<>(spatial3D, "Collider3D", Collider3D.class);
 
         Node<?> staticBody = new Node<>(spatial3D, "StaticBody", StaticBody.class);
         Node<?> kinematicBody = new Node<>(spatial3D, "KinematicBody", KinematicBody.class);

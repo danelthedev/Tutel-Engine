@@ -1,9 +1,14 @@
 package org.tuiasi.engine.global.nodes.physics.collider;
 
+import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import org.joml.Vector3f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
+import org.tuiasi.engine.global.nodes.Node;
+import org.tuiasi.engine.global.nodes.physics.body.IBody;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+import org.tuiasi.engine.logic.AppLogic;
 import org.tuiasi.engine.renderer.material.Material;
 import org.tuiasi.engine.renderer.mesh.Mesh;
 import org.tuiasi.engine.renderer.primitives.Cube;
@@ -12,16 +17,18 @@ import org.tuiasi.engine.renderer.shader.DrawMode;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 
-public class Collider3D extends Spatial3D implements Collider {
+@Data
+@Getter @Setter
+public class Collider3D extends Spatial3D {
 
-    @Getter
     private Renderable3D representation;
-//    @EditorVisible
+    @EditorVisible
     private Boolean enabled = Boolean.TRUE;
 
     public Collider3D(){
@@ -35,43 +42,87 @@ public class Collider3D extends Spatial3D implements Collider {
         representation.getMesh().setDrawMode(DrawMode.WIREFRAME);
     }
 
+    public Collider3D(Vector3f position, Vector3f rotation, Vector3f scale){
+        super(position, rotation, scale);
+        Mesh cubeMesh = new Mesh("", Cube.vertexData, Cube.indexData);
+        representation = new Renderable3D(
+                cubeMesh,
+                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_vertex.vert", GL_VERTEX_SHADER), new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
+                new Material(),
+                new Spatial3D(getPosition(), getRotation(), getScale())
+        );
+        representation.getMesh().setDrawMode(DrawMode.WIREFRAME);
+    }
+
     public void setPosition(Vector3f newPosition){
         super.setPosition(newPosition);
-//        position = newPosition;
         representation.setPosition(getPosition());
     }
 
     public void setRotation(Vector3f newRotation){
-        rotation = newRotation;
+        super.setRotation(newRotation);
         representation.setRotation(getRotation());
     }
 
     public void setScale(Vector3f newScale){
-        scale = newScale;
+        super.setScale(newScale);
         representation.setScale(getScale());
     }
 
-    @Override
-    public boolean isColliding(Collider other) {
+    public boolean isColliding(Collider3D other) {
+        // Simple collision detection based on position and scale
+        Vector3f distance = other.getPosition().sub(this.getPosition(), new Vector3f());
+        Vector3f totalScale = this.getScale().add(other.getScale(), new Vector3f());
+        return distance.lengthSquared() < totalScale.lengthSquared();
+    }
+
+    public boolean isColliding(Vector3f position) {
+        Vector3f minA = new Vector3f(position).sub(this.getScale().div(2f, new Vector3f()));
+        Vector3f maxA = new Vector3f(position).add(this.getScale().div(2f, new Vector3f()));
+
+        // Iterate over all physics nodes
+        for (Node<?> node : AppLogic.getPhysicsNodes()) {
+            if (node.getValue() instanceof IBody){
+                Collider3D other = ((IBody)node.getValue()).getCollider();
+                if(other == this)
+                    continue;
+
+                Vector3f minB = new Vector3f(other.getPosition()).sub(other.getScale().div(2f, new Vector3f()));
+                Vector3f maxB = new Vector3f(other.getPosition()).add(other.getScale().div(2f, new Vector3f()));
+
+                // Check if the dimensions of the two colliders overlap
+                if(minA.x <= maxB.x && maxA.x >= minB.x &&
+                        minA.y <= maxB.y && maxA.y >= minB.y &&
+                        minA.z <= maxB.z && maxA.z >= minB.z) {
+                    return true;
+                }
+            }
+        }
+        // If no collision was detected, return false
         return false;
     }
 
-    @Override
-    public List<Collider> getColliding() {
-        return null;
+    public List<Collider3D> getColliding() {
+        List<Collider3D> colliding = new ArrayList<>();
+        for (Node<?> node : AppLogic.getPhysicsNodes()) {
+            if (node.getValue() instanceof Collider3D) {
+                Collider3D other = (Collider3D) node.getValue();
+                if (this != other && this.isColliding(other)) {
+                    colliding.add(other);
+                }
+            }
+        }
+        return colliding;
     }
 
-    @Override
     public boolean isOnFloor() {
         return false;
     }
 
-    @Override
     public boolean isOnWall() {
         return false;
     }
 
-    @Override
     public boolean isOnCeiling() {
         return false;
     }

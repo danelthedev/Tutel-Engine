@@ -2,6 +2,7 @@ package org.tuiasi.engine.ui.uiWindows.prefabs;
 
 import imgui.ImVec2;
 import org.lwjgl.glfw.GLFW;
+import org.tuiasi.engine.global.nodes.physics.collider.Collider3D;
 import org.tuiasi.engine.logic.IO.KeyboardHandler;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.logic.AppLogic;
@@ -91,6 +92,9 @@ public class UINodeTreeWindow extends UIWindow {
         }
         else if (node.getValue() instanceof LightSource) {
             Renderer.removeLightSource((LightSource) node.getValue());
+        }
+        else if(node.getValue() instanceof Collider3D) {
+            Renderer.removeRenderable(((Collider3D) node.getValue()).getRepresentation());
         }
 
         for (int i = node.getChildren().size() - 1; i >= 0; i--) {

@@ -103,9 +103,17 @@ public class Mesh {
 
         if (drawMode == DrawMode.FILLED)
             GL20.glDrawElements(GL11.GL_TRIANGLES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
-        else {
+        else
+        if (drawMode == DrawMode.AXIS){
             glLineWidth(2.0f);
             GL20.glDrawElements(GL11.GL_LINES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
         }
+        else
+        if (drawMode == DrawMode.WIREFRAME){
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            GL20.glDrawElements(GL11.GL_TRIANGLES, indicesBuffer.capacity(), GL_UNSIGNED_INT, 0);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
+
     }
 }

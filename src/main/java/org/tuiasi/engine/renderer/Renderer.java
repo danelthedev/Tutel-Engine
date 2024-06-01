@@ -43,7 +43,7 @@ public class Renderer {
         this.editorUI = new DefaultEngineEditorUI();
 
         Mesh axisMesh = new Mesh("", Axis.vertexData, Axis.indexData);
-        axisMesh.setDrawMode(DrawMode.WIREFRAME);
+        axisMesh.setDrawMode(DrawMode.AXIS);
 
         axis = new Renderable3D(
                 axisMesh,

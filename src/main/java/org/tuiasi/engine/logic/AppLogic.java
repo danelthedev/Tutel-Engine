@@ -6,6 +6,8 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.global.nodes.physics.body.IBody;
+import org.tuiasi.engine.global.nodes.physics.body.KinematicBody;
+import org.tuiasi.engine.global.nodes.physics.collider.Collider3D;
 import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
@@ -28,7 +30,10 @@ public class AppLogic {
     @Getter @Setter
     static Node<?> selectedNode;
 
+    @Getter
     static List<Node<?>> nodesWithScripts;
+
+    @Getter
     static List<Node<?>> physicsNodes;
 
     @Getter
@@ -36,6 +41,8 @@ public class AppLogic {
 
     @Getter
     static List<Camera> cameras;
+
+    private static boolean addedTestNodes = false;
 
     public static void init(){
         WindowVariables windowVariables = WindowVariables.getInstance();
@@ -54,6 +61,33 @@ public class AppLogic {
         physicsNodes = new ArrayList<>();
 
         cameras = new ArrayList<>();
+
+    }
+
+    public static void addTestNodes(){
+        // add a kinematic body with a collider child 2
+        Node<KinematicBody> kinematicBody = new Node<>(root, "Obj", new KinematicBody(
+                new Vector3f(0,0,0),
+                new Vector3f(0,0,0),
+                new Vector3f(1,1,1)
+        ));
+        Node<Collider3D> collider = new Node<>(kinematicBody, "Collider", new Collider3D(
+                new Vector3f(0,0,0),
+                new Vector3f(0,0,0),
+                new Vector3f(1,1,1)));
+
+        Node<KinematicBody> kinematicBody2 = new Node<>(root, "Wall", new KinematicBody(
+                new Vector3f(0,0,0),
+                new Vector3f(0,0,0),
+                new Vector3f(1,1,1)
+        ));
+        Node<Collider3D> collider2 = new Node<>(kinematicBody2, "Collider 2", new Collider3D(
+                new Vector3f(0,0,0),
+                new Vector3f(0,0,0),
+                new Vector3f(3,3,3)
+        ));
+
+
     }
 
     public static void initializeNodes(){
@@ -69,6 +103,14 @@ public class AppLogic {
 
         if(node.getValue() instanceof IBody){
             physicsNodes.add(node);
+
+            // set the collider variable of the body if it has one
+            for(Node<?> child : node.getChildren()){
+                if(child.getValue() instanceof Collider3D){
+                    ((IBody)node.getValue()).setCollider((Collider3D) child.getValue());
+                }
+            }
+
         }
 
         if(node.getValue() instanceof Camera){
@@ -83,6 +125,12 @@ public class AppLogic {
     }
 
     public static void run(){
+
+        if(!addedTestNodes){
+            addTestNodes();
+            addedTestNodes = true;
+        }
+
         if(engineState == EngineState.EDITOR) {
             if (MouseHandler.isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
                 Node<?> node = root.findNode(node1 -> {
