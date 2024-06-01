@@ -91,7 +91,7 @@ public class Spatial3D extends Spatial{
 
     public boolean isMouseHovered(){
         // test raycasting
-        Vector4f cameraOrigin = MainCamera.getInstance().getPosition();
+        Vector3f cameraOrigin = MainCamera.getInstance().getPosition();
         Vector3f rayOrigin = new Vector3f(cameraOrigin.x, cameraOrigin.y, cameraOrigin.z);
         Vector3f rayDirection = MainCamera.getInstance().getRayDirection();
 

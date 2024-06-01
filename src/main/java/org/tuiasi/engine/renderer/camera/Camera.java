@@ -6,6 +6,7 @@ import org.joml.Vector2d;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
+import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.misc.MathMisc;
@@ -13,7 +14,7 @@ import org.tuiasi.engine.misc.MathMisc;
 import static java.lang.Math.*;
 
 @Data
-public class Camera {
+public class Camera extends Spatial3D {
     @EditorVisible
     private Float fov;
     @EditorVisible
@@ -22,10 +23,6 @@ public class Camera {
     private Float near;
     @EditorVisible
     private Float far;
-    @EditorVisible
-    private Vector4f position;
-    @EditorVisible
-    private Vector4f rotation;
     @EditorVisible
     private Boolean isMainCamera = Boolean.FALSE;;
 
@@ -36,8 +33,8 @@ public class Camera {
         this.aspect = (float) WindowVariables.getInstance().getWidth() / WindowVariables.getInstance().getHeight();
         this.near = 0.1f;
         this.far = 1000.0f;
-        this.position = new Vector4f(0, 0, 0, 0);
-        this.rotation = new Vector4f(0, (float) (-PI/2), 0, 0);
+        this.position = new Vector3f(0, 0, 0);
+        this.rotation = new Vector3f(0, -90, 0); // converted from radians to degrees
 
         this.viewMatrix = new Matrix4f();
     }
@@ -47,13 +44,13 @@ public class Camera {
         this.aspect = aspect;
         this.near = near;
         this.far = far;
-        this.position = new Vector4f(0, 0, 0, 0);
-        this.rotation = new Vector4f(0, (float) (-PI/2), 0, 0);
+        this.position = new Vector3f(0, 0, 0);
+        this.rotation = new Vector3f(0, (float) (-PI/2), 0);
 
         this.viewMatrix = new Matrix4f();
     }
 
-    public Camera(float fov, float aspect, float near, float far, Vector4f position, Vector4f rotation) {
+    public Camera(float fov, float aspect, float near, float far, Vector3f position, Vector3f rotation) {
         this.fov = fov;
         this.aspect = aspect;
         this.near = near;
@@ -78,7 +75,7 @@ public class Camera {
         return projectionMatrix;
     }
 
-    public void move(float x, float y, float z) {
+    public void translate(float x, float y, float z) {
         position.x += x;
         position.y += y;
         position.z += z;
@@ -90,9 +87,9 @@ public class Camera {
         rotation.y += y;
         rotation.z += z;
 
-        rotation.x = (float) MathMisc.clamp(rotation.x,  Math.toRadians(-89), Math.toRadians(89));
-        rotation.y = (float) MathMisc.wrapAngle(rotation.y, -Math.PI, Math.PI);
-        rotation.z = (float) MathMisc.wrapAngle(rotation.z, -Math.PI, Math.PI);
+        rotation.x = MathMisc.clamp(rotation.x,  -89, 89);
+        rotation.y = (float) MathMisc.wrapAngle(rotation.y, -180, 180);
+        rotation.z = (float) MathMisc.wrapAngle(rotation.z, -180, 180);
     }
 
     public void lookAtPosition(Vector4f targetPosition) {
@@ -101,18 +98,18 @@ public class Camera {
                 targetPosition.z - position.z);
         direction.normalize();
 
-        float pitch = (float) asin(-direction.y);
-        float yaw = (float) atan2(direction.x, direction.z);
+        float pitch = (float) toDegrees(asin(-direction.y));
+        float yaw = (float) toDegrees(atan2(direction.x, direction.z));
 
         rotation.x = pitch;
-        rotation.y = (float) ((PI/2) + yaw);
+        rotation.y = 90 + yaw;
     }
 
     public Vector3f getCameraFront() {
         Vector3f direction = new Vector3f();
-        direction.x = (float) (cos(rotation.y) * cos(rotation.x));
-        direction.y = (float) sin(rotation.x);
-        direction.z = (float) (sin(rotation.y) * cos(rotation.x));
+        direction.x = (float) (cos(toRadians(rotation.y)) * cos(toRadians(rotation.x)));
+        direction.y = (float) sin(toRadians(rotation.x));
+        direction.z = (float) (sin(toRadians(rotation.y)) * cos(toRadians(rotation.x)));
 
         return direction.normalize();
     }

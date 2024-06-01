@@ -59,10 +59,10 @@ public class MainCamera {
 
         // Move forward/backward
         if (KeyboardHandler.isKeyPressed(GLFW.GLFW_KEY_W)) {
-            instance.move(cameraFront.x * speed, cameraFront.y * speed, cameraFront.z * speed);
+            instance.translate(cameraFront.x * speed, cameraFront.y * speed, cameraFront.z * speed);
         }
         if (KeyboardHandler.isKeyPressed(GLFW.GLFW_KEY_S)) {
-            instance.move(-cameraFront.x * speed, -cameraFront.y * speed, -cameraFront.z * speed);
+            instance.translate(-cameraFront.x * speed, -cameraFront.y * speed, -cameraFront.z * speed);
         }
 
         // Calculate right vector (for strafing)
@@ -71,25 +71,25 @@ public class MainCamera {
 
         // Move left/right (strafe)
         if (KeyboardHandler.isKeyPressed(GLFW.GLFW_KEY_A)) {
-            instance.move(-cameraRight.x * speed, -cameraRight.y * speed, -cameraRight.z * speed);
+            instance.translate(-cameraRight.x * speed, -cameraRight.y * speed, -cameraRight.z * speed);
         }
         if (KeyboardHandler.isKeyPressed(GLFW.GLFW_KEY_D)) {
-            instance.move(cameraRight.x * speed, cameraRight.y * speed, cameraRight.z * speed);
+            instance.translate(cameraRight.x * speed, cameraRight.y * speed, cameraRight.z * speed);
         }
 
         // Move up when pressing space and down when pressing left control
         if (KeyboardHandler.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
-            instance.move(0, speed, 0);
+            instance.translate(0, speed, 0);
         }
         if (KeyboardHandler.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL)) {
-            instance.move(0, -speed, 0);
+            instance.translate(0, -speed, 0);
         }
     }
 
     private static void editorCameraRotation(){
         Vector2d mouseDelta = MouseHandler.getMouseOffset();
         // Update rotation based on mouse offset
-        float sensitivity = 0.001f;
+        float sensitivity = 0.015f;
         instance.rotate((float) (mouseDelta.y * sensitivity), (float) (mouseDelta.x * sensitivity), 0);
     }
 
