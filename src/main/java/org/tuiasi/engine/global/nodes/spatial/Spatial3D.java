@@ -122,4 +122,17 @@ public class Spatial3D extends Spatial {
             }
         }
     }
+
+    @Override
+    public Object saveState() {
+        return new Spatial3D(position, rotation, scale);
+    }
+
+    @Override
+    public void loadState(Object state) {
+        Spatial3D newState = (Spatial3D) state;
+        position = newState.getPosition();
+        rotation = newState.getRotation();
+        scale = newState.getScale();
+    }
 }

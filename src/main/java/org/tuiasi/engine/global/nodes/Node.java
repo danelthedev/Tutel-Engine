@@ -3,10 +3,14 @@ package org.tuiasi.engine.global.nodes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.tuiasi.engine.global.nodes.physics.collider.Collider3D;
 import org.tuiasi.engine.global.nodes.reflective.ReflectiveObjectManager;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.logic.codeProcessor.IScript;
 import org.tuiasi.engine.logic.codeProcessor.UserScript;
+import org.tuiasi.engine.renderer.Renderer;
+import org.tuiasi.engine.renderer.light.LightSource;
+import org.tuiasi.engine.renderer.renderable.Renderable3D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,7 @@ public class Node<T>{
     private Node<?> parent;
 
     private T value;
+    private T originalValue;
     private ReflectiveObjectManager rom;
 
     @EditorVisible
@@ -52,11 +57,30 @@ public class Node<T>{
         this.value = value;
         this.rom = new ReflectiveObjectManager(value);
 
+        // handle spatial3D child/parent structure
         if(parent != null){
             if(value instanceof Spatial3D && parent.getValue() instanceof Spatial3D){
                 ((Spatial3D) parent.getValue()).addChild((Spatial3D) value);
             }
         }
+        // handle renderabl3D, collider3D and light source rendering
+        if(value instanceof Renderable3D){
+            Renderer.addRenderable((Renderable3D) value);
+        }
+        else if(value instanceof Collider3D){
+            ((Collider3D) value).addToRenderer();
+        }
+        else if(value instanceof LightSource){
+            ((LightSource) value).addToRenderer();
+        }
+    }
+
+    public void saveState(){
+        originalValue = (T) ((INodeValue) value).saveState();
+    }
+
+    public void loadState(){
+        ((INodeValue) value).loadState(originalValue);
     }
 
     // override hash function

@@ -89,6 +89,9 @@ public class Renderer {
         renderAxis();
         renderLights();
         editorUI.renderUI();
+
+        System.out.println("Rendered instances: " + renderables.size());
+        System.out.println("Rendered lights: " + lightSources.size());
     }
 
     private void renderAxis(){

@@ -1,5 +1,7 @@
 package org.tuiasi.engine.global.nodes.spatial;
 
-public abstract class Spatial {
+import org.tuiasi.engine.global.nodes.INodeValue;
+
+public abstract class Spatial implements INodeValue {
 
 }

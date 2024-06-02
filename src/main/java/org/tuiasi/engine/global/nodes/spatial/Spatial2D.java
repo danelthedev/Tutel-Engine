@@ -33,4 +33,17 @@ public class Spatial2D extends Spatial{
     public void scale(Vector2f scale){
         this.scale.add(scale);
     }
+
+    @Override
+    public Object saveState() {
+        return new Spatial2D(position, rotation, scale);
+    }
+
+    @Override
+    public void loadState(Object state) {
+        Spatial2D newState = (Spatial2D) state;
+        this.position = newState.getPosition();
+        this.rotation = newState.getRotation();
+        this.scale = newState.getScale();
+    }
 }

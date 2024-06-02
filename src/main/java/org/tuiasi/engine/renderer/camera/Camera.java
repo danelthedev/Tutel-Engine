@@ -59,7 +59,15 @@ public class Camera extends Spatial3D {
         this.rotation = rotation;
 
         this.viewMatrix = new Matrix4f();
+    }
 
+    public Camera(Spatial3D spatial3D, float fov, float aspect, float near, float far) {
+        super(spatial3D.getPosition(), spatial3D.getRotation(), spatial3D.getScale());
+        this.fov = fov;
+        this.aspect = aspect;
+        this.near = near;
+        this.far = far;
+        this.viewMatrix = new Matrix4f();
     }
 
     public Matrix4f calculateViewMatrix() {
@@ -136,6 +144,21 @@ public class Camera extends Spatial3D {
         rayDirection = new Vector3f(rayWorld.x, rayWorld.y, rayWorld.z);
         rayDirection.normalize();
         return rayDirection;
+    }
+
+    @Override
+    public Object saveState(){
+        return new Camera((Spatial3D)super.saveState(), fov, aspect, near, far);
+    }
+
+    @Override
+    public void loadState(Object state){
+        super.loadState(state);
+        Camera camera = (Camera) state;
+        this.fov = camera.fov;
+        this.aspect = camera.aspect;
+        this.near = camera.near;
+        this.far = camera.far;
     }
 
 }

@@ -9,6 +9,7 @@ import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.physics.body.IBody;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.material.Material;
 import org.tuiasi.engine.renderer.mesh.Mesh;
 import org.tuiasi.engine.renderer.primitives.Cube;
@@ -52,6 +53,16 @@ public class Collider3D extends Spatial3D {
                 new Spatial3D(getPosition(), getRotation(), getScale())
         );
         representation.getMesh().setDrawMode(DrawMode.WIREFRAME);
+    }
+
+    public Collider3D(Vector3f position, Vector3f rotation, Vector3f scale, Renderable3D representation, Boolean enabled){
+        super(position, rotation, scale);
+        this.representation = representation;
+        this.enabled = enabled;
+    }
+
+    public void addToRenderer(){
+        Renderer.addRenderable(representation);
     }
 
     public void setPosition(Vector3f newPosition){
@@ -125,5 +136,19 @@ public class Collider3D extends Spatial3D {
 
     public boolean isOnCeiling() {
         return false;
+    }
+
+    @Override
+    public Object saveState(){
+        return new Collider3D(getPosition(), getRotation(), getScale(), representation, enabled);
+    }
+
+    @Override
+    public void loadState(Object state){
+        Collider3D newState = (Collider3D) state;
+        setPosition(newState.getPosition());
+        setRotation(newState.getRotation());
+        setScale(newState.getScale());
+        enabled = newState.getEnabled();
     }
 }

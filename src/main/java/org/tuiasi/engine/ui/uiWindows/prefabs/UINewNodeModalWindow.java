@@ -60,7 +60,7 @@ public class UINewNodeModalWindow extends UIWindow {
 
         Node<?> root = new Node<>(null, "Node", Node.class);
 
-        Node<?> camera3D = new Node<>(root, "Camera3D", Camera.class);
+        Node<?> camera = new Node<>(root, "Camera", Camera.class);
 
         Node<?> spatial = new Node<>(root, "Spatial", Spatial.class);
         Node<?> spatial3D = new Node<>(spatial, "Spatial3D", Spatial3D.class);

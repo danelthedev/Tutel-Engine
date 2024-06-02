@@ -36,8 +36,6 @@ public class LightSource extends Spatial3D {
                 new Material(),
                 new Spatial3D(getPosition(), getRotation(), new Vector3f(.2f,.2f,.2f))
         );
-
-        Renderer.addLightSource(this);
     }
 
     public LightSource(Spatial3D transform, LightData lightData){
@@ -52,7 +50,11 @@ public class LightSource extends Spatial3D {
                 new Spatial3D(getPosition(), getRotation(), new Vector3f(.2f,.2f,.2f))
             );
 
+    }
+
+    public void addToRenderer(){
         Renderer.addLightSource(this);
+        Renderer.addRenderable(representation);
     }
 
     public void setPosition(Vector3f newPosition){
@@ -73,4 +75,15 @@ public class LightSource extends Spatial3D {
             representation.setUniform(new Uniform<>("color", new Vector3f(0.0f, 0.0f, 0.0f)));
     }
 
+    @Override
+    public Object saveState(){
+        return new LightSource((Spatial3D) super.saveState(), lightData);
+    }
+
+    @Override
+    public void loadState(Object state){
+        super.loadState(state);
+        LightSource lightSource = (LightSource) state;
+        this.lightData = lightSource.lightData;
+    }
 }

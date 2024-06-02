@@ -2,6 +2,6 @@ package org.tuiasi.engine.global.nodes;
 
 public interface INodeValue {
 
-    void saveState();
-    void loadState();
+    Object saveState();
+    void loadState(Object state);
 }

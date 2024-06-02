@@ -3,10 +3,11 @@ package org.tuiasi.engine.renderer.light;
 import lombok.Getter;
 import lombok.Setter;
 import org.tuiasi.engine.global.nodes.EditorVisible;
+import org.tuiasi.engine.global.nodes.INodeValue;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 
 @Getter @Setter
-public class PointLight extends LightSource{
+public class PointLight extends LightSource {
 
     @EditorVisible
     private float constant, linear, quadratic;
@@ -21,6 +22,28 @@ public class PointLight extends LightSource{
         this.constant = constant;
         this.linear = linear;
         this.quadratic = quadratic;
+    }
+
+    public PointLight(LightSource lightSource, float constant, float linear, float quadratic) {
+        super(lightSource, lightSource.getLightData());
+
+        this.constant = constant;
+        this.linear = linear;
+        this.quadratic = quadratic;
+    }
+
+    @Override
+    public Object saveState(){
+        return new PointLight((LightSource) super.saveState(), constant, linear, quadratic);
+    }
+
+    @Override
+    public void loadState(Object state){
+        super.loadState(state);
+        PointLight pointLight = (PointLight) state;
+        this.constant = pointLight.constant;
+        this.linear = pointLight.linear;
+        this.quadratic = pointLight.quadratic;
     }
 
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 import org.joml.Matrix4f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+import org.tuiasi.engine.logic.AppLogic;
 import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.camera.Camera;
 import org.tuiasi.engine.renderer.camera.MainCamera;
@@ -43,7 +44,6 @@ public class Renderable3D extends Spatial3D implements IRenderable {
                         new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_fragment.frag", GL_FRAGMENT_SHADER)),
                 new Material(new Texture(0), new Texture(1), 32.0f),
                 new Spatial3D());
-
     }
 
     public Renderable3D(Mesh mesh, ShaderProgram shaderProgram, Material material, Spatial3D transform) {
@@ -60,7 +60,21 @@ public class Renderable3D extends Spatial3D implements IRenderable {
         if (!material.equals(new Material()))
             setMaterialUniforms();
 
+//        Renderer.addRenderable(this);
+    }
+
+    public void addToRenderer(){
         Renderer.addRenderable(this);
+    }
+
+    public Renderable3D(Spatial3D transform, ShaderProgram shaderProgram, Material material, String meshPath) {
+        this(new Mesh(meshPath),
+                shaderProgram,
+                material,
+                transform);
+        setPosition(transform.getPosition());
+        setRotation(transform.getRotation());
+        setScale(transform.getScale());
     }
 
     // function that copies all fields from one renderable to another
@@ -133,6 +147,19 @@ public class Renderable3D extends Spatial3D implements IRenderable {
 
         mesh.render();
 
+    }
+
+    @Override
+    public Object saveState() {
+        Renderable3D copyObj = new Renderable3D();
+        copyObj.copy(this);
+        return copyObj;
+    }
+
+    @Override
+    public void loadState(Object state) {
+        Renderable3D copyObj = (Renderable3D) state;
+        copy(copyObj);
     }
 
 }
