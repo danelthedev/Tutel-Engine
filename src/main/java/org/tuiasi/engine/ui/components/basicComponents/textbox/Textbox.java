@@ -4,6 +4,7 @@ import imgui.ImGui;
 import imgui.ImGuiInputTextCallbackData;
 import imgui.callback.ImGuiInputTextCallback;
 import imgui.flag.ImGuiInputTextFlags;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import org.tuiasi.engine.logic.IO.KeyboardHandler;
 public class Textbox extends ITextbox{
 
     private String label;
-    private ImString text = new ImString();
+    private ImString text = new ImString(2000);
     boolean enterPressed = false;
     TextboxListener textboxListener;
     private int fontSize = 50;
@@ -32,15 +33,24 @@ public class Textbox extends ITextbox{
 
     @Override
     public void render() {
+
         previousText = text.get();
 
-        // Callback needed for buffer size override
-        enterPressed = ImGui.inputTextMultiline("##Textbox_" + label, text, getWidth() * ImGui.getWindowWidth(), getHeight() * ImGui.getWindowHeight(), getFlags() | ImGuiInputTextFlags.CallbackResize, new ImGuiInputTextCallback() {
+        // calculate the height of the textbox based on the font size and the number of lines in the text
+        float textHeight = ImGui.calcTextSize(text.get()).y;
+        float windowHeight = ImGui.getWindowHeight();
+        float height = Math.max(windowHeight, textHeight);
+
+        enterPressed = ImGui.inputTextMultiline("##Textbox_" + label, text, ImGui.getWindowWidth(), height, getFlags() | ImGuiInputTextFlags.CallbackResize, new ImGuiInputTextCallback() {
             @Override
             public void accept(ImGuiInputTextCallbackData imGuiInputTextCallbackData) {
-                // TODO: Implement some sort of text wrap
             }
         });
+
+        if(previousText.length() > 1000) {
+            text = new ImString(2000);
+            previousText = "";
+        }
 
         ImGui.sameLine();
 

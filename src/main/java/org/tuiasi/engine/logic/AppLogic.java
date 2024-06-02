@@ -11,6 +11,7 @@ import org.tuiasi.engine.global.nodes.physics.collider.Collider3D;
 import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+import org.tuiasi.engine.logic.logger.Log;
 import org.tuiasi.engine.renderer.camera.Camera;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
@@ -127,7 +128,6 @@ public class AppLogic {
     }
 
     public static void run(){
-
         if(!addedTestNodes){
             addTestNodes();
             addedTestNodes = true;

@@ -4,6 +4,7 @@ import org.joml.Vector3f;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.logic.logger.Log;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.light.DirectionalLight;
 import org.tuiasi.engine.renderer.light.LightData;
@@ -90,8 +91,6 @@ public class Renderer {
         renderLights();
         editorUI.renderUI();
 
-        System.out.println("Rendered instances: " + renderables.size());
-        System.out.println("Rendered lights: " + lightSources.size());
     }
 
     private void renderAxis(){

@@ -65,6 +65,7 @@ public class AppWindow {
 
     public void init() {
         initWindow();
+
         initImGui();
         imGuiGlfw.init(windowID, true);
         imGuiGl3.init(glslVersion);
@@ -104,7 +105,11 @@ public class AppWindow {
             // get size of the monitor
             long monitor = glfwGetPrimaryMonitor();
             GLFWVidMode vidMode = glfwGetVideoMode(monitor);
-            windowID = glfwCreateWindow(vidMode.width(), vidMode.height(), title, NULL, NULL);
+            // get the height of the taskbar
+            width = vidMode.width();
+            height = vidMode.height();
+            // get the taskbar height to calculate the window height
+            windowID = glfwCreateWindow(width, height, title, NULL, NULL);
             glfwMaximizeWindow(windowID);
         }else{
             windowID = glfwCreateWindow(width, height, title, NULL, NULL);
@@ -128,11 +133,17 @@ public class AppWindow {
         glfwSetFramebufferSizeCallback(windowID, (window, width, height) -> {
             GL20.glViewport(0, 0, width, height);
             MainCamera.getInstance().setAspect((float)width / (float)height);
+            this.width = width; // update the width and height of the window
+            this.height = height;
         });
 
         // initialize the keyboard handler
         KeyboardHandler.initialize(windowID);
         MouseHandler.initialize(windowID);
+
+
+        GL20.glViewport(0, 0, width, height);
+        MainCamera.getInstance().setAspect((float)width / (float)height);
     }
 
     private void initImGui() {

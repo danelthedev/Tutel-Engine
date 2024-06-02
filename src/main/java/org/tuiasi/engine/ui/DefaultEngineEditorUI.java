@@ -1,9 +1,11 @@
 package org.tuiasi.engine.ui;
 
+import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiDir;
 import lombok.Getter;
 import lombok.Setter;
+import org.tuiasi.engine.logic.logger.Log;
 import org.tuiasi.engine.ui.components.IComponent;
 import org.tuiasi.engine.ui.components.basicComponents.TopMenuBar;
 import org.tuiasi.engine.ui.uiWindows.IUIWindow;
@@ -40,7 +42,7 @@ public class DefaultEngineEditorUI {
             mainWindow.setDocked(true);
             uiWindows.add(mainWindow);
 
-            UILogsWindow debugLogsWindow = new UILogsWindow("Debug logs", new ImVec2(0, 0), new ImVec2(100, 100));
+            UILogsWindow debugLogsWindow = new UILogsWindow("Debug logs", new ImVec2(0, 0), new ImVec2(500, 200));
             debugLogsWindow.setDocked(true);
             mainWindow.addDockedWindow(debugLogsWindow, ImGuiDir.Down, 0.2f);
             uiWindows.add(debugLogsWindow);

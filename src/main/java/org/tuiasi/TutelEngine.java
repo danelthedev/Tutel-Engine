@@ -3,6 +3,7 @@ package org.tuiasi;
 import org.joml.Vector4f;
 import org.lwjgl.Version;
 import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.logic.logger.Log;
 import org.tuiasi.engine.ui.AppWindow;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 
@@ -28,6 +29,7 @@ public class TutelEngine {
         AppLogic.init();
         appWindow = new AppWindow(1920, 1080, true, "Tutel Engine", new Vector4f(0.25f, 0.25f, 0.25f, 0.25f), new DefaultEngineEditorUI());
         appWindow.init();
+        Log.init();
     }
 
     private void loop() {
