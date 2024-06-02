@@ -46,4 +46,5 @@ public class Spatial2D extends Spatial{
         this.rotation = newState.getRotation();
         this.scale = newState.getScale();
     }
+
 }

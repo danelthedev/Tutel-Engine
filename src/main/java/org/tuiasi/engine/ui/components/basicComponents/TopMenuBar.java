@@ -4,32 +4,34 @@ import imgui.flag.ImGuiStyleVar;
 import imgui.internal.ImGui;
 import lombok.Getter;
 import lombok.Setter;
-import org.lwjgl.opengl.GL11;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.logic.AppLogic;
 import org.tuiasi.engine.logic.EngineState;
+import org.tuiasi.engine.logic.logger.Log;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.renderer.texture.Texture;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.components.IComponent;
 import org.tuiasi.engine.ui.components.composedComponents.Dialog.DialogType;
 import org.tuiasi.engine.ui.components.composedComponents.Dialog.FileDialog;
+import org.tuiasi.engine.ui.components.composedComponents.Dialog.FileDialogFromButton;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TopMenuBar extends IComponent {
 
 
     FileDialog fileDialog;
-    @Getter @Setter
-    String workDirectory = "";
 
     Texture playTexture, stopTexture;
 
     public TopMenuBar(){
         playTexture = null;
         stopTexture = null;
+
     }
 
     public String getLabel() {
@@ -50,20 +52,23 @@ public class TopMenuBar extends IComponent {
         WindowVariables.getInstance().setMainMenuHeight(ImGui.getWindowSize().y);
 
         if (ImGui.beginMenu("File")) {
-
             if(ImGui.menuItem("New project")){
-                System.out.println("Starting new project");
                 if(fileDialog == null || !DefaultEngineEditorUI.getPopups().contains(fileDialog)) {
                     fileDialog = new FileDialog("NewProject", DialogType.FOLDER, null, this);
                     DefaultEngineEditorUI.addPopup(fileDialog);
                 }
             }
             if(ImGui.menuItem("Open project")) {
-                System.out.println("Opening project");
                 if(fileDialog == null || !DefaultEngineEditorUI.getPopups().contains(fileDialog)) {
-                    fileDialog = new FileDialog("OpenProject", DialogType.FOLDER, null, this);
+                    fileDialog = new FileDialog("OpenProject", DialogType.FILE, null, this);
                     DefaultEngineEditorUI.addPopup(fileDialog);
                 }
+            }
+            if(ImGui.menuItem("Save project")){
+                if(AppLogic.getProjectFile() != null)
+                    AppLogic.saveProject();
+                else
+                    Log.error("Select a folder for the project before saving");
             }
 
             ImGui.endMenu();

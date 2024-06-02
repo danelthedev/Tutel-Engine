@@ -1,7 +1,10 @@
 package org.tuiasi.engine.logic;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.jackson.Jacksonized;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.tuiasi.engine.global.WindowVariables;
@@ -17,6 +20,7 @@ import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeInspectorWindow;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +48,11 @@ public class AppLogic {
     static List<Camera> cameras;
 
     private static boolean addedTestNodes = false;
+
+    @Getter @Setter
+    private static String workingDirectory = ".";
+    @Getter @Setter
+    private static File projectFile;
 
     public static void init(){
         WindowVariables windowVariables = WindowVariables.getInstance();
@@ -179,6 +188,16 @@ public class AppLogic {
         for(Node<?> child : node.getChildren()){
             resetNode(child);
         }
+    }
+
+    public static void saveProject(){
+        // iterate over all nodes, use jackson to convert them to string and print them
+        ObjectMapper objectMapper = new ObjectMapper();
+
+    }
+
+    public static void loadProject(){
+
     }
 
 }

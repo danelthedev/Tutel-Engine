@@ -106,7 +106,7 @@ public class UINodeInspectorWindow extends UIWindow {
         addComponent(scriptField);
 
         scriptField.setEditable(false);
-        FileDialogFromButton scriptBrowse = new FileDialogFromButton("Browse script", DialogType.FILE, scriptField);
+        FileDialogFromButton scriptBrowse = new FileDialogFromButton("Browse script", DialogType.FILE, scriptField, ".java");
         scriptBrowse.setSeparator(true);
         addComponent(scriptBrowse);
 
@@ -316,7 +316,7 @@ public class UINodeInspectorWindow extends UIWindow {
                 // if the string contains "material" or "mesh" and "path" add a browse button
                 if((name.toLowerCase().contains("material") || name.toLowerCase().contains("mesh")) && name.toLowerCase().contains("path")){
                     field.setEditable(false);
-                    FileDialogFromButton fileDialogFromButton = new FileDialogFromButton("Browse " + name, DialogType.FILE, field);
+                    FileDialogFromButton fileDialogFromButton = new FileDialogFromButton("Browse " + name, DialogType.FILE, field, ".obj,.gltf,.png,.jpg,.jpeg,.bmp");
                     fileDialogFromButton.setSeparator(true);
                     addComponent(fileDialogFromButton);
                 }
