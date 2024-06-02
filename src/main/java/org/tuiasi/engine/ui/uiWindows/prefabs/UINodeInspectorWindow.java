@@ -56,6 +56,10 @@ public class UINodeInspectorWindow extends UIWindow {
         clearComponents();
         Node<?> selectedNode = AppLogic.getSelectedNode();
 
+        // add a label with the class name of the selected node
+        Label classLabel = new Label(selectedNode.getValue().getClass().getSimpleName(), false, 20);
+        addComponent(classLabel);
+
         // add a label with the name of the selected node and a textbox that allows the user to change the name
         Label nameLabel = new Label("Name", false, 16);
         addComponent(nameLabel);
