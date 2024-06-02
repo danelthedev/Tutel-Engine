@@ -34,8 +34,11 @@ public class KinematicBody extends Spatial3D implements IBody{
         velocity.add(acceleration);
         Vector3f newPosition = new Vector3f(getPosition()).add(velocity);
         if(collider != null){
-            if(collider.isColliding(newPosition)){
-                velocity = new Vector3f(0,0,0);
+            Collider3D possibleCollider = collider.isColliding(newPosition);
+            if(possibleCollider != null){
+                velocity.x -= Math.signum(velocity.x) * 0.01f;
+                velocity.y -= Math.signum(velocity.y) * 0.01f;
+                velocity.z -= Math.signum(velocity.z) * 0.01f;
             }
             else{
                 setPosition(newPosition);

@@ -76,7 +76,7 @@ public class Collider3D extends Spatial3D {
         return distance.lengthSquared() < totalScale.lengthSquared();
     }
 
-    public boolean isColliding(Vector3f position) {
+    public Collider3D isColliding(Vector3f position) {
         Vector3f minA = new Vector3f(position).sub(this.getScale().div(2f, new Vector3f()));
         Vector3f maxA = new Vector3f(position).add(this.getScale().div(2f, new Vector3f()));
 
@@ -94,12 +94,12 @@ public class Collider3D extends Spatial3D {
                 if(minA.x <= maxB.x && maxA.x >= minB.x &&
                         minA.y <= maxB.y && maxA.y >= minB.y &&
                         minA.z <= maxB.z && maxA.z >= minB.z) {
-                    return true;
+                    return other;
                 }
             }
         }
         // If no collision was detected, return false
-        return false;
+        return null;
     }
 
     public List<Collider3D> getColliding() {

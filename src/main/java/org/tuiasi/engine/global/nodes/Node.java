@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 @Data @NoArgsConstructor @AllArgsConstructor
-public class Node<T> {
+public class Node<T>{
     private Integer salt;
 
     @EditorVisible

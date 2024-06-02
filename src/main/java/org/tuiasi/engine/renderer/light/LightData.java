@@ -5,6 +5,7 @@ import lombok.Data;
 import org.joml.Vector3f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 
+
 @Data @AllArgsConstructor
 public class LightData {
     @EditorVisible

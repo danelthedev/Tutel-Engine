@@ -16,7 +16,7 @@ import static org.lwjgl.stb.STBImage.stbi_image_free;
 import static org.lwjgl.stb.STBImage.stbi_load;
 
 @Data @AllArgsConstructor
-public class Texture implements ITexture {
+public class Texture implements ITexture{
     private IntBuffer width, height, nrChannels;
     @EditorVisible
     private String path;

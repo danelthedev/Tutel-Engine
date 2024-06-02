@@ -96,6 +96,9 @@ public class AppLogic {
     }
 
     public static void initializeNode(Node<?> node){
+
+//        node.saveValue();
+
         if(node.getScriptObj() != null){
             nodesWithScripts.add(node);
             node.getScriptObj().init();
@@ -165,6 +168,18 @@ public class AppLogic {
         nodesWithScripts.clear();
         physicsNodes.clear();
         cameras.clear();
+        resetNodes();
+    }
+
+    public static void resetNodes(){
+        resetNode(root);
+    }
+
+    public static void resetNode(Node<?> node){
+//        node.restoreValue();
+        for(Node<?> child : node.getChildren()){
+            resetNode(child);
+        }
     }
 
 }

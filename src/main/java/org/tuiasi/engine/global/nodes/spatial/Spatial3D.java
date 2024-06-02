@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class Spatial3D extends Spatial{
-
+public class Spatial3D extends Spatial {
     @EditorVisible
     protected Vector3f position;
     @EditorVisible
