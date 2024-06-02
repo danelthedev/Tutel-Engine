@@ -1,5 +1,6 @@
 package org.tuiasi.engine.renderer.mesh;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -26,6 +27,7 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 public class Mesh{
 
     @EditorVisible
+    @JsonProperty
     String path="";
     int VAO, VBO, EBO;
     FloatBuffer verticesBuffer;

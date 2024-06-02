@@ -1,13 +1,17 @@
 package org.tuiasi.engine.global.nodes.spatial;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.joml.Vector2f;
 
 @Data
 public class Spatial2D extends Spatial{
 
+    @JsonProperty
     private Vector2f position;
+    @JsonProperty
     private Vector2f rotation;
+    @JsonProperty
     private Vector2f scale;
 
     public Spatial2D(Vector2f position, Vector2f rotation, Vector2f scale) {

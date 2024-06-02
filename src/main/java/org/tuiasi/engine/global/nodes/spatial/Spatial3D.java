@@ -1,5 +1,6 @@
 package org.tuiasi.engine.global.nodes.spatial;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -12,9 +13,12 @@ import java.util.List;
 @Data
 public class Spatial3D extends Spatial {
     @EditorVisible
+    @JsonProperty
     protected Vector3f position;
+    @JsonProperty
     @EditorVisible
     protected Vector3f rotation;
+    @JsonProperty
     @EditorVisible
     protected Vector3f scale;
 

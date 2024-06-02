@@ -1,5 +1,6 @@
 package org.tuiasi.engine.renderer.renderable;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.joml.Matrix4f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
@@ -28,6 +29,7 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 public class Renderable3D extends Spatial3D implements IRenderable {
     // material data
     @EditorVisible
+    @JsonProperty
     Material material;
 
     // shader data
@@ -35,6 +37,7 @@ public class Renderable3D extends Spatial3D implements IRenderable {
 
     // mesh
     @EditorVisible
+    @JsonProperty
     Mesh mesh;
     String previousMeshPath = "";
 

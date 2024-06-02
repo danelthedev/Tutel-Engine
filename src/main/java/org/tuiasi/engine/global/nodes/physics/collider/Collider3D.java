@@ -1,5 +1,6 @@
 package org.tuiasi.engine.global.nodes.physics.collider;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,7 @@ public class Collider3D extends Spatial3D {
 
     private Renderable3D representation;
     @EditorVisible
+    @JsonProperty
     private Boolean enabled = Boolean.TRUE;
 
     public Collider3D(){

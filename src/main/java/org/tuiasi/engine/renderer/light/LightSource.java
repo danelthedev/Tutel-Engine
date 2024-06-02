@@ -1,5 +1,6 @@
 package org.tuiasi.engine.renderer.light;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.joml.Vector3f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
@@ -20,8 +21,10 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 public class LightSource extends Spatial3D {
 
     private Renderable3D representation;
+    @JsonProperty
     @EditorVisible
     private LightData lightData;
+    @JsonProperty
     @EditorVisible
     private Boolean enabled = Boolean.TRUE;
 

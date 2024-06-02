@@ -1,7 +1,10 @@
 package org.tuiasi.engine.logic;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
@@ -15,12 +18,14 @@ import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.logic.logger.Log;
+import org.tuiasi.engine.misc.json.Vector3fSerializer;
 import org.tuiasi.engine.renderer.camera.Camera;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeInspectorWindow;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -193,7 +198,25 @@ public class AppLogic {
     public static void saveProject(){
         // iterate over all nodes, use jackson to convert them to string and print them
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new SimpleModule().addSerializer(Vector3f.class, new Vector3fSerializer()));
+        // configure mapper to ignore all fields except those market as JsonProperty
+        objectMapper.setVisibility(objectMapper.getSerializationConfig().getDefaultVisibilityChecker()
+                .withFieldVisibility(JsonAutoDetect.Visibility.NONE)
+                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withCreatorVisibility(JsonAutoDetect.Visibility.NONE)
+                .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE));
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        try {
+            String projectConfig =  objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
+            System.out.println(projectConfig);
+            PrintWriter writer = new PrintWriter(projectFile);
+            writer.print(projectConfig);
+            writer.close();
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void loadProject(){

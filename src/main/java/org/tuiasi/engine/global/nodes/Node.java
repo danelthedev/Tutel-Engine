@@ -1,6 +1,7 @@
 package org.tuiasi.engine.global.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,18 +20,25 @@ import java.util.Random;
 
 @Data @NoArgsConstructor @AllArgsConstructor
 public class Node<T>{
+    @JsonProperty
     private Integer salt;
 
-    @EditorVisible
+    @EditorVisible @JsonProperty
     private String name;
+
+    @JsonProperty
+    private String className;
+
+    @JsonProperty
     private ArrayList<Node<?>> children;
     private Node<?> parent;
 
+    @JsonProperty
     private T value;
     private T originalValue;
     private ReflectiveObjectManager rom;
 
-    @EditorVisible
+    @EditorVisible  @JsonProperty
     private String script;
     private UserScript scriptObj;
 
@@ -56,6 +64,7 @@ public class Node<T>{
     public Node(Node<?> parent, String name, T value){
         this(parent, name);
         this.value = value;
+        this.className = value.getClass().getName();
         this.rom = new ReflectiveObjectManager(value);
 
         // handle spatial3D child/parent structure

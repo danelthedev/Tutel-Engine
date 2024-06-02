@@ -5,6 +5,6 @@ public interface INodeValue {
     Object saveState();
     void loadState(Object state);
 
-    String serialize();
-    void deserialize(String serialized);
+//    String serialize();
+//    void deserialize(String serialized);
 }

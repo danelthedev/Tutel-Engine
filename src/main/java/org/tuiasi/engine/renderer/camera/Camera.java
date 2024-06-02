@@ -1,5 +1,6 @@
 package org.tuiasi.engine.renderer.camera;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.joml.Matrix4f;
 import org.joml.Vector2d;
@@ -16,13 +17,18 @@ import static java.lang.Math.*;
 @Data
 public class Camera extends Spatial3D {
     @EditorVisible
+    @JsonProperty
     private Float fov;
+    @JsonProperty
     @EditorVisible
     private Float aspect;
+    @JsonProperty
     @EditorVisible
     private Float near;
+    @JsonProperty
     @EditorVisible
     private Float far;
+    @JsonProperty
     @EditorVisible
     private Boolean isMainCamera = Boolean.FALSE;;
 
