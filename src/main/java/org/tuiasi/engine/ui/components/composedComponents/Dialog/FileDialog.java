@@ -44,10 +44,10 @@ public class FileDialog extends IComponent {
         if(dialogType == DialogType.FILE) {
             if (!isActive) {
                 isActive = true;
-                ImGuiFileDialog.openModal("browse-key", "Choose File", ".*", AppLogic.getWorkingDirectory(), 1, 42, ImGuiFileDialogFlags.None);
+                ImGuiFileDialog.openModal("browse-key##" + label, "Choose File", ".*", AppLogic.getWorkingDirectory(), 1, 42, ImGuiFileDialogFlags.None);
                 Log.info("Acest mesaj apare cand se deschide pop-upul");
             }
-            if (ImGuiFileDialog.display("browse-key", ImGuiFileDialogFlags.None, 200, 400, 800, 600)) {
+            if (ImGuiFileDialog.display("browse-key##" + label, ImGuiFileDialogFlags.None, 200, 400, 800, 600)) {
                 if (ImGuiFileDialog.isOk()) {
                     selection = ImGuiFileDialog.getSelection();
                     userData = ImGuiFileDialog.getUserDatas();
@@ -83,9 +83,9 @@ public class FileDialog extends IComponent {
         if(dialogType == DialogType.FOLDER) {
             if (!isActive) {
                 isActive = true;
-                ImGuiFileDialog.openDialog("browse-folder-key1", "Choose Folder", null, AppLogic.getWorkingDirectory(), "", 1, 7, ImGuiFileDialogFlags.None);
+                ImGuiFileDialog.openDialog("browse-folder-key##" + label, "Choose Folder", null, AppLogic.getWorkingDirectory(), "", 1, 7, ImGuiFileDialogFlags.None);
             }
-            if (ImGuiFileDialog.display("browse-folder-key1", ImGuiFileDialogFlags.None, 200, 400, 800, 600)) {
+            if (ImGuiFileDialog.display("browse-folder-key##" + label, ImGuiFileDialogFlags.None, 200, 400, 800, 600)) {
                 if (ImGuiFileDialog.isOk()) {
                     selection = ImGuiFileDialog.getSelection();
                     userData = ImGuiFileDialog.getUserDatas();

@@ -7,6 +7,8 @@ import org.joml.Vector3f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.global.nodes.physics.collider.Collider3D;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.logic.EngineState;
 import org.tuiasi.engine.renderer.light.DirectionalLight;
 import org.tuiasi.engine.renderer.light.LightSource;
 

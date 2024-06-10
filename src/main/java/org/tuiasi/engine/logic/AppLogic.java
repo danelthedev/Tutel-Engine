@@ -22,6 +22,7 @@ import org.tuiasi.engine.global.nodes.reflective.ReflectiveObjectManager;
 import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+import org.tuiasi.engine.logic.codeProcessor.UserScript;
 import org.tuiasi.engine.logic.logger.Log;
 import org.tuiasi.engine.misc.json.Vector3fSerializer;
 import org.tuiasi.engine.renderer.Renderer;
@@ -30,8 +31,12 @@ import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeInspectorWindow;
 
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -76,6 +81,7 @@ public class AppLogic {
                 new Vector3f(0,0,0),
                 new Vector3f(1,1,1)
         ));
+        root.saveState();
         selectedNode = root;
 
         nodesWithScripts = new ArrayList<>();
@@ -118,7 +124,7 @@ public class AppLogic {
             initializeNode(child);
         }
 
-        if(node.getValue() instanceof INodeValue)
+        if(node.getValue() instanceof INodeValue && AppLogic.getEngineState() == EngineState.EDITOR)
             node.saveState();
     }
 
@@ -158,8 +164,6 @@ public class AppLogic {
         nodesWithScripts.clear();
         physicsNodes.clear();
         cameras.clear();
-        Renderer.removeAllRenderables();
-        Renderer.removeAllLightSources();
 
         resetNodes();
     }
@@ -201,10 +205,33 @@ public class AppLogic {
 
     public static Node<?> createNodeFromJson(JsonNode jsonNode) throws ClassNotFoundException, IllegalAccessException, InstantiationException, JsonProcessingException {
         String className = jsonNode.get("className").asText();
+        String scriptPath = jsonNode.get("script").asText();
         Class<?> clazz = Class.forName(className);
         ObjectMapper objectMapper = new ObjectMapper();
         Object value = objectMapper.treeToValue(jsonNode.get("value"), clazz);
         Node<?> node = new Node<>(null, jsonNode.get("name").asText(), value);
+        if(!scriptPath.equals("null")){
+            node.setScript(scriptPath);
+            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+            int result = compiler.run(null, null, null, node.getScript());
+
+            try {
+                String classPath = node.getScript().substring(0, node.getScript().lastIndexOf("\\"));
+                String cName = node.getScript().substring(node.getScript().lastIndexOf("\\") + 1, node.getScript().lastIndexOf("."));
+
+                URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{new File(classPath).toURI().toURL()});
+                Class<?> script = Class.forName(cName, true, classLoader);
+                UserScript scriptInstance = (UserScript) script.getDeclaredConstructor().newInstance();
+                node.setScriptObj(scriptInstance);
+                node.getScriptObj().setRoot(AppLogic.getRoot());
+                scriptInstance.setAttachedNode(node);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            node.setScript("");
+        }
+
 
         JsonNode childrenNode = jsonNode.get("children");
         for (JsonNode childNode : childrenNode) {
@@ -221,6 +248,8 @@ public class AppLogic {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             cleanNodeQueue();
+            Renderer.removeAllRenderables();
+            Renderer.removeAllLightSources();
             JsonNode newRoot = objectMapper.readTree(projectFile);
             root = createNodeFromJson(newRoot);
             initializeNodes();

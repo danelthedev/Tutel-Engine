@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.tuiasi.engine.global.nodes.physics.collider.Collider3D;
 import org.tuiasi.engine.global.nodes.reflective.ReflectiveObjectManager;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.logic.EngineState;
 import org.tuiasi.engine.logic.codeProcessor.IScript;
 import org.tuiasi.engine.logic.codeProcessor.UserScript;
 import org.tuiasi.engine.renderer.Renderer;
@@ -84,7 +86,7 @@ public class Node<T>{
             ((LightSource) value).addToRenderer();
         }
 
-        if(value instanceof INodeValue)
+        if(value instanceof INodeValue && AppLogic.getEngineState() == EngineState.EDITOR)
             saveState();
     }
 
