@@ -1,5 +1,6 @@
 package org.tuiasi.engine.logic.logger;
 
+import org.tuiasi.engine.logic.AppLogic;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.components.basicComponents.textbox.Textbox;
 
@@ -14,6 +15,8 @@ public class Log {
     public static void init(){
         logsTextbox = (Textbox) DefaultEngineEditorUI.getWindow("Debug logs").getComponentByLabel("Logs");
         initialized = true;
+
+        Log.info("Tutel engine version: " + AppLogic.getAppVersion());
     }
 
     public static void info(String message) {

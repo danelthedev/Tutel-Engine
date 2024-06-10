@@ -147,10 +147,10 @@ public class UINodeInspectorWindow extends UIWindow {
                             try {
                                 if (finalJ == 0) {
                                     selectedNode.setFieldValue(name, new Vector2f(Float.parseFloat(searchText), value.y));
-                                    value.x = Float.parseFloat(searchText);
+//                                    value.x = Float.parseFloat(searchText);
                                 } else {
                                     selectedNode.setFieldValue(name, new Vector2f(value.x, Float.parseFloat(searchText)));
-                                    value.y = Float.parseFloat(searchText);
+//                                    value.y = Float.parseFloat(searchText);
                                 }
                             } catch (NumberFormatException e) {
                                 System.out.println("Invalid number format");
@@ -180,13 +180,13 @@ public class UINodeInspectorWindow extends UIWindow {
                             try {
                                 if (finalJ == 0) {
                                     selectedNode.setFieldValue(name, new Vector3f(Float.parseFloat(searchText), value.y, value.z));
-                                    value.x = Float.parseFloat(searchText);
+//                                    value.x = Float.parseFloat(searchText);
                                 } else if (finalJ == 1) {
                                     selectedNode.setFieldValue(name, new Vector3f(value.x, Float.parseFloat(searchText), value.z));
-                                    value.y = Float.parseFloat(searchText);
+//                                    value.y = Float.parseFloat(searchText);
                                 } else {
                                     selectedNode.setFieldValue(name, new Vector3f(value.x, value.y, Float.parseFloat(searchText)));
-                                    value.z = Float.parseFloat(searchText);
+//                                    value.z = Float.parseFloat(searchText);
                                 }
                             } catch (NumberFormatException e) {
                                 System.out.println("Invalid number format");
@@ -216,16 +216,16 @@ public class UINodeInspectorWindow extends UIWindow {
                             try {
                                 if (finalJ == 0) {
                                     selectedNode.setFieldValue(name, new Vector4f(Float.parseFloat(searchText), value.y, value.z, value.w));
-                                    value.x = Float.parseFloat(searchText);
+//                                    value.x = Float.parseFloat(searchText);
                                 } else if (finalJ == 1) {
                                     selectedNode.setFieldValue(name, new Vector4f(value.x, Float.parseFloat(searchText), value.z, value.w));
-                                    value.y = Float.parseFloat(searchText);
+//                                    value.y = Float.parseFloat(searchText);
                                 } else if (finalJ == 2) {
                                     selectedNode.setFieldValue(name, new Vector4f(value.x, value.y, Float.parseFloat(searchText), value.w));
-                                    value.z = Float.parseFloat(searchText);
+//                                    value.z = Float.parseFloat(searchText);
                                 }else {
                                     selectedNode.setFieldValue(name, new Vector4f(value.x, value.y, value.z, Float.parseFloat(searchText)));
-                                    value.w = Float.parseFloat(searchText);
+//                                    value.w = Float.parseFloat(searchText);
                                 }
                             } catch (NumberFormatException e) {
                                 System.out.println("Invalid number format");

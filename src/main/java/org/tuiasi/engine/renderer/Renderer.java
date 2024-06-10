@@ -16,10 +16,7 @@ import org.tuiasi.engine.renderer.modelLoader.ModelLoader;
 import org.tuiasi.engine.renderer.primitives.Axis;
 import org.tuiasi.engine.renderer.primitives.Plane;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
-import org.tuiasi.engine.renderer.shader.DrawMode;
-import org.tuiasi.engine.renderer.shader.Shader;
-import org.tuiasi.engine.renderer.shader.ShaderProgram;
-import org.tuiasi.engine.renderer.shader.Uniform;
+import org.tuiasi.engine.renderer.shader.*;
 import org.tuiasi.engine.renderer.texture.Texture;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 
@@ -48,8 +45,8 @@ public class Renderer {
 
         axis = new Renderable3D(
                 axisMesh,
-                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_vertex.vert", GL_VERTEX_SHADER),
-                                    new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
+                new ShaderProgram(new Shader(DefaultShaders.getVertexShader(), GL_VERTEX_SHADER),
+                                    new Shader(DefaultShaders.getSolidColorFragmentShader(), GL_FRAGMENT_SHADER)),
                 new Material(),
                 new Spatial3D()
         );

@@ -13,6 +13,7 @@ import org.tuiasi.engine.renderer.material.Material;
 import org.tuiasi.engine.renderer.mesh.Mesh;
 import org.tuiasi.engine.renderer.modelLoader.Model;
 import org.tuiasi.engine.renderer.modelLoader.ModelLoader;
+import org.tuiasi.engine.renderer.shader.DefaultShaders;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
 import org.tuiasi.engine.renderer.shader.Uniform;
@@ -43,8 +44,8 @@ public class Renderable3D extends Spatial3D implements IRenderable {
 
     public Renderable3D() {
         this(new Mesh(),
-                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_vertex.vert", GL_VERTEX_SHADER),
-                        new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_fragment.frag", GL_FRAGMENT_SHADER)),
+                new ShaderProgram(new Shader(DefaultShaders.getVertexShader(), GL_VERTEX_SHADER),
+                        new Shader(DefaultShaders.getFragmentShader(), GL_FRAGMENT_SHADER)),
                 new Material(new Texture(0), new Texture(1), 32.0f),
                 new Spatial3D());
     }

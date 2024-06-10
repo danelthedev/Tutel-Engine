@@ -45,13 +45,11 @@ public class FileDialog extends IComponent {
             if (!isActive) {
                 isActive = true;
                 ImGuiFileDialog.openModal("browse-key##" + label, "Choose File", ".*", AppLogic.getWorkingDirectory(), 1, 42, ImGuiFileDialogFlags.None);
-                Log.info("Acest mesaj apare cand se deschide pop-upul");
             }
             if (ImGuiFileDialog.display("browse-key##" + label, ImGuiFileDialogFlags.None, 200, 400, 800, 600)) {
                 if (ImGuiFileDialog.isOk()) {
                     selection = ImGuiFileDialog.getSelection();
                     userData = ImGuiFileDialog.getUserDatas();
-                    Log.info("Acest mesaj apare cand se inchide pop-upul");
 
                     if(selection.values().stream().findFirst().isPresent() && selection.values().stream().findFirst().get().endsWith(".tutel")) {
                         // AppLogic.loadProject(selection.values().stream().findFirst().get());
@@ -59,8 +57,6 @@ public class FileDialog extends IComponent {
                         AppLogic.setWorkingDirectory(selection.values().stream().findFirst().get().substring(0, selection.values().stream().findFirst().get().lastIndexOf("\\")));
                         AppLogic.setProjectFile(new File(selection.values().stream().findFirst().get()));
                         AppLogic.loadProject();
-                        Log.info(AppLogic.getWorkingDirectory());
-                        Log.info(AppLogic.getProjectFile().getAbsolutePath());
 
                         String workPath = AppLogic.getWorkingDirectory();
                         // get last folder in the work path

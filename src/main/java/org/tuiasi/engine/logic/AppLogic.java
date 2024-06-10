@@ -43,6 +43,9 @@ import java.util.List;
 
 public class AppLogic {
 
+    @Getter
+    static String appVersion = "0.1.0 Alpha";
+
     @Getter @Setter
     static EngineState engineState = EngineState.EDITOR;
 
@@ -193,7 +196,6 @@ public class AppLogic {
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         try {
             String projectConfig =  objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
-            System.out.println(projectConfig);
             PrintWriter writer = new PrintWriter(projectFile);
             writer.print(projectConfig);
             writer.close();

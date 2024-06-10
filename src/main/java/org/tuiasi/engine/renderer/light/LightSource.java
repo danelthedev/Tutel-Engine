@@ -10,6 +10,7 @@ import org.tuiasi.engine.renderer.material.Material;
 import org.tuiasi.engine.renderer.mesh.Mesh;
 import org.tuiasi.engine.renderer.primitives.Cube;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
+import org.tuiasi.engine.renderer.shader.DefaultShaders;
 import org.tuiasi.engine.renderer.shader.Shader;
 import org.tuiasi.engine.renderer.shader.ShaderProgram;
 import org.tuiasi.engine.renderer.shader.Uniform;
@@ -35,7 +36,9 @@ public class LightSource extends Spatial3D {
         Mesh cubeMesh = new Mesh("", Cube.vertexData, Cube.indexData);
         representation = new Renderable3D(
                 cubeMesh,
-                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_vertex.vert", GL_VERTEX_SHADER), new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
+                new ShaderProgram(
+                        new Shader(DefaultShaders.getVertexShader(), GL_VERTEX_SHADER),
+                        new Shader(DefaultShaders.getSolidColorFragmentShader(), GL_FRAGMENT_SHADER)),
                 new Material(),
                 new Spatial3D(getPosition(), getRotation(), new Vector3f(.2f,.2f,.2f))
         );
@@ -48,7 +51,9 @@ public class LightSource extends Spatial3D {
         Mesh cubeMesh = new Mesh("", Cube.vertexData, Cube.indexData);
         representation = new Renderable3D(
                 cubeMesh,
-                new ShaderProgram(new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\default_vertex.vert", GL_VERTEX_SHADER), new Shader("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\shaders\\solid_color_fragment.frag", GL_FRAGMENT_SHADER)),
+                new ShaderProgram(
+                        new Shader(DefaultShaders.getVertexShader(), GL_VERTEX_SHADER),
+                        new Shader(DefaultShaders.getSolidColorFragmentShader(), GL_FRAGMENT_SHADER)),
                 new Material(),
                 new Spatial3D(getPosition(), getRotation(), new Vector3f(.2f,.2f,.2f))
             );

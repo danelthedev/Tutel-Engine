@@ -16,8 +16,9 @@ public class Shader {
     private String shaderCode;
     private int shaderID;
 
-    public Shader(String pathToShader, int shaderType) {
-        this.shaderCode = loadShaderCode(pathToShader);
+    public Shader(String code, int shaderType) {
+//        this.shaderCode = loadShaderCode(pathToShader);
+        this.shaderCode = code;
         this.shaderID = createShader(shaderCode, shaderType);
     }
 
