@@ -83,6 +83,9 @@ public class Node<T>{
         else if(value instanceof LightSource){
             ((LightSource) value).addToRenderer();
         }
+
+        if(value instanceof INodeValue)
+            saveState();
     }
 
     public void saveState(){
@@ -100,8 +103,17 @@ public class Node<T>{
         return salt.hashCode() + name.hashCode();
     }
 
+    public void setParent(Node<?> parent){
+        this.parent = parent;
+
+        if(value instanceof Spatial3D && parent.getValue() instanceof Spatial3D){
+            ((Spatial3D) parent.getValue()).addChild((Spatial3D) value);
+        }
+    }
+
     public void addChild(Node<?> child){
         children.add(child);
+
     }
 
     public void removeChild(Node<?> child){

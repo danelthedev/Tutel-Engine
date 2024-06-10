@@ -54,19 +54,8 @@ public class Renderer {
                 new Spatial3D()
         );
 
-        addTestLights();
     }
 
-
-    public void addTestLights(){
-        DirectionalLight directionalLight = new DirectionalLight(
-                new Spatial3D(  new Vector3f(0, 0, 0), new Vector3f(-0.2f, -1.0f, -0.3f), new Vector3f(1f, 1f, 1f)),
-                new LightData(  new Vector3f(.0f, .0f, .0f),
-                                new Vector3f(1.0f, 1.0f, 1.0f),
-                                new Vector3f(1.0f, 1.0f, 1.0f))
-        );
-        Node<DirectionalLight> dirLightNode = new Node<>(AppLogic.getRoot(), "Dir Light", directionalLight);
-    }
 
     public static void addRenderable(Renderable3D renderable) {
         renderables.add(renderable);
@@ -76,6 +65,10 @@ public class Renderer {
         renderables.remove(renderable);
     }
 
+    public static void removeAllRenderables() {
+        renderables.clear();
+    }
+
     public static void addLightSource(LightSource lightSource) {
         lightSources.add(lightSource);
     }
@@ -83,6 +76,10 @@ public class Renderer {
     public static void removeLightSource(LightSource lightSource) {
         renderables.remove(lightSource.getRepresentation());
         lightSources.remove(lightSource);
+    }
+
+    public static void removeAllLightSources() {
+        lightSources.clear();
     }
 
     public void render() {

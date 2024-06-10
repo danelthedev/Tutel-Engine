@@ -2,23 +2,29 @@ package org.tuiasi.engine.logic;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 import org.tuiasi.engine.global.WindowVariables;
+import org.tuiasi.engine.global.nodes.INodeValue;
 import org.tuiasi.engine.global.nodes.physics.body.IBody;
 import org.tuiasi.engine.global.nodes.physics.body.KinematicBody;
 import org.tuiasi.engine.global.nodes.physics.collider.Collider3D;
+import org.tuiasi.engine.global.nodes.reflective.ReflectiveObjectManager;
 import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.logic.logger.Log;
 import org.tuiasi.engine.misc.json.Vector3fSerializer;
+import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.camera.Camera;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
@@ -27,6 +33,7 @@ import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeInspectorWindow;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class AppLogic {
@@ -35,7 +42,7 @@ public class AppLogic {
     static EngineState engineState = EngineState.EDITOR;
 
     @Getter @Setter
-    static Node<Spatial3D> root;
+    static Node<?> root;
 
     @Getter @Setter
     static Node<?> selectedNode;
@@ -52,7 +59,6 @@ public class AppLogic {
     @Getter
     static List<Camera> cameras;
 
-    private static boolean addedTestNodes = false;
 
     @Getter @Setter
     private static String workingDirectory = ".";
@@ -76,32 +82,6 @@ public class AppLogic {
         physicsNodes = new ArrayList<>();
 
         cameras = new ArrayList<>();
-
-    }
-
-    public static void addTestNodes(){
-        // add a kinematic body with a collider child 2
-        Node<KinematicBody> kinematicBody = new Node<>(root, "Obj", new KinematicBody(
-                new Vector3f(0,0,0),
-                new Vector3f(0,0,0),
-                new Vector3f(1,1,1)
-        ));
-        Node<Collider3D> collider = new Node<>(kinematicBody, "Collider", new Collider3D(
-                new Vector3f(0,0,0),
-                new Vector3f(0,0,0),
-                new Vector3f(1,1,1)));
-
-        Node<KinematicBody> kinematicBody2 = new Node<>(root, "Wall", new KinematicBody(
-                new Vector3f(0,0,0),
-                new Vector3f(0,0,0),
-                new Vector3f(1,1,1)
-        ));
-        Node<Collider3D> collider2 = new Node<>(kinematicBody2, "Collider 2", new Collider3D(
-                new Vector3f(0,0,0),
-                new Vector3f(0,0,0),
-                new Vector3f(3,3,3)
-        ));
-
 
     }
 
@@ -138,14 +118,11 @@ public class AppLogic {
             initializeNode(child);
         }
 
-        node.saveState();
+        if(node.getValue() instanceof INodeValue)
+            node.saveState();
     }
 
     public static void run(){
-        if(!addedTestNodes){
-            addTestNodes();
-            addedTestNodes = true;
-        }
 
         if(engineState == EngineState.EDITOR) {
             if (MouseHandler.isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
@@ -181,6 +158,9 @@ public class AppLogic {
         nodesWithScripts.clear();
         physicsNodes.clear();
         cameras.clear();
+        Renderer.removeAllRenderables();
+        Renderer.removeAllLightSources();
+
         resetNodes();
     }
 
@@ -219,8 +199,34 @@ public class AppLogic {
         }
     }
 
-    public static void loadProject(){
+    public static Node<?> createNodeFromJson(JsonNode jsonNode) throws ClassNotFoundException, IllegalAccessException, InstantiationException, JsonProcessingException {
+        String className = jsonNode.get("className").asText();
+        Class<?> clazz = Class.forName(className);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Object value = objectMapper.treeToValue(jsonNode.get("value"), clazz);
+        Node<?> node = new Node<>(null, jsonNode.get("name").asText(), value);
 
+        JsonNode childrenNode = jsonNode.get("children");
+        for (JsonNode childNode : childrenNode) {
+            Node<?> child = createNodeFromJson(childNode);
+            node.addChild(child);
+            child.setParent(node);
+        }
+
+        return node;
+    }
+
+    public static void loadProject(){
+        // read the project file and parse it to a node tree
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            cleanNodeQueue();
+            JsonNode newRoot = objectMapper.readTree(projectFile);
+            root = createNodeFromJson(newRoot);
+            initializeNodes();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

@@ -39,6 +39,10 @@ public class KinematicBody extends Spatial3D implements IBody{
         this.friction = friction;
     }
 
+    public KinematicBody(){
+        super();
+    }
+
     @Override
     public void physRun() {
         // apply friction on each coordinate of the velocity, going towards 0
