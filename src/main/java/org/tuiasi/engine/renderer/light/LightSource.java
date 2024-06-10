@@ -81,8 +81,8 @@ public class LightSource extends Spatial3D {
     @Override
     public Object saveState(){
         LightSource lightSource = new LightSource((Spatial3D) super.saveState(), lightData);
-        representation.setPosition(getPosition());
-        representation.setRotation(getRotation());
+        lightSource.representation.setPosition(getPosition());
+        lightSource.representation.setRotation(getRotation());
         return lightSource;
     }
 

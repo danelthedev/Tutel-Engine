@@ -1,5 +1,6 @@
 package org.tuiasi.engine.renderer.texture;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.lwjgl.BufferUtils;
@@ -19,11 +20,14 @@ import static org.lwjgl.stb.STBImage.stbi_load;
 public class Texture implements ITexture{
     private IntBuffer width, height, nrChannels;
     @EditorVisible
+    @JsonProperty
     private String path;
     private String previousPath;
     private String format;
     private ByteBuffer image;
-    private int textureID, textureIndex;
+    private Integer textureID;
+    @JsonProperty
+    private Integer textureIndex;
 
     public Texture(){
         this.path = "";
@@ -33,6 +37,7 @@ public class Texture implements ITexture{
         this.height = BufferUtils.createIntBuffer(1);
         this.nrChannels = BufferUtils.createIntBuffer(1);
         this.textureID = glGenTextures();
+        this.textureIndex = 0;
     }
 
     public Texture(int textureIndex){

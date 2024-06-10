@@ -124,7 +124,7 @@ public class AppLogic {
             initializeNode(child);
         }
 
-        if(node.getValue() instanceof INodeValue && AppLogic.getEngineState() == EngineState.EDITOR)
+        if(node.getValue() instanceof INodeValue)
             node.saveState();
     }
 
@@ -209,7 +209,10 @@ public class AppLogic {
         Class<?> clazz = Class.forName(className);
         ObjectMapper objectMapper = new ObjectMapper();
         Object value = objectMapper.treeToValue(jsonNode.get("value"), clazz);
+
         Node<?> node = new Node<>(null, jsonNode.get("name").asText(), value);
+
+        // handle script objects
         if(!scriptPath.equals("null")){
             node.setScript(scriptPath);
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -231,7 +234,6 @@ public class AppLogic {
         }else {
             node.setScript("");
         }
-
 
         JsonNode childrenNode = jsonNode.get("children");
         for (JsonNode childNode : childrenNode) {
