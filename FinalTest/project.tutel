@@ -1,0 +1,61 @@
+{
+  "salt" : 358222965,
+  "name" : "Root",
+  "className" : "org.tuiasi.engine.global.nodes.spatial.Spatial3D",
+  "children" : [ {
+    "salt" : -513422575,
+    "name" : "Renderable3D",
+    "className" : "org.tuiasi.engine.renderer.renderable.Renderable3D",
+    "children" : [ ],
+    "value" : {
+      "position" : {
+        "x" : 0.0,
+        "y" : 0.0,
+        "z" : 0.0
+      },
+      "rotation" : {
+        "x" : 0.0,
+        "y" : 0.0,
+        "z" : 0.0
+      },
+      "scale" : {
+        "x" : 1.0,
+        "y" : 1.0,
+        "z" : 1.0
+      },
+      "material" : {
+        "diffuse" : {
+          "path" : "",
+          "textureIndex" : 0
+        },
+        "specular" : {
+          "path" : "",
+          "textureIndex" : 1
+        },
+        "shininess" : 32.0
+      },
+      "mesh" : {
+        "path" : "C:\\Users\\Danel\\IdeaProjects\\licenta\\FinalTest\\assets\\monki.gltf"
+      }
+    },
+    "script" : ""
+  } ],
+  "value" : {
+    "position" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  },
+  "script" : ""
+}

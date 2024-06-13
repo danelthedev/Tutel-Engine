@@ -1,5 +1,6 @@
 package org.tuiasi.engine.ui.components.basicComponents;
 
+import imgui.flag.ImGuiColorEditFlags;
 import imgui.flag.ImGuiStyleVar;
 import imgui.internal.ImGui;
 import lombok.Getter;
@@ -83,6 +84,13 @@ public class TopMenuBar extends IComponent {
             ImGui.endMenu();
         }
 
+        if(ImGui.button("Export")){
+            if(fileDialog == null || !DefaultEngineEditorUI.getPopups().contains(fileDialog)) {
+                fileDialog = new FileDialog("Export", DialogType.FOLDER, null, this);
+                DefaultEngineEditorUI.addPopup(fileDialog);
+            }
+        }
+
 
         // play button
         ImGui.setCursorPosX((imgui.ImGui.getWindowSizeX() - 30));
@@ -109,7 +117,7 @@ public class TopMenuBar extends IComponent {
         ImGui.popStyleVar();
     }
 
-    // TODO: Use this to create the node file structure
+
     public void listf(String directoryName, Node<File> parentNode) {
         File directory = new File(directoryName);
 

@@ -20,6 +20,7 @@ import org.tuiasi.engine.renderer.shader.*;
 import org.tuiasi.engine.renderer.texture.Texture;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

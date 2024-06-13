@@ -53,8 +53,9 @@ public class Tree extends ITree{
 
             // Check if the current node is the last clicked one
 
-            if(AppLogic.getSelectedNode() != null && AppLogic.getSelectedNode().hashCode() == node.hashCode())
+            if(AppLogic.getSelectedNode() != null && AppLogic.getSelectedNode().hashCode() == node.hashCode()) {
                 lastClickedNodeId = node.hashCode();
+            }
 
             boolean isLastClickedNode = lastClickedNodeId != null && lastClickedNodeId.equals(node.hashCode());
 

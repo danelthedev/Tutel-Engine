@@ -307,6 +307,7 @@ public class UINodeInspectorWindow extends UIWindow {
                     @Override
                     public void onSearch(String searchText) {
                         selectedNode.setFieldValue(name, searchText);
+                        System.out.println("Set to " + selectedNode.getFieldValue(name));
                     }
                 });
 

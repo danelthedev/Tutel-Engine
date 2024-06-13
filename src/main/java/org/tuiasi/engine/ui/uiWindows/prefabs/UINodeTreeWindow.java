@@ -2,10 +2,12 @@ package org.tuiasi.engine.ui.uiWindows.prefabs;
 
 import imgui.ImVec2;
 import org.lwjgl.glfw.GLFW;
+import org.tuiasi.engine.global.nodes.physics.body.KinematicBody;
 import org.tuiasi.engine.global.nodes.physics.collider.Collider3D;
 import org.tuiasi.engine.logic.IO.KeyboardHandler;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.logic.logger.Log;
 import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.light.LightSource;
 import org.tuiasi.engine.renderer.renderable.Renderable3D;
@@ -46,7 +48,7 @@ public class UINodeTreeWindow extends UIWindow {
             }
         });
         addNodeButton.setSize(100, 20);
-        addNodeButton.setRatioedPosition(0.05f, 0.05f);
+        addNodeButton.setRatioedPosition(0.05f, 0.04f);
         addNodeButton.setSeparator(true);
 
         addComponent(addNodeButton);

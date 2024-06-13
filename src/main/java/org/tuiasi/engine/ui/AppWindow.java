@@ -24,6 +24,8 @@ import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.camera.MainCamera;
 
+import java.awt.*;
+import java.io.InputStream;
 import java.util.HashMap;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -160,8 +162,17 @@ public class AppWindow {
 
 
         appFonts = new HashMap<>();
-        for(int i = 16; i <= 64; ++ i)
-            appFonts.put(i, io.getFonts().addFontFromFileTTF("C:\\Users\\Danel\\IdeaProjects\\licenta\\target\\classes\\Nihonium113-Console.ttf", i, fontConfig));
+        for(int i = 16; i <= 64; ++ i) {
+            InputStream fontStream = getClass().getClassLoader().getResourceAsStream("fonts/Nihonium113-Console.ttf");
+            // read font as byte[]
+            byte[] fontBytes = new byte[0];
+            try {
+                fontBytes = fontStream.readAllBytes();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            appFonts.put(i, io.getFonts().addFontFromMemoryTTF(fontBytes, i, fontConfig));
+        }
 
     }
 

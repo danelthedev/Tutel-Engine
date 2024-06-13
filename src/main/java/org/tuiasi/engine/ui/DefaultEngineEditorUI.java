@@ -15,6 +15,7 @@ import org.tuiasi.engine.ui.uiWindows.prefabs.UILogsWindow;
 import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeInspectorWindow;
 import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeTreeWindow;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,9 @@ public class DefaultEngineEditorUI {
         boolean isSetup = false;
 
         @Getter @Setter
-        static boolean displayingUI = true;
+        private static boolean displayingUI = true;
+        @Getter @Setter
+        private static boolean displayingTopBar = true;
 
 //        IComponent fileDialog;
 
@@ -64,7 +67,7 @@ public class DefaultEngineEditorUI {
 
         }
 
-        public void renderUI() {
+        public void renderUI()  {
             if (displayingUI) {
                 for (int i = 0; i < uiWindows.size(); i++) {
                     uiWindows.get(i).render();
@@ -73,7 +76,8 @@ public class DefaultEngineEditorUI {
                     popups.get(i).render();
                 }
             }
-            topMenuBar.render();
+            if(displayingTopBar)
+                topMenuBar.render();
         }
 
         public static void addPopup(IComponent popup) {

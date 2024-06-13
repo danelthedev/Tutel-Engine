@@ -8,10 +8,13 @@ import org.tuiasi.engine.logic.logger.Log;
 import org.tuiasi.engine.ui.AppWindow;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 
+import java.io.File;
+import java.io.IOException;
+
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 
-public class TutelEngine {
+public class Game {
 
     // The window
     AppWindow appWindow;
@@ -19,18 +22,25 @@ public class TutelEngine {
     // Logic update rate
     private static final double TARGET_UPS = 60.0; // Target updates per second
 
-    public void run() {
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
+    public void run() throws IOException, ClassNotFoundException {
         init();
         loop();
         close();
     }
 
-    private void init() {
+    private void init() throws IOException, ClassNotFoundException {
         AppLogic.init();
-        appWindow = new AppWindow(1920, 1080, true, "Tutel Engine", new Vector4f(0.25f, 0.25f, 0.25f, 0.25f), new DefaultEngineEditorUI());
+
+        DefaultEngineEditorUI.setDisplayingUI(false);
+        DefaultEngineEditorUI.setDisplayingTopBar(false);
+        AppLogic.setEngineState(EngineState.PLAY);
+
+        appWindow = new AppWindow(1920, 1080, true, "Game", new Vector4f(0.25f, 0.25f, 0.25f, 0.25f), new DefaultEngineEditorUI());
         appWindow.init();
         Log.init();
+
+        AppLogic.setProjectFile(new File("project.tutel"));
+        AppLogic.loadProject();
     }
 
     private void loop() {
@@ -64,8 +74,8 @@ public class TutelEngine {
         appWindow.destroy();
     }
 
-    public static void main(String[] args) {
-        new TutelEngine().run();
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        new Game().run();
     }
 
 }

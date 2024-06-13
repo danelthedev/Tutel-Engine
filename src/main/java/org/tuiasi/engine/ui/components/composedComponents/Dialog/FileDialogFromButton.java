@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.logic.logger.Log;
 import org.tuiasi.engine.ui.components.IComponent;
 import org.tuiasi.engine.ui.components.basicComponents.searchbar.SearchbarWithHint;
 
@@ -79,7 +80,21 @@ public class FileDialogFromButton extends IComponent {
             ImGui.separator();
 
         if (selection != null && !selection.isEmpty() && relatedSearchbar != null && isActive && (selection.values().stream().findFirst().get().endsWith(ImGuiFileDialog.getCurrentFilter()) || filter.equals(".*"))) {
-            relatedSearchbar.setSearchText(new ImString(selection.values().stream().findFirst().get()));
+
+            // if file is not from workFolder + "/assets/" display error and return
+            if(!selection.values().stream().findFirst().get().startsWith(AppLogic.getWorkingDirectory() + "\\assets\\")) {
+                Log.error("File must be from the assets folder");
+                selection = null;
+                userData = 0;
+                isActive = false;
+                return;
+            }
+
+            // from the selected file, remove everything before the project folder
+            String path = selection.values().stream().findFirst().get();//.substring(AppLogic.getWorkingDirectory().length() + 1);
+
+            System.out.println("From the file dialog was selected: " + path);
+            relatedSearchbar.setSearchText(new ImString(path, 300));
             relatedSearchbar.trigger();
 
             selection = null;

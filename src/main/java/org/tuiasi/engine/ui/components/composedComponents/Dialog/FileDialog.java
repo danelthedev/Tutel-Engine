@@ -16,6 +16,7 @@ import org.tuiasi.engine.ui.components.basicComponents.searchbar.SearchbarWithHi
 import org.tuiasi.engine.ui.uiWindows.prefabs.UIFilesWindow;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,7 +41,7 @@ public class FileDialog extends IComponent {
     }
 
     @Override
-    public void render() {
+    public void render(){
         if(dialogType == DialogType.FILE) {
             if (!isActive) {
                 isActive = true;
@@ -50,6 +51,7 @@ public class FileDialog extends IComponent {
                 if (ImGuiFileDialog.isOk()) {
                     selection = ImGuiFileDialog.getSelection();
                     userData = ImGuiFileDialog.getUserDatas();
+                    Log.info(selection.values().stream().findFirst().get());
 
                     if(selection.values().stream().findFirst().isPresent() && selection.values().stream().findFirst().get().endsWith(".tutel")) {
                         // AppLogic.loadProject(selection.values().stream().findFirst().get());
@@ -86,8 +88,7 @@ public class FileDialog extends IComponent {
                     selection = ImGuiFileDialog.getSelection();
                     userData = ImGuiFileDialog.getUserDatas();
 
-                    // TODO: Clean up this code and file dialog in general
-                    if(originator != null && originator instanceof TopMenuBar) {
+                    if(label.equals("NewProject")) {
                         Optional<String> path = selection.values().stream().findFirst();
                         String currentDirectory = AppLogic.getWorkingDirectory();
                         int i = 0;
@@ -111,12 +112,40 @@ public class FileDialog extends IComponent {
                             }
                         }
 
+                        // create assets folder
+                        File assetsFolder = new File(workPath + "\\assets");
+
+                        if(!assetsFolder.exists()) {
+                            assetsFolder.mkdir();
+                        }
+
                         Node<File> rootNode = new Node<>(null, folderName, new File(workPath));
                         ((TopMenuBar) originator).listf(workPath, rootNode);
                         UIFilesWindow treeWindow = (UIFilesWindow) DefaultEngineEditorUI.getWindow("Files"); // Get the UIFilesWindow instance
                         if(treeWindow != null)
                             treeWindow.getTreeComponent().getTree().setRoot(rootNode);
                     }
+
+                    if(label.equals("Export")){
+                        Optional<String> path = selection.values().stream().findFirst();
+                        String currentDirectory = AppLogic.getWorkingDirectory();
+                        int i = 0;
+                        if(path.isPresent())
+                            i = path.get().lastIndexOf("\\");
+                        String workPath = path.isPresent() && !path.get().endsWith(".") ? path.get().substring(0, i) : currentDirectory;
+                        String folderName = path.isPresent() ? path.get().substring(i + 1) : currentDirectory.substring(currentDirectory.lastIndexOf("\\") + 1);
+
+                        Log.info("Exporting to game to: " + workPath);
+
+                        try {
+                            AppLogic.copyJarFile(workPath + "/game.jar");
+                        } catch (IOException e) {
+                            Log.error("Error exporting game to: " + workPath + "/game.jar");
+                        }
+
+
+                    }
+
                 }
                 ImGuiFileDialog.close();
                 DefaultEngineEditorUI.removePopup(this);

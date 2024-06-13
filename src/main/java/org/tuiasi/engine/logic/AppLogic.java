@@ -33,13 +33,19 @@ import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeInspectorWindow;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-import java.io.File;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
 
 public class AppLogic {
 
@@ -205,9 +211,10 @@ public class AppLogic {
         }
     }
 
-    public static Node<?> createNodeFromJson(JsonNode jsonNode) throws ClassNotFoundException, IllegalAccessException, InstantiationException, JsonProcessingException {
+    public static Node<?> createNodeFromJson(JsonNode jsonNode) throws ClassNotFoundException, JsonProcessingException {
         String className = jsonNode.get("className").asText();
         String scriptPath = jsonNode.get("script").asText();
+        System.out.println(scriptPath);
         Class<?> clazz = Class.forName(className);
         ObjectMapper objectMapper = new ObjectMapper();
         Object value = objectMapper.treeToValue(jsonNode.get("value"), clazz);
@@ -215,7 +222,7 @@ public class AppLogic {
         Node<?> node = new Node<>(null, jsonNode.get("name").asText(), value);
 
         // handle script objects
-        if(!scriptPath.equals("null")){
+        if(scriptPath != null && !scriptPath.isEmpty() && !scriptPath.equals("null")){
             node.setScript(scriptPath);
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
             int result = compiler.run(null, null, null, node.getScript());
@@ -247,7 +254,7 @@ public class AppLogic {
         return node;
     }
 
-    public static void loadProject(){
+    public static void loadProject() {
         // read the project file and parse it to a node tree
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -260,6 +267,80 @@ public class AppLogic {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void copyJarFile(String destinationPath) throws IOException {
+        // Get the path of the currently running JAR file
+        String jarPath = new File(AppLogic.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
+        System.out.println(jarPath);
+        // Copy the JAR file to the specified destination
+        File sourceJar = new File(jarPath);
+        File destinationJar = new File(destinationPath);
+
+        // Copy the jar
+        Files.copy(sourceJar.toPath(), destinationJar.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        updateManifestMainClass(destinationPath, destinationPath);
+        // Copy the .tutel file to the export path
+        Files.copy(projectFile.toPath(), new File(destinationJar.getParentFile(), projectFile.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private static void updateManifestMainClass(String jarFile, String newJarFile) throws IOException {
+        Path tempDir = Files.createTempDirectory("jar");
+
+        try (JarFile jar = new JarFile(jarFile)) {
+            // Extract jar contents
+            jar.stream().forEach(entry -> {
+                File file = new File(tempDir.toFile(), entry.getName());
+                if (entry.isDirectory()) {
+                    file.mkdirs();
+                } else {
+                    try (InputStream is = jar.getInputStream(entry);
+                         OutputStream os = new FileOutputStream(file)) {
+                        is.transferTo(os);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            // Edit the MANIFEST.MF file
+            File manifestFile = new File(tempDir.toFile(), "META-INF/MANIFEST.MF");
+            if (manifestFile.exists()) {
+                StringBuilder content = new StringBuilder();
+                try (BufferedReader reader = new BufferedReader(new FileReader(manifestFile))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        if (line.startsWith("Main-Class: org.tuiasi.TutelEngine")) {
+                            line = "Main-Class: org.tuiasi.Game";
+                        }
+                        content.append(line).append("\n");
+                    }
+                }
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(manifestFile))) {
+                    writer.write(content.toString());
+                }
+            }
+
+            // Create a new JAR file with the updated manifest
+            try (JarOutputStream jos = new JarOutputStream(new FileOutputStream(newJarFile))) {
+                Files.walk(tempDir).forEach(path -> {
+                    if (Files.isDirectory(path)) return;
+                    String name = tempDir.relativize(path).toString().replace("\\", "/");
+                    try {
+                        jos.putNextEntry(new JarEntry(name));
+                        Files.copy(path, jos);
+                        jos.closeEntry();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        } finally {
+            // Clean up temporary files
+            Files.walk(tempDir).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+        }
+
+        System.out.println("Updated JAR file created: " + newJarFile);
     }
 
 }

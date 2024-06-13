@@ -3,6 +3,8 @@ package org.tuiasi.engine.ui.components;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.IOException;
+
 @Getter @Setter
 public abstract class IComponent {
         float width, height;
