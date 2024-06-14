@@ -90,8 +90,9 @@ public class FileDialogFromButton extends IComponent {
                 return;
             }
 
-            // from the selected file, remove everything before the project folder
-            String path = selection.values().stream().findFirst().get();//.substring(AppLogic.getWorkingDirectory().length() + 1);
+            String path = selection.values().stream().findFirst().get();
+            // get only the file name
+            path = path.substring(path.lastIndexOf("\\") + 1);
 
             System.out.println("From the file dialog was selected: " + path);
             relatedSearchbar.setSearchText(new ImString(path, 300));

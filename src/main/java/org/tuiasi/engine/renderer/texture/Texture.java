@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.lwjgl.BufferUtils;
 import org.tuiasi.engine.global.nodes.EditorVisible;
+import org.tuiasi.engine.logic.AppLogic;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -29,6 +30,8 @@ public class Texture implements ITexture{
     @JsonProperty
     private Integer textureIndex;
 
+    private Boolean isEngineResource = false;
+
     public Texture(){
         this.path = "";
         this.previousPath = "";
@@ -49,6 +52,14 @@ public class Texture implements ITexture{
         this();
         this.path = path;
         this.previousPath = path;
+        createTexture(path, textureIndex);
+    }
+
+    public Texture(String path, int textureIndex, boolean isEngineResource){
+        this();
+        this.path = path;
+        this.previousPath = path;
+        this.isEngineResource = isEngineResource;
         createTexture(path, textureIndex);
     }
 
@@ -75,7 +86,10 @@ public class Texture implements ITexture{
         glBindTexture(GL_TEXTURE_2D, textureID);
 
         try {
-            image = stbi_load(path, width, height, nrChannels, 0);
+            if(!isEngineResource)
+                image = stbi_load(AppLogic.getWorkingDirectory() + "\\assets\\" + path, width, height, nrChannels, 0);
+            else
+                image = stbi_load(path, width, height, nrChannels, 0);
         }   catch (Exception e){
             e.printStackTrace();
         }

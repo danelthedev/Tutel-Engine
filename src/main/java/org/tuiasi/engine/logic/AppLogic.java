@@ -50,7 +50,7 @@ import java.util.jar.JarOutputStream;
 public class AppLogic {
 
     @Getter
-    static String appVersion = "0.1.0 Alpha";
+    static String appVersion = "0.1.1 Alpha";
 
     @Getter @Setter
     static EngineState engineState = EngineState.EDITOR;
@@ -106,8 +106,27 @@ public class AppLogic {
     }
 
     public static void initializeNode(Node<?> node){
-        if(node.getScriptObj() != null){
+        if(node.getScript() != null && !node.getScript().isEmpty() && !node.getScript().equals("null")){
             nodesWithScripts.add(node);
+
+            String pathToScript = workingDirectory + "\\assets\\" + node.getScript();
+            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+            int result = compiler.run(null, null, null, pathToScript);
+
+            try {
+                String classPath = pathToScript.substring(0, pathToScript.lastIndexOf("\\"));
+                String cName = pathToScript.substring(pathToScript.lastIndexOf("\\") + 1, pathToScript.lastIndexOf("."));
+
+                URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{new File(classPath).toURI().toURL()});
+                Class<?> script = Class.forName(cName, true, classLoader);
+                UserScript scriptInstance = (UserScript) script.getDeclaredConstructor().newInstance();
+                node.setScriptObj(scriptInstance);
+                node.getScriptObj().setRoot(AppLogic.getRoot());
+                scriptInstance.setAttachedNode(node);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+
             node.getScriptObj().init();
         }
 
@@ -224,12 +243,14 @@ public class AppLogic {
         // handle script objects
         if(scriptPath != null && !scriptPath.isEmpty() && !scriptPath.equals("null")){
             node.setScript(scriptPath);
+            String pathToScript = workingDirectory + "\\assets\\" + node.getScript();
+            System.out.println(pathToScript);
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            int result = compiler.run(null, null, null, node.getScript());
+            int result = compiler.run(null, null, null, pathToScript);
 
             try {
-                String classPath = node.getScript().substring(0, node.getScript().lastIndexOf("\\"));
-                String cName = node.getScript().substring(node.getScript().lastIndexOf("\\") + 1, node.getScript().lastIndexOf("."));
+                String classPath = pathToScript.substring(0, pathToScript.lastIndexOf("\\"));
+                String cName = pathToScript.substring(pathToScript.lastIndexOf("\\") + 1, pathToScript.lastIndexOf("."));
 
                 URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{new File(classPath).toURI().toURL()});
                 Class<?> script = Class.forName(cName, true, classLoader);
@@ -282,6 +303,28 @@ public class AppLogic {
         updateManifestMainClass(destinationPath, destinationPath);
         // Copy the .tutel file to the export path
         Files.copy(projectFile.toPath(), new File(destinationJar.getParentFile(), projectFile.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+        // copy the assets folder to the export path
+        File assetsFolder = new File(workingDirectory + "\\assets");
+        File exportAssetsFolder = new File(destinationJar.getParentFile(), "assets");
+        copyFolder(assetsFolder, exportAssetsFolder);
+
+    }
+
+    private static void copyFolder(File startingFolder, File destinationFolder){
+        if(!destinationFolder.exists()){
+            destinationFolder.mkdirs();
+        }
+        for(File file : startingFolder.listFiles()){
+            if(file.isDirectory()){
+                copyFolder(file, new File(destinationFolder, file.getName()));
+            }else{
+                try {
+                    Files.copy(file.toPath(), new File(destinationFolder, file.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private static void updateManifestMainClass(String jarFile, String newJarFile) throws IOException {

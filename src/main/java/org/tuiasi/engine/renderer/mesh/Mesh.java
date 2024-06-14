@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.tuiasi.engine.global.nodes.EditorVisible;
+import org.tuiasi.engine.logic.AppLogic;
 import org.tuiasi.engine.renderer.modelLoader.Model;
 import org.tuiasi.engine.renderer.modelLoader.ModelLoader;
 import org.tuiasi.engine.renderer.primitives.Cube;
@@ -26,8 +27,8 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 @Data
 public class Mesh{
 
-    @EditorVisible
-    @JsonProperty
+//    @EditorVisible
+//    @JsonProperty
     String path="";
     int VAO, VBO, EBO;
     FloatBuffer verticesBuffer;
@@ -44,7 +45,7 @@ public class Mesh{
         this("", Cube.vertexData, Cube.indexData);
         this.path = path;
 
-        Model model = ModelLoader.load(path);
+        Model model = ModelLoader.load(AppLogic.getWorkingDirectory() + "\\assets\\" + path);
 
         verticesBuffer = model.getMesh().getVerticesBuffer();
         indicesBuffer = model.getMesh().getIndicesBuffer();
@@ -101,6 +102,7 @@ public class Mesh{
     }
 
     public void render() {
+
         glBindVertexArray(VAO);
 
         if (drawMode == DrawMode.FILLED)
