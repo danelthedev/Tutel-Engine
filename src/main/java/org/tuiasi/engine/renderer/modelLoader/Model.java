@@ -14,8 +14,15 @@ public class Model {
 
     public Model(String path, float[] vertices, int[] indices, String textureName) {
         mesh = new Mesh(path, vertices, indices);
-        this.path = path.substring(0, path.lastIndexOf("\\"));
-        this.meshName = path.substring(path.lastIndexOf("\\") + 1);
-        this.textureName = textureName;
+
+        if(path.isEmpty()){
+            this.path = "";
+            this.meshName = "";
+            this.textureName = "";
+        }else{
+            this.path = path.substring(0, path.lastIndexOf("\\"));
+            this.meshName = path.substring(path.lastIndexOf("\\") + 1);
+            this.textureName = textureName;
+        }
     }
 }

@@ -2,12 +2,19 @@ package org.tuiasi.engine.renderer.modelLoader;
 
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
+import org.tuiasi.engine.renderer.mesh.Mesh;
+import org.tuiasi.engine.renderer.primitives.Cube;
 
 import java.io.File;
 import java.nio.IntBuffer;
 
 public class ModelLoader {
     public static Model load(String path){
+        if(!path.endsWith(".gltf") && !path.endsWith(".obj")){
+            // return a mesh with a cube
+            return new Model("", Cube.vertexData, Cube.indexData, "");
+        }
+
         Model model = new Model();
 
         File file = new File(path);

@@ -84,6 +84,11 @@ public class UINodeInspectorWindow extends UIWindow {
                 selectedNode.setScript(searchText);
                 scriptField.setSearchText(new ImString(searchText, 250));
 
+                if(selectedNode.getScript().isBlank()){
+                    selectedNode.setScriptObj(null);
+                    return;
+                }
+
                 String pathToScript = AppLogic.getWorkingDirectory() + "\\assets\\" + searchText;
                 JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
                 int result = compiler.run(null, null, null, new File(pathToScript).getPath());

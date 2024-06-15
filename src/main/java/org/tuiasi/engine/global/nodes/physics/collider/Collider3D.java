@@ -103,7 +103,7 @@ public class Collider3D extends Spatial3D {
         for (Node<?> node : AppLogic.getPhysicsNodes()) {
             if (node.getValue() instanceof IBody){
                 Collider3D other = ((IBody)node.getValue()).getCollider();
-                if(other == this)
+                if(other == null || other == this || !other.getEnabled() || !this.getEnabled())
                     continue;
 
                 Vector3f minB = new Vector3f(other.getPosition()).sub(other.getScale().div(2f, new Vector3f()));

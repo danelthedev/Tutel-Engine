@@ -76,6 +76,15 @@ public class FileDialogFromButton extends IComponent {
            }
         }
 
+        ImGui.sameLine();
+        if(ImGui.button("-##" + label)) {
+            relatedSearchbar.setSearchText(new ImString("", 300));
+            relatedSearchbar.trigger();
+            selection = null;
+            userData = 0;
+            isActive = false;
+        }
+
         if(isSeparator())
             ImGui.separator();
 

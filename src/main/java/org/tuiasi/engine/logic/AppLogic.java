@@ -179,7 +179,8 @@ public class AppLogic {
         }
         else{
             for(Node<?> node : nodesWithScripts){
-                node.getScriptObj().run();
+                if(node.getScriptObj() != null)
+                    node.getScriptObj().run();
             }
             for(Node<?> node: physicsNodes){
                 ((IBody)node.getValue()).physRun();
