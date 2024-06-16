@@ -28,8 +28,11 @@ import org.tuiasi.engine.misc.json.Vector3fSerializer;
 import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.camera.Camera;
 import org.tuiasi.engine.renderer.camera.MainCamera;
+import org.tuiasi.engine.renderer.light.LightSource;
+import org.tuiasi.engine.renderer.renderable.Renderable3D;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeInspectorWindow;
+import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeTreeWindow;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
@@ -194,7 +197,48 @@ public class AppLogic {
         physicsNodes.clear();
         cameras.clear();
 
+        removePlayGeneratedNodes(root);
+
         resetNodes();
+    }
+
+    private static void removePlayGeneratedNodes(Node<?> node){
+        if(node.getIsPlayGenerated()) {
+            if (node.getValue() instanceof Renderable3D) {
+                Renderer.removeRenderable((Renderable3D) node.getValue());
+            } else if (node.getValue() instanceof LightSource) {
+                Renderer.removeLightSource((LightSource) node.getValue());
+            } else if (node.getValue() instanceof Collider3D) {
+                Renderer.removeRenderable(((Collider3D) node.getValue()).getRepresentation());
+            }
+        }
+
+        for (int i = node.getChildren().size() - 1; i >= 0; i--) {
+            Node<?> child = node.getChildren().get(i);
+            removePlayGeneratedNodes(child);
+        }
+
+        if(node.getIsPlayGenerated()) {
+            node.getParent().removeChild(node);
+        }
+    }
+
+    public static void removeNodeAndChildren(Node<?> node){
+        if (node.getValue() instanceof Renderable3D) {
+            Renderer.removeRenderable((Renderable3D) node.getValue());
+        } else if (node.getValue() instanceof LightSource) {
+            Renderer.removeLightSource((LightSource) node.getValue());
+        } else if (node.getValue() instanceof Collider3D) {
+            Renderer.removeRenderable(((Collider3D) node.getValue()).getRepresentation());
+            physicsNodes.remove(node.getParent());
+        }
+
+        for (int i = node.getChildren().size() - 1; i >= 0; i--) {
+            Node<?> child = node.getChildren().get(i);
+            removeNodeAndChildren(child);
+        }
+
+        node.getParent().removeChild(node);
     }
 
     public static void resetNodes(){
@@ -203,8 +247,8 @@ public class AppLogic {
 
     public static void resetNode(Node<?> node){
         node.loadState();
-        for(Node<?> child : node.getChildren()){
-            resetNode(child);
+        for(int i = 0; i < node.getChildren().size(); ++ i) {
+            resetNode(node.getChildren().get(i));
         }
     }
 

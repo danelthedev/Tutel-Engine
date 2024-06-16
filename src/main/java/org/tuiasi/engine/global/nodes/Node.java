@@ -44,8 +44,12 @@ public class Node<T>{
     private String script;
     private UserScript scriptObj;
 
+    private Boolean isPlayGenerated = false;
 
     public Node(Node<?> parent, String name){
+        if(AppLogic.getEngineState().equals(EngineState.PLAY))
+            isPlayGenerated = true;
+
         this.salt = new Random().nextInt();
 
         this.parent = parent;

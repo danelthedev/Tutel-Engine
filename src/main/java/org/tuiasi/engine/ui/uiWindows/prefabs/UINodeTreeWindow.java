@@ -88,7 +88,7 @@ public class UINodeTreeWindow extends UIWindow {
         }
     }
 
-    private void deleteNodeAndChildren(Node<?> node) {
+    public void deleteNodeAndChildren(Node<?> node) {
         if (node.getValue() instanceof Renderable3D) {
             Renderer.removeRenderable((Renderable3D) node.getValue());
         }

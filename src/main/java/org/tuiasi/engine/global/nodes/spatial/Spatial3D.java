@@ -135,6 +135,10 @@ public class Spatial3D extends Spatial {
 
     @Override
     public void loadState(Object state) {
+        if(state == null){
+            return;
+        }
+
         Spatial3D newState = (Spatial3D) state;
         position = newState.getPosition();
         rotation = newState.getRotation();

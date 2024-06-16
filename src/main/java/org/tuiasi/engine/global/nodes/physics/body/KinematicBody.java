@@ -75,6 +75,9 @@ public class KinematicBody extends Spatial3D implements IBody{
     @Override
     public void loadState(Object state){
         super.loadState(state);
+        if(state == null)
+            return;
+
         KinematicBody kinematicBody = (KinematicBody) state;
 
         this.collider = kinematicBody.collider;

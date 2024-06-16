@@ -5,6 +5,8 @@ import lombok.Data;
 import org.joml.Matrix4f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.logic.EngineState;
 import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.camera.Camera;
 import org.tuiasi.engine.renderer.camera.MainCamera;
@@ -38,6 +40,8 @@ public class Renderable3D extends Spatial3D implements IRenderable {
     @JsonProperty
     String meshPath = "";
     String previousMeshPath = "";
+
+    private Boolean playVisible = true;
 
     public Renderable3D() {
         this(new Mesh(),
@@ -80,6 +84,9 @@ public class Renderable3D extends Spatial3D implements IRenderable {
 
     // function that copies all fields from one renderable to another
     public void copy(Renderable3D renderable) {
+        if(renderable == null)
+            return;
+
         this.mesh = renderable.getMesh();
         this.material = renderable.getMaterial();
         this.shaderProgram = renderable.getShaderProgram();
@@ -141,13 +148,12 @@ public class Renderable3D extends Spatial3D implements IRenderable {
             previousMeshPath = mesh.getPath();
         }
 
-        shaderProgram.use();
-
-        setModelViewMatrix();
-        setMaterialUniforms();
-
-        mesh.render();
-
+        if((playVisible && AppLogic.getEngineState() == EngineState.PLAY) || AppLogic.getEngineState() == EngineState.EDITOR) {
+            shaderProgram.use();
+            setModelViewMatrix();
+            setMaterialUniforms();
+            mesh.render();
+        }
     }
 
     @Override
