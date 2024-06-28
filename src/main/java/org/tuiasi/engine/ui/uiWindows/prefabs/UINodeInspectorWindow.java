@@ -141,7 +141,6 @@ public class UINodeInspectorWindow extends UIWindow {
             if(selectedNode.getFieldValue(name) instanceof Vector2f) {
                 Vector2f value = (Vector2f) selectedNode.getFieldValue(name);
                 for (int j = 0; j < 2; j++) {
-                    // add a label saying x,y,z,w depending on the j value
                     Label compLabel = new Label(String.valueOf((char)('x' + j)), true, 16);
                     addComponent(compLabel);
                     SearchbarWithHint field = new SearchbarWithHint(name + " " + j, name + " " + j, false);
@@ -149,7 +148,6 @@ public class UINodeInspectorWindow extends UIWindow {
                     field.setSearchListener(new SearchListener() {
                         @Override
                         public void onSearch(String searchText) {
-                            // depending on the j value, set the x, y or z value of the vector
                             try {
                                 if (finalJ == 0) {
                                     selectedNode.setFieldValue(name, new Vector2f(Float.parseFloat(searchText), value.y));
@@ -174,7 +172,6 @@ public class UINodeInspectorWindow extends UIWindow {
             else if(selectedNode.getFieldValue(name) instanceof Vector3f){
                 Vector3f value = (Vector3f) selectedNode.getFieldValue(name);
                 for(int j = 0; j < 3; j++) {
-                    // add a label saying x,y,z,w depending on the j value
                     Label compLabel = new Label(String.valueOf((char)('x' + j)), true, 16);
                     addComponent(compLabel);
                     SearchbarWithHint field = new SearchbarWithHint(name + " " + j, name + " " + j, false);
@@ -182,7 +179,6 @@ public class UINodeInspectorWindow extends UIWindow {
                     field.setSearchListener(new SearchListener() {
                         @Override
                         public void onSearch(String searchText) {
-                            // depending on the j value, set the x, y or z value of the vector
                             try {
                                 if (finalJ == 0) {
                                     selectedNode.setFieldValue(name, new Vector3f(Float.parseFloat(searchText), value.y, value.z));
@@ -210,7 +206,6 @@ public class UINodeInspectorWindow extends UIWindow {
             else if(selectedNode.getFieldValue(name) instanceof Vector4f){
                 Vector4f value = (Vector4f) selectedNode.getFieldValue(name);
                 for(int j = 0; j < 4; j++) {
-                    // add a label saying x,y,z,w depending on the j value
                     Label compLabel = new Label(String.valueOf((char)('x' + j)), true, 16);
                     addComponent(compLabel);
                     SearchbarWithHint field = new SearchbarWithHint(name + " " + j, name + " " + j, false);
@@ -218,7 +213,6 @@ public class UINodeInspectorWindow extends UIWindow {
                     field.setSearchListener(new SearchListener() {
                         @Override
                         public void onSearch(String searchText) {
-                            // depending on the j value, set the x, y or z value of the vector
                             try {
                                 if (finalJ == 0) {
                                     selectedNode.setFieldValue(name, new Vector4f(Float.parseFloat(searchText), value.y, value.z, value.w));
@@ -298,10 +292,8 @@ public class UINodeInspectorWindow extends UIWindow {
                     }
                 });
 
-//                dropdown.setSelectedItemIndex(((Enum)selectedNode.getFieldValue(name)).ordinal());
                 dropdown.setWidth(200);
                 dropdown.setSeparator(true);
-
 
                 addComponent(dropdown);
             }

@@ -19,6 +19,7 @@ import org.tuiasi.engine.global.nodes.physics.body.IBody;
 import org.tuiasi.engine.global.nodes.physics.body.KinematicBody;
 import org.tuiasi.engine.global.nodes.physics.collider.Collider3D;
 import org.tuiasi.engine.global.nodes.reflective.ReflectiveObjectManager;
+import org.tuiasi.engine.logic.IO.KeyboardHandler;
 import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
@@ -28,8 +29,11 @@ import org.tuiasi.engine.misc.json.Vector3fSerializer;
 import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.camera.Camera;
 import org.tuiasi.engine.renderer.camera.MainCamera;
+import org.tuiasi.engine.renderer.light.LightSource;
+import org.tuiasi.engine.renderer.renderable.Renderable3D;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeInspectorWindow;
+import org.tuiasi.engine.ui.uiWindows.prefabs.UINodeTreeWindow;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
@@ -110,8 +114,6 @@ public class AppLogic {
             nodesWithScripts.add(node);
 
             String pathToScript = workingDirectory + "\\assets\\" + node.getScript();
-            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            int result = compiler.run(null, null, null, pathToScript);
 
             try {
                 String classPath = pathToScript.substring(0, pathToScript.lastIndexOf("\\"));
@@ -157,7 +159,6 @@ public class AppLogic {
     }
 
     public static void run(){
-
         if(engineState == EngineState.EDITOR) {
             if (MouseHandler.isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
                 Node<?> node = root.findNode(node1 -> {
@@ -194,7 +195,48 @@ public class AppLogic {
         physicsNodes.clear();
         cameras.clear();
 
+        removePlayGeneratedNodes(root);
+
         resetNodes();
+    }
+
+    private static void removePlayGeneratedNodes(Node<?> node){
+        if(node.getIsPlayGenerated()) {
+            if (node.getValue() instanceof Renderable3D) {
+                Renderer.removeRenderable((Renderable3D) node.getValue());
+            } else if (node.getValue() instanceof LightSource) {
+                Renderer.removeLightSource((LightSource) node.getValue());
+            } else if (node.getValue() instanceof Collider3D) {
+                Renderer.removeRenderable(((Collider3D) node.getValue()).getRepresentation());
+            }
+        }
+
+        for (int i = node.getChildren().size() - 1; i >= 0; i--) {
+            Node<?> child = node.getChildren().get(i);
+            removePlayGeneratedNodes(child);
+        }
+
+        if(node.getIsPlayGenerated()) {
+            node.getParent().removeChild(node);
+        }
+    }
+
+    public static void removeNodeAndChildren(Node<?> node){
+        if (node.getValue() instanceof Renderable3D) {
+            Renderer.removeRenderable((Renderable3D) node.getValue());
+        } else if (node.getValue() instanceof LightSource) {
+            Renderer.removeLightSource((LightSource) node.getValue());
+        } else if (node.getValue() instanceof Collider3D) {
+            Renderer.removeRenderable(((Collider3D) node.getValue()).getRepresentation());
+            physicsNodes.remove(node.getParent());
+        }
+
+        for (int i = node.getChildren().size() - 1; i >= 0; i--) {
+            Node<?> child = node.getChildren().get(i);
+            removeNodeAndChildren(child);
+        }
+
+        node.getParent().removeChild(node);
     }
 
     public static void resetNodes(){
@@ -203,23 +245,28 @@ public class AppLogic {
 
     public static void resetNode(Node<?> node){
         node.loadState();
-        for(Node<?> child : node.getChildren()){
-            resetNode(child);
+        for(int i = 0; i < node.getChildren().size(); ++ i) {
+            resetNode(node.getChildren().get(i));
         }
     }
 
-    public static void saveProject(){
-        // iterate over all nodes, use jackson to convert them to string and print them
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new SimpleModule().addSerializer(Vector3f.class, new Vector3fSerializer()));
-        // configure mapper to ignore all fields except those market as JsonProperty
-        objectMapper.setVisibility(objectMapper.getSerializationConfig().getDefaultVisibilityChecker()
+    public static ObjectMapper configureObjectMapper(ObjectMapper om){
+        om.setVisibility(om.getSerializationConfig().getDefaultVisibilityChecker()
                 .withFieldVisibility(JsonAutoDetect.Visibility.NONE)
                 .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
                 .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
                 .withCreatorVisibility(JsonAutoDetect.Visibility.NONE)
                 .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE));
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        return om;
+    }
+
+
+    public static void saveProject(){
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new SimpleModule().addSerializer(Vector3f.class, new Vector3fSerializer()));
+        // configure mapper to ignore all fields except those market as JsonProperty
+        configureObjectMapper(objectMapper);
         try {
             String projectConfig =  objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
             PrintWriter writer = new PrintWriter(projectFile);
@@ -277,7 +324,6 @@ public class AppLogic {
     }
 
     public static void loadProject() {
-        // read the project file and parse it to a node tree
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             cleanNodeQueue();
@@ -292,10 +338,9 @@ public class AppLogic {
     }
 
     public static void copyJarFile(String destinationPath) throws IOException {
-        // Get the path of the currently running JAR file
         String jarPath = new File(AppLogic.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
         System.out.println(jarPath);
-        // Copy the JAR file to the specified destination
+
         File sourceJar = new File(jarPath);
         File destinationJar = new File(destinationPath);
 

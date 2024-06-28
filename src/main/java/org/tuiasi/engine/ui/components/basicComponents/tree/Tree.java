@@ -18,7 +18,7 @@ public class Tree extends ITree{
     private Node<?> root;
     private TreeListener nodeClickListener;
 
-    private Integer lastClickedNodeId;  // Variable to store the last clicked node
+    private Integer lastClickedNodeId;
 
     public Tree(Node<?> root, TreeListener nodeClickListener) {
         this.root = root;
@@ -27,7 +27,6 @@ public class Tree extends ITree{
 
     @Override
     public void render() {
-        // Draw a separator as the top border
         if(root != null)
             renderTreeNodes(List.of(root), null);
     }
@@ -51,34 +50,30 @@ public class Tree extends ITree{
             int flags = isLeaf ? ImGuiTreeNodeFlags.Leaf : (ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.OpenOnDoubleClick);
             flags |= ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth;
 
-            // Check if the current node is the last clicked one
-
             if(AppLogic.getSelectedNode() != null && AppLogic.getSelectedNode().hashCode() == node.hashCode()) {
                 lastClickedNodeId = node.hashCode();
             }
 
             boolean isLastClickedNode = lastClickedNodeId != null && lastClickedNodeId.equals(node.hashCode());
 
-            // Highlight the last clicked node
             if (isLastClickedNode) {
                 ImGui.pushStyleColor(ImGuiCol.Text, 1.0f, 1.0f, 0.0f, 1.0f);  // Yellow text color
             }
 
             ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 0, 5);
-            // Render the tree node
 
+            // Render the tree node
             boolean treeNodeOpen = ImGui.treeNodeEx(node.getName() + "##TreeNode", flags);
 
             // Check if the item (label) is clicked, regardless of whether the node is open or closed
             if (ImGui.isItemClicked()) {
-                lastClickedNodeId = node.hashCode();  // Update the last clicked node ID
+                lastClickedNodeId = node.hashCode();
                 if (nodeClickListener != null) {
                     nodeClickListener.onNodeClick(node);
                 }
             }
             ImGui.popStyleVar();
 
-            // Restore the text color if not the last clicked node
             if (isLastClickedNode) {
                 ImGui.popStyleColor();
             }

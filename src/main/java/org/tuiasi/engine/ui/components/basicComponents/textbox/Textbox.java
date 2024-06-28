@@ -36,7 +36,6 @@ public class Textbox extends ITextbox{
 
         previousText = text.get();
 
-        // calculate the height of the textbox based on the font size and the number of lines in the text
         float textHeight = ImGui.calcTextSize(text.get()).y;
         float windowHeight = ImGui.getWindowHeight();
         float height = Math.max(windowHeight, textHeight);

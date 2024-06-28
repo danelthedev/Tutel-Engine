@@ -1,4 +1,4 @@
-package org.tuiasi.engine.ui;
+package org.tuiasi.engine.renderer;
 
 import imgui.ImFont;
 import imgui.ImFontConfig;
@@ -23,6 +23,7 @@ import org.tuiasi.engine.logic.IO.MouseHandler;
 import org.tuiasi.engine.global.WindowVariables;
 import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.camera.MainCamera;
+import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 
 import java.awt.*;
 import java.io.InputStream;
@@ -87,11 +88,9 @@ public class AppWindow {
     }
 
     private void initWindow() {
-        // Setup an error callback. The default implementation
-        // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 
-        // Initialize GLFW. Most GLFW functions will not work before doing this.
+        // Initialize GLFW
         if ( !glfwInit() ) {
             System.out.println("Unable to initialize GLFW");
             System.exit(-1);
@@ -135,7 +134,7 @@ public class AppWindow {
         glfwSetFramebufferSizeCallback(windowID, (window, width, height) -> {
             GL20.glViewport(0, 0, width, height);
             MainCamera.getInstance().setAspect((float)width / (float)height);
-            this.width = width; // update the width and height of the window
+            this.width = width;
             this.height = height;
         });
 
@@ -155,16 +154,13 @@ public class AppWindow {
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
         io.addConfigFlags(ImGuiConfigFlags.DpiEnableScaleFonts);
 
-
-        // add the font Nihonium113-Console.ttf found in resources to the atlas
+        // add the font found in resources to the atlas
         ImFontConfig fontConfig = new ImFontConfig();
         fontConfig.setGlyphRanges(io.getFonts().getGlyphRangesDefault());
-
 
         appFonts = new HashMap<>();
         for(int i = 16; i <= 64; ++ i) {
             InputStream fontStream = getClass().getClassLoader().getResourceAsStream("fonts/Nihonium113-Console.ttf");
-            // read font as byte[]
             byte[] fontBytes = new byte[0];
             try {
                 fontBytes = fontStream.readAllBytes();

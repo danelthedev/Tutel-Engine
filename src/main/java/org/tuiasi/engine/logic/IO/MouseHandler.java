@@ -14,7 +14,7 @@ public class MouseHandler implements IInputHandler{
     private static double lastActivityTime = 0;
 
     private MouseHandler() {
-        // Private constructor to prevent instantiation
+
     }
 
     public static void initialize(long window) {

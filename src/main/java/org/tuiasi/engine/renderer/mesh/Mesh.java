@@ -26,15 +26,11 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 @Data
 public class Mesh{
-
-//    @EditorVisible
-//    @JsonProperty
     String path="";
     int VAO, VBO, EBO;
     FloatBuffer verticesBuffer;
     IntBuffer indicesBuffer;
 
-//    @EditorVisible
     DrawMode drawMode = DrawMode.FILLED;
 
     public Mesh(){
@@ -71,21 +67,16 @@ public class Mesh{
     }
 
     private void initVertBuf(){
-        // create a vertex array object to store the vertex buffer object
         VAO = glGenVertexArrays();
         glBindVertexArray(VAO);
 
-        // create a vertex buffer object to store the vertices
         VBO = GL15.glGenBuffers();
         GL15.glBindBuffer(GL_ARRAY_BUFFER, VBO);
         GL15.glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
 
-        // create element buffer object
         EBO = GL15.glGenBuffers();
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, EBO);
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
-
-        // set the vertex attributes
 
         // position attribute
         GL20.glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * Float.BYTES, 0);

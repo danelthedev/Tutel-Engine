@@ -11,7 +11,7 @@ public class KeyboardHandler implements IInputHandler{
     private static final boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
 
     private KeyboardHandler() {
-        // Private constructor to prevent instantiation
+
     }
 
     public static void initialize(long window) {

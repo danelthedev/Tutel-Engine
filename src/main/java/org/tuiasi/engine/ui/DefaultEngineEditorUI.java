@@ -34,8 +34,6 @@ public class DefaultEngineEditorUI {
         @Getter @Setter
         private static boolean displayingTopBar = true;
 
-//        IComponent fileDialog;
-
         public DefaultEngineEditorUI() {
             uiWindows = new ArrayList<>();
             popups = new ArrayList<>();

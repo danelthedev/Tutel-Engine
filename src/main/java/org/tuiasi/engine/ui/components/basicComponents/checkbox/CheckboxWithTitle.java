@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter @Getter @AllArgsConstructor @NoArgsConstructor
-public class CheckboxWithTitle extends ICheckbox {
+public class CheckboxWithTitle extends Checkbox {
 
     private String label;
     private boolean isChecked;
@@ -21,7 +21,6 @@ public class CheckboxWithTitle extends ICheckbox {
 
     @Override
     public void render() {
-        // Render the checkbox
         ImGui.checkbox( label + "##Checkbox", isChecked);
 
         if (ImGui.isItemClicked()) {
@@ -33,8 +32,6 @@ public class CheckboxWithTitle extends ICheckbox {
 
     }
 
-
-    // Getter to retrieve the checkbox state
     public boolean isChecked() {
         return isChecked;
     }

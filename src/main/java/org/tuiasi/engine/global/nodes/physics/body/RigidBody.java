@@ -4,7 +4,7 @@ import lombok.Data;
 import org.joml.Vector3f;
 import org.tuiasi.engine.global.nodes.physics.collider.Collider3D;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
-import org.tuiasi.engine.logic.PhysicsProperties;
+import org.tuiasi.engine.global.nodes.physics.PhysicsProperties;
 
 @Data
 public class RigidBody extends Spatial3D implements IBody{

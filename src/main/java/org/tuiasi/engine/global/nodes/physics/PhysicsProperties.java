@@ -1,10 +1,8 @@
-package org.tuiasi.engine.logic;
+package org.tuiasi.engine.global.nodes.physics;
 
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
-// TODO: Figure out how to implement physics and parent - child relation for spatial stuff
 
 @Data
 public class PhysicsProperties {

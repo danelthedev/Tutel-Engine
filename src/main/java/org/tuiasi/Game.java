@@ -1,11 +1,10 @@
 package org.tuiasi;
 
 import org.joml.Vector4f;
-import org.lwjgl.Version;
 import org.tuiasi.engine.logic.AppLogic;
 import org.tuiasi.engine.logic.EngineState;
 import org.tuiasi.engine.logic.logger.Log;
-import org.tuiasi.engine.ui.AppWindow;
+import org.tuiasi.engine.renderer.AppWindow;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 
 import java.io.File;
@@ -56,9 +55,7 @@ public class Game {
 
             accumulatedTime += elapsedTime;
 
-            // Update logic if enough time has elapsed
             while (accumulatedTime >= 1.0 / TARGET_UPS) {
-                // Update logic of the engine
                 AppLogic.run();
 
                 accumulatedTime -= 1.0 / TARGET_UPS;

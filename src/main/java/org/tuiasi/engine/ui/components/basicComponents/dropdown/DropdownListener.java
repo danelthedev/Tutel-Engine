@@ -1,5 +1,7 @@
 package org.tuiasi.engine.ui.components.basicComponents.dropdown;
 
-public interface DropdownListener {
+import org.tuiasi.engine.ui.components.IListener;
+
+public interface DropdownListener extends IListener {
     void onItemSelected(int index);
 }

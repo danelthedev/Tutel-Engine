@@ -5,6 +5,8 @@ import lombok.Data;
 import org.joml.Matrix4f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
+import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.logic.EngineState;
 import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.camera.Camera;
 import org.tuiasi.engine.renderer.camera.MainCamera;
@@ -19,25 +21,22 @@ import org.tuiasi.engine.renderer.texture.Texture;
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 
-// TODO: Switch individual sampler2D uniforms to a single array of samplers
-
 @Data
 public class Renderable3D extends Spatial3D implements IRenderable {
-    // material data
     @EditorVisible
     @JsonProperty
     Material material;
 
-    // shader data
     ShaderProgram shaderProgram;
 
-    // mesh
     Mesh mesh;
 
     @EditorVisible
     @JsonProperty
     String meshPath = "";
     String previousMeshPath = "";
+
+    private Boolean playVisible = true;
 
     public Renderable3D() {
         this(new Mesh(),
@@ -60,8 +59,6 @@ public class Renderable3D extends Spatial3D implements IRenderable {
 
         if (!material.equals(new Material()))
             setMaterialUniforms();
-
-//        Renderer.addRenderable(this);
     }
 
     public void addToRenderer(){
@@ -78,8 +75,10 @@ public class Renderable3D extends Spatial3D implements IRenderable {
         setScale(transform.getScale());
     }
 
-    // function that copies all fields from one renderable to another
     public void copy(Renderable3D renderable) {
+        if(renderable == null)
+            return;
+
         this.mesh = renderable.getMesh();
         this.material = renderable.getMaterial();
         this.shaderProgram = renderable.getShaderProgram();
@@ -105,6 +104,7 @@ public class Renderable3D extends Spatial3D implements IRenderable {
         modelMatrix.rotateX((float) Math.toRadians(getRotation().x));
         modelMatrix.rotateY((float) Math.toRadians(getRotation().y));
         modelMatrix.rotateZ((float) Math.toRadians(getRotation().z));
+
         modelMatrix.scale(getScale());
 
         Matrix4f viewMatrix = camera.getViewMatrix();
@@ -141,13 +141,12 @@ public class Renderable3D extends Spatial3D implements IRenderable {
             previousMeshPath = mesh.getPath();
         }
 
-        shaderProgram.use();
-
-        setModelViewMatrix();
-        setMaterialUniforms();
-
-        mesh.render();
-
+        if((playVisible && AppLogic.getEngineState() == EngineState.PLAY) || AppLogic.getEngineState() == EngineState.EDITOR) {
+            shaderProgram.use();
+            setModelViewMatrix();
+            setMaterialUniforms();
+            mesh.render();
+        }
     }
 
     @Override

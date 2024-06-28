@@ -90,10 +90,9 @@ public abstract class IUIWindow {
     }
 
     public ImVec2 calculateWindowPosition(){
-        // get the position of the main window
         ImVec2 mainWindowPos = new ImVec2();
         ImGui.getMainViewport().getPos(mainWindowPos);
-        // get the position of the top left corner of the window
+
         ImVec2 position = new ImVec2();
         ImGui.getWindowPos(position);
 

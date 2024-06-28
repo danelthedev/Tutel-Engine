@@ -8,8 +8,10 @@ import org.joml.Vector3f;
 import org.tuiasi.engine.global.nodes.EditorVisible;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.physics.body.IBody;
+import org.tuiasi.engine.global.nodes.physics.body.KinematicBody;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
 import org.tuiasi.engine.logic.AppLogic;
+import org.tuiasi.engine.logic.logger.Log;
 import org.tuiasi.engine.renderer.Renderer;
 import org.tuiasi.engine.renderer.material.Material;
 import org.tuiasi.engine.renderer.mesh.Mesh;
@@ -36,7 +38,6 @@ public class Collider3D extends Spatial3D {
     private Boolean enabled = Boolean.TRUE;
 
     public Collider3D(){
-
         Mesh cubeMesh = new Mesh("", Cube.vertexData, Cube.indexData);
         representation = new Renderable3D(
                 cubeMesh,
@@ -47,6 +48,7 @@ public class Collider3D extends Spatial3D {
                 new Spatial3D(getPosition(), getRotation(), new Vector3f(1f,1f,1f))
         );
         representation.getMesh().setDrawMode(DrawMode.WIREFRAME);
+        representation.setPlayVisible(false);
     }
 
     public Collider3D(Vector3f position, Vector3f rotation, Vector3f scale){
@@ -89,10 +91,18 @@ public class Collider3D extends Spatial3D {
     }
 
     public boolean isColliding(Collider3D other) {
-        // Simple collision detection based on position and scale
-        Vector3f distance = other.getPosition().sub(this.getPosition(), new Vector3f());
-        Vector3f totalScale = this.getScale().add(other.getScale(), new Vector3f());
-        return distance.lengthSquared() < totalScale.lengthSquared();
+        if(other == null)
+            return false;
+
+        Vector3f thisMin = this.getPosition().sub(this.getScale().div(2f, new Vector3f()));
+        Vector3f thisMax = this.getPosition().add(this.getScale().div(2f, new Vector3f()));
+
+        Vector3f otherMin = other.getPosition().sub(other.getScale().div(2f, new Vector3f()));
+        Vector3f otherMax = other.getPosition().add(other.getScale().div(2f, new Vector3f()));
+
+        return (thisMin.x <= otherMax.x && thisMax.x >= otherMin.x) &&
+                (thisMin.y <= otherMax.y && thisMax.y >= otherMin.y) &&
+                (thisMin.z <= otherMax.z && thisMax.z >= otherMin.z);
     }
 
     public Collider3D isColliding(Vector3f position) {
@@ -103,7 +113,7 @@ public class Collider3D extends Spatial3D {
         for (Node<?> node : AppLogic.getPhysicsNodes()) {
             if (node.getValue() instanceof IBody){
                 Collider3D other = ((IBody)node.getValue()).getCollider();
-                if(other == null || other == this || !other.getEnabled() || !this.getEnabled())
+                if(other == null || other == this)
                     continue;
 
                 Vector3f minB = new Vector3f(other.getPosition()).sub(other.getScale().div(2f, new Vector3f()));
@@ -117,16 +127,16 @@ public class Collider3D extends Spatial3D {
                 }
             }
         }
-        // If no collision was detected, return false
         return null;
     }
 
     public List<Collider3D> getColliding() {
         List<Collider3D> colliding = new ArrayList<>();
         for (Node<?> node : AppLogic.getPhysicsNodes()) {
-            if (node.getValue() instanceof Collider3D) {
-                Collider3D other = (Collider3D) node.getValue();
-                if (this != other && this.isColliding(other)) {
+            if (node.getValue() instanceof IBody && ((IBody) node.getValue()).getCollider() != this) {
+                Collider3D other = ((IBody) node.getValue()).getCollider();
+                if (this.isColliding(other)) {
+                    System.out.println("Detected collision with: " + node.getName());
                     colliding.add(other);
                 }
             }
@@ -153,6 +163,9 @@ public class Collider3D extends Spatial3D {
 
     @Override
     public void loadState(Object state){
+        if(state == null)
+            return;
+
         Collider3D newState = (Collider3D) state;
         setPosition(newState.getPosition());
         setRotation(newState.getRotation());

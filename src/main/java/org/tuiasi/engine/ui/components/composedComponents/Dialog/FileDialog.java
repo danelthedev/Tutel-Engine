@@ -54,14 +54,11 @@ public class FileDialog extends IComponent {
                     Log.info(selection.values().stream().findFirst().get());
 
                     if(selection.values().stream().findFirst().isPresent() && selection.values().stream().findFirst().get().endsWith(".tutel")) {
-                        // AppLogic.loadProject(selection.values().stream().findFirst().get());
-
                         AppLogic.setWorkingDirectory(selection.values().stream().findFirst().get().substring(0, selection.values().stream().findFirst().get().lastIndexOf("\\")));
                         AppLogic.setProjectFile(new File(selection.values().stream().findFirst().get()));
                         AppLogic.loadProject();
 
                         String workPath = AppLogic.getWorkingDirectory();
-                        // get last folder in the work path
                         int i = workPath.lastIndexOf("\\");
                         String folderName = workPath.substring(i + 1);
 
@@ -100,7 +97,6 @@ public class FileDialog extends IComponent {
                         AppLogic.setWorkingDirectory(workPath);
                         Log.info("Working directory set to: " + workPath);
 
-                        // create a file called "project.tutel" in the selected folder
                         File projectFile = new File(workPath + "\\project.tutel");
                         AppLogic.setProjectFile(projectFile);
 
@@ -112,7 +108,6 @@ public class FileDialog extends IComponent {
                             }
                         }
 
-                        // create assets folder
                         File assetsFolder = new File(workPath + "\\assets");
 
                         if(!assetsFolder.exists()) {

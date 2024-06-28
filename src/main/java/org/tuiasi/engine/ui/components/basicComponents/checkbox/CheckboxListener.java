@@ -1,5 +1,7 @@
 package org.tuiasi.engine.ui.components.basicComponents.checkbox;
 
-public interface CheckboxListener {
+import org.tuiasi.engine.ui.components.IListener;
+
+public interface CheckboxListener extends IListener {
     void onToggle(boolean isChecked);
 }

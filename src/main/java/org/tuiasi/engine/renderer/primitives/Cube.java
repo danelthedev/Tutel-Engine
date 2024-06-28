@@ -1,6 +1,6 @@
 package org.tuiasi.engine.renderer.primitives;
 
-public class Cube {
+public class Cube implements Primitive{
 
     public static float[] vertexData = new float[]{
             -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,

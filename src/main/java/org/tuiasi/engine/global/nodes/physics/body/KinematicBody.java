@@ -47,7 +47,6 @@ public class KinematicBody extends Spatial3D implements IBody{
 
     @Override
     public void physRun() {
-        // apply friction on each coordinate of the velocity, going towards 0
         velocity.x -= Math.signum(velocity.x) * friction.x;
         velocity.y -= Math.signum(velocity.y) * friction.y;
         velocity.z -= Math.signum(velocity.z) * friction.z;
@@ -75,6 +74,9 @@ public class KinematicBody extends Spatial3D implements IBody{
     @Override
     public void loadState(Object state){
         super.loadState(state);
+        if(state == null)
+            return;
+
         KinematicBody kinematicBody = (KinematicBody) state;
 
         this.collider = kinematicBody.collider;

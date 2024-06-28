@@ -78,17 +78,16 @@ public class UINodeTreeWindow extends UIWindow {
         treeComponent.getTree().setRoot(AppLogic.getRoot());
         super.render();
 
-        // Add key listener for delete key
         if (KeyboardHandler.isKeyPressed(GLFW.GLFW_KEY_DELETE)) {
             Node<?> selectedNode = AppLogic.getSelectedNode();
             if (selectedNode != null && selectedNode.getParent() != null) {
                 deleteNodeAndChildren(selectedNode);
-                AppLogic.setSelectedNode(null); // Clear the selected node
+                AppLogic.setSelectedNode(null);
             }
         }
     }
 
-    private void deleteNodeAndChildren(Node<?> node) {
+    public void deleteNodeAndChildren(Node<?> node) {
         if (node.getValue() instanceof Renderable3D) {
             Renderer.removeRenderable((Renderable3D) node.getValue());
         }

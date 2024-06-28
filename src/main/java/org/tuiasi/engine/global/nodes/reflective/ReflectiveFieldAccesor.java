@@ -24,7 +24,6 @@ public class ReflectiveFieldAccesor {
     }
 
     public void setValue(Object value) {
-        // set the value of the field in the object to the value
         try {
             setter.invoke(obj, value);
         } catch (Exception e) {
@@ -33,7 +32,6 @@ public class ReflectiveFieldAccesor {
     }
 
     public Object getValue() {
-        // get the value of the field in the object
         try {
             return getter.invoke(obj);
         } catch (Exception e) {

@@ -3,9 +3,8 @@ package org.tuiasi;
 import org.joml.Vector4f;
 import org.lwjgl.Version;
 import org.tuiasi.engine.logic.AppLogic;
-import org.tuiasi.engine.logic.EngineState;
 import org.tuiasi.engine.logic.logger.Log;
-import org.tuiasi.engine.ui.AppWindow;
+import org.tuiasi.engine.renderer.AppWindow;
 import org.tuiasi.engine.ui.DefaultEngineEditorUI;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
@@ -46,9 +45,9 @@ public class TutelEngine {
 
             accumulatedTime += elapsedTime;
 
-            // Update logic if enough time has elapsed
+            System.out.println("Time between frames: " + (elapsedTime * 1000) + " ms");
+
             while (accumulatedTime >= 1.0 / TARGET_UPS) {
-                // Update logic of the engine
                 AppLogic.run();
 
                 accumulatedTime -= 1.0 / TARGET_UPS;

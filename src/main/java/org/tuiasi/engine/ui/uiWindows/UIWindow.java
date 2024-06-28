@@ -46,7 +46,6 @@ public class UIWindow extends IUIWindow{
     public void render() {
         super.render();
 
-
         // if the window is the root, autoresize to the window size
         if(isRoot) {
             WindowVariables windowVariables = WindowVariables.getInstance();
@@ -58,18 +57,13 @@ public class UIWindow extends IUIWindow{
 
         ImGui.begin(getWindowTitle(), getFlags());
 
-
-        // render components inside
         for (IComponent component : getComponents()) {
             component.render();
         }
 
-        // create dockspace
         dockspace_id = ImGui.getID(getWindowTitle() + "_dockspace");
         ImGui.dockSpace(dockspace_id, 0, 0, ImGuiDockNodeFlags.PassthruCentralNode | ImGuiDockNodeFlags.NoDockingInCentralNode);
 
-
-        // setup docked windows
         if(isFirstTime) {
             dockedSetup();
             configurePrefabComponents();
@@ -88,10 +82,8 @@ public class UIWindow extends IUIWindow{
 
         ImInt newNode = new ImInt(dockspace_id);
         for(Map.Entry<IUIWindow, DockData> entry : dockedWindows.entrySet()){
-            // split the node defined by the newNode id in 2 windows and return the id of the newly split node in the given direection
             int dock_id = ImGui.dockBuilderSplitNode(newNode.get(), entry.getValue().getDirection(), entry.getValue().getSplitRatio(), null, newNode);
 
-            // add the window defined by the windowLabel to the window with the id dock_id
             ImGui.dockBuilderDockWindow(entry.getKey().getWindowTitle(), dock_id);
 
             ImVec2 nodeSize = ImGui.dockBuilderGetNode(dock_id).getSize();

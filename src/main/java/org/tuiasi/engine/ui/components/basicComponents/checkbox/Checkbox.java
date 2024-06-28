@@ -34,8 +34,6 @@ public class Checkbox extends ICheckbox {
 
     }
 
-
-    // Getter to retrieve the checkbox state
     public boolean isChecked() {
         return isChecked;
     }

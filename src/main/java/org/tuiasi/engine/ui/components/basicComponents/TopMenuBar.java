@@ -45,8 +45,6 @@ public class TopMenuBar extends IComponent {
 
     @Override
     public void render() {
-        // top menu bar with 2 options: file and edit
-
         ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 0, 10);
         ImGui.beginMainMenuBar();
 
@@ -121,7 +119,6 @@ public class TopMenuBar extends IComponent {
     public void listf(String directoryName, Node<File> parentNode) {
         File directory = new File(directoryName);
 
-        // Get all files from a directory.
         File[] fList = directory.listFiles();
         if(fList != null)
             for (File file : fList) {

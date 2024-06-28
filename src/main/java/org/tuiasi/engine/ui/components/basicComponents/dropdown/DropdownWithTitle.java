@@ -22,7 +22,7 @@ public class DropdownWithTitle extends IDropdown{
         this.label = label;
         this.items = items;
         this.descriptions = null;
-        this.selectedItemIndex = 0; // Default to the first item
+        this.selectedItemIndex = 0;
     }
 
     public DropdownWithTitle(String label, String[] items, String[] descriptions) {

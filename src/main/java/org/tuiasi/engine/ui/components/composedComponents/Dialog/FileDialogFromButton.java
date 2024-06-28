@@ -47,7 +47,6 @@ public class FileDialogFromButton extends IComponent {
             if (ImGui.button("Browse##" + label)) {
                 isActive = true;
 
-                // using ImGui.setNextWindowPos set the position of the modal to the center of the screen
                 ImGui.setNextWindowPos((float) WindowVariables.getInstance().getWidth() / 2, (float) WindowVariables.getInstance().getHeight() / 2, ImGuiCond.Appearing);
 
                 ImGuiFileDialog.openModal("browse-key##" + label, "Choose File", filter, AppLogic.getWorkingDirectory(), 1, 42, ImGuiFileDialogFlags.None);
@@ -90,7 +89,6 @@ public class FileDialogFromButton extends IComponent {
 
         if (selection != null && !selection.isEmpty() && relatedSearchbar != null && isActive && (selection.values().stream().findFirst().get().endsWith(ImGuiFileDialog.getCurrentFilter()) || filter.equals(".*"))) {
 
-            // if file is not from workFolder + "/assets/" display error and return
             if(!selection.values().stream().findFirst().get().startsWith(AppLogic.getWorkingDirectory() + "\\assets\\")) {
                 Log.error("File must be from the assets folder");
                 selection = null;
@@ -100,7 +98,6 @@ public class FileDialogFromButton extends IComponent {
             }
 
             String path = selection.values().stream().findFirst().get();
-            // get only the file name
             path = path.substring(path.lastIndexOf("\\") + 1);
 
             System.out.println("From the file dialog was selected: " + path);

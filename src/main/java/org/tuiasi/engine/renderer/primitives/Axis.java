@@ -1,6 +1,6 @@
 package org.tuiasi.engine.renderer.primitives;
 
-public class Axis {
+public class Axis implements Primitive{
     public static float[] vertexData = new float[]{
             -100.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0,
             100.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0,

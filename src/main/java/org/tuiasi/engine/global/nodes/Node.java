@@ -44,8 +44,12 @@ public class Node<T>{
     private String script;
     private UserScript scriptObj;
 
+    private Boolean isPlayGenerated = false;
 
     public Node(Node<?> parent, String name){
+        if(AppLogic.getEngineState().equals(EngineState.PLAY))
+            isPlayGenerated = true;
+
         this.salt = new Random().nextInt();
 
         this.parent = parent;
@@ -69,13 +73,13 @@ public class Node<T>{
         this.className = value.getClass().getName();
         this.rom = new ReflectiveObjectManager(value);
 
-        // handle spatial3D child/parent structure
+
         if(parent != null){
             if(value instanceof Spatial3D && parent.getValue() instanceof Spatial3D){
                 ((Spatial3D) parent.getValue()).addChild((Spatial3D) value);
             }
         }
-        // handle renderabl3D, collider3D and light source rendering
+
         if(value instanceof Renderable3D){
             Renderer.addRenderable((Renderable3D) value);
         }
@@ -98,10 +102,8 @@ public class Node<T>{
         ((INodeValue) value).loadState(originalValue);
     }
 
-    // override hash function
     @Override
     public int hashCode() {
-        // create a hashcode using the name and the children
         return salt.hashCode() + name.hashCode();
     }
 

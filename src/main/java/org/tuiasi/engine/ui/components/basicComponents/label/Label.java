@@ -4,7 +4,7 @@ import imgui.ImGui;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.tuiasi.engine.ui.AppWindow;
+import org.tuiasi.engine.renderer.AppWindow;
 
 @Setter @Getter @NoArgsConstructor
 public class Label extends ILabel {

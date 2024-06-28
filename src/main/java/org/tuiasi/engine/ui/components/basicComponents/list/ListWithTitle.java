@@ -14,7 +14,6 @@ public class ListWithTitle extends SimpleList{
 
     @Override
     public void render() {
-        // render the label
         ImGui.text(getLabel());
         super.render();
     }

@@ -48,7 +48,7 @@ public class Camera extends Spatial3D {
         this.near = 0.1f;
         this.far = 1000.0f;
         this.position = new Vector3f(0, 0, 0);
-        this.rotation = new Vector3f(0, -90, 0); // converted from radians to degrees
+        this.rotation = new Vector3f(0, -90, 0);
 
         this.viewMatrix = new Matrix4f();
     }
@@ -85,7 +85,6 @@ public class Camera extends Spatial3D {
     }
 
     public Matrix4f calculateViewMatrix() {
-        // use the position vector and front vector in the lookAt function to calculate the view matrix
         viewMatrix = new Matrix4f().lookAt( new Vector3f(position.x, position.y, position.z),
                                             getCameraFront().add(position.x, position.y, position.z),
                                             new Vector3f(0, 1, 0));
@@ -104,7 +103,6 @@ public class Camera extends Spatial3D {
     }
 
     public void rotate(float x, float y, float z) {
-        // Add rotation
         rotation.x += x;
         rotation.y += y;
         rotation.z += z;
@@ -140,7 +138,6 @@ public class Camera extends Spatial3D {
         WindowVariables windowVariables = WindowVariables.getInstance();
         Vector2d mousePos = MouseHandler.getMousePosition();
 
-        // get the ray direction from the camera position and the position of the mouse
         Vector3f rayOrigin = new Vector3f(position.x, position.y, position.z);
         Vector3f rayDirection = new Vector3f();
         float x = (2.0f * (float)mousePos.x) / windowVariables.getWidth() - 1.0f;

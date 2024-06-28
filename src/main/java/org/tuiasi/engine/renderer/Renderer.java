@@ -1,5 +1,6 @@
 package org.tuiasi.engine.renderer;
 
+import lombok.Getter;
 import org.joml.Vector3f;
 import org.tuiasi.engine.global.nodes.Node;
 import org.tuiasi.engine.global.nodes.spatial.Spatial3D;
@@ -30,6 +31,7 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 public class Renderer {
 
     Renderable3D axis;
+    @Getter
     static List<Renderable3D> renderables;
     static List<LightSource> lightSources;
 

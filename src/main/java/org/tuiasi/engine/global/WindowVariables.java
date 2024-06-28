@@ -20,7 +20,6 @@ public class WindowVariables {
     private long windowID;
 
     private WindowVariables() {
-        //Init class variables
         this.width = 800;
         this.height = 600;
         this.windowPosX = 100;
@@ -57,13 +56,13 @@ public class WindowVariables {
     public void updateGlobalVariables(long windowId) {
         WindowVariables windowVariables = WindowVariables.getInstance();
         windowVariables.setWindowID(windowId);
-        // get the window dimensions using glfw
+
         int[] w = new int[1];
         int[] h = new int[1];
         org.lwjgl.glfw.GLFW.glfwGetWindowSize(windowId, w, h);
         windowVariables.setWidth(w[0]);
         windowVariables.setHeight(h[0]);
-        // get the window position using glfw
+
         int[] x = new int[1];
         int[] y = new int[1];
         org.lwjgl.glfw.GLFW.glfwGetWindowPos(windowId, x, y);

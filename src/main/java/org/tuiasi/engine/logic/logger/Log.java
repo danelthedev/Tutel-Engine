@@ -38,7 +38,6 @@ public class Log {
     private static String getCurrentTime(){
         Instant currentMoment = java.time.Instant.now();
         ZoneId zoneId = ZoneId.systemDefault();
-        // create a string with hh:mm:ss format that excludes the milliseconds
         return "[" + currentMoment.atZone(zoneId).toLocalTime().toString().substring(0, 8) + "]";
     }
 }

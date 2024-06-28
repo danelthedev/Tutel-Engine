@@ -50,11 +50,8 @@ public class TreeWithTitleAndSearchBar extends IComponent {
             getFilteredPaths(tree.getRoot(), searchbar.getSearchText().get(), new ArrayList<>());
             getFilteredNodes();
 
-            searchbar.setEnterPressed(false); // Reset the flag
+            searchbar.setEnterPressed(false);
         }
-
-        // Set the matching paths to the tree
-
 
         tree.render(matchingNodes);
     }

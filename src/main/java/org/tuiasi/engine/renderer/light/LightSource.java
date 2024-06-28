@@ -96,7 +96,6 @@ public class LightSource extends Spatial3D {
         super.loadState(state);
         LightSource lightSource = (LightSource) state;
         this.lightData = lightSource.lightData;
-        // copy the position and rotation to the representation
         representation.setPosition(getPosition());
         representation.setRotation(getRotation());
     }

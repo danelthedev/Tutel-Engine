@@ -93,13 +93,11 @@ public class Spatial3D extends Spatial {
         }
     }
 
+    // tests raycasting
     public boolean isMouseHovered(){
-        // test raycasting
         Vector3f cameraOrigin = MainCamera.getInstance().getPosition();
         Vector3f rayOrigin = new Vector3f(cameraOrigin.x, cameraOrigin.y, cameraOrigin.z);
         Vector3f rayDirection = MainCamera.getInstance().getRayDirection();
-
-        // check if the ray cast from the origin in the direction goes through or near the origin of the world
 
         Vector3f sphereOrigin = position;
         float sphereRadius = .2f;
@@ -135,6 +133,10 @@ public class Spatial3D extends Spatial {
 
     @Override
     public void loadState(Object state) {
+        if(state == null){
+            return;
+        }
+
         Spatial3D newState = (Spatial3D) state;
         position = newState.getPosition();
         rotation = newState.getRotation();
