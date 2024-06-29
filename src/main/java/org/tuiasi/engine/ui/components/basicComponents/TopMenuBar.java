@@ -93,8 +93,8 @@ public class TopMenuBar extends IComponent {
         // play button
         ImGui.setCursorPosX((imgui.ImGui.getWindowSizeX() - 30));
         if(playTexture == null) {
-            playTexture = new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\textures\\uiTextures\\play.png", 0, true);
-            stopTexture = new Texture("C:\\Users\\Danel\\IdeaProjects\\licenta\\src\\main\\resources\\textures\\uiTextures\\stop.png", 0, true);
+            playTexture = new Texture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\uiTextures\\play.png", 0, true);
+            stopTexture = new Texture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\uiTextures\\stop.png", 0, true);
         }
         Texture currentStateTexture = AppLogic.getEngineState() == EngineState.PLAY ? stopTexture : playTexture;
         if(ImGui.imageButton(currentStateTexture.getTextureID(), 25, 20)){
